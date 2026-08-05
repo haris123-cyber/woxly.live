@@ -17,9 +17,9 @@ const navItems = [
 ];
 
 const mockOrders = [
-  { id: "WOXLY-10244", date: "12 Jul 2023", status: "Delivered", total: "$149.99", items: 3 },
-  { id: "WOXLY-10198", date: "03 Jun 2023", status: "Processing", total: "$89.00", items: 1 },
-  { id: "WOXLY-10101", date: "15 Apr 2023", status: "Delivered", total: "$220.50", items: 5 },
+  { id: "WOXLY-10244", date: "12 Jul 2023", status: "Delivered", total: "₹149.99", items: 3 },
+  { id: "WOXLY-10198", date: "03 Jun 2023", status: "Processing", total: "₹89.00", items: 1 },
+  { id: "WOXLY-10101", date: "15 Apr 2023", status: "Delivered", total: "₹220.50", items: 5 },
 ];
 
 const mockReviews = [

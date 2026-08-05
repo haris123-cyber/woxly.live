@@ -127,7 +127,7 @@ export default function CartPage() {
                 <div className="flex justify-between items-center">
                   <span className="text-gray-900 font-medium">Discount</span>
                   <span className="font-bold text-gray-900">
-                    {couponApplied ? `-$${discount.toLocaleString()}` : "$0"}
+                    {couponApplied ? `-₹${discount.toLocaleString()}` : "₹0"}
                   </span>
                 </div>
 
@@ -165,11 +165,11 @@ export default function CartPage() {
 
               {/* Checkout buttons */}
               <div className="space-y-4">
-                <Link href="/checkout" className="w-full bg-[#1c1c1c] hover:bg-black text-white font-semibold py-4 rounded-xl transition-colors flex items-center justify-center">
+                <Link href="/checkout" className="w-full bg-primary hover:bg-black text-white font-semibold py-4 rounded-xl transition-colors flex items-center justify-center">
                   Proceed to Checkout
                 </Link>
 
-               
+
               </div>
             </div>
           </div>

@@ -131,7 +131,7 @@ export default function CheckoutPage() {
       <div className="flex justify-between">
         <span className="text-muted-foreground">Shipping</span>
         <span className={`font-medium ${shipping === 0 ? "text-emerald-600" : ""}`}>
-          {shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}
+          {shipping === 0 ? "Free" : `₹${shipping.toFixed(2)}`}
         </span>
       </div>
       <div className="flex justify-between">
@@ -324,7 +324,7 @@ export default function CheckoutPage() {
                           <p className="text-xs text-muted-foreground">{method.eta}</p>
                         </div>
                         <span className={`text-sm font-semibold shrink-0 ${method.price === 0 ? "text-emerald-600" : ""}`}>
-                          {method.price === 0 ? "Free" : `$${method.price.toFixed(2)}`}
+                          {method.price === 0 ? "Free" : `₹${method.price.toFixed(2)}`}
                         </span>
                       </button>
                     );
@@ -440,7 +440,7 @@ export default function CheckoutPage() {
                     {line}
                   </p>
                 ))}
-                <p className="text-xs text-muted-foreground mt-1">{delivery?.name} · {shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</p>
+                <p className="text-xs text-muted-foreground mt-1">{delivery?.name} · {shipping === 0 ? "Free" : `₹${shipping.toFixed(2)}`}</p>
               </div>
 
               <div className="rounded-xl border border-border p-4">
@@ -509,7 +509,7 @@ export default function CheckoutPage() {
             ) : step === 4 ? (
               <span className="inline-flex items-center gap-2">
                 <Lock className="w-4 h-4" />
-                Place Order · $
+                Place Order · ₹
                 {paymentMethod === "partial-cod"
                   ? advanceAmount.toFixed(2)
                   : paymentMethod === "cod"
@@ -636,7 +636,7 @@ export default function CheckoutPage() {
                             <p className="text-sm text-muted-foreground">{method.eta}</p>
                           </div>
                           <span className={`font-semibold ${method.price === 0 ? "text-emerald-600" : ""}`}>
-                            {method.price === 0 ? "Free" : `$${method.price.toFixed(2)}`}
+                            {method.price === 0 ? "Free" : `₹${method.price.toFixed(2)}`}
                           </span>
                         </button>
                       );

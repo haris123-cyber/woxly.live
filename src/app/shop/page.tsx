@@ -195,7 +195,7 @@ export default function ShopPage() {
             ))}
             {priceFilterActive && (
               <div className="flex items-center gap-1.5 bg-gray-100 text-gray-800 text-[11px] px-3 py-1.5 rounded-full font-bold">
-                ${priceRange[0]} – ${priceRange[1]}
+                ₹{priceRange[0]} – ₹{priceRange[1]}
                 <button onClick={() => setPriceRange([priceBounds.min, priceBounds.max])} className="text-gray-400 hover:text-gray-600">✕</button>
               </div>
             )}
@@ -336,12 +336,12 @@ export default function ShopPage() {
           <div className="flex items-center gap-2">
             <div className="flex-1 rounded-lg border border-gray-200 px-3 py-2 text-center bg-gray-50">
               <span className="text-[10px] text-gray-400 block mb-0.5">Min</span>
-              <span className="text-xs font-bold text-gray-900">${priceRange[0]}</span>
+              <span className="text-xs font-bold text-gray-900">₹{priceRange[0]}</span>
             </div>
             <span className="text-gray-300 text-sm">—</span>
             <div className="flex-1 rounded-lg border border-gray-200 px-3 py-2 text-center bg-gray-50">
               <span className="text-[10px] text-gray-400 block mb-0.5">Max</span>
-              <span className="text-xs font-bold text-gray-900">${priceRange[1]}</span>
+              <span className="text-xs font-bold text-gray-900">₹{priceRange[1]}</span>
             </div>
           </div>
         </div>
@@ -536,7 +536,7 @@ export default function ShopPage() {
 
                 <div>
                   <p className="text-sm font-medium text-foreground mb-3">
-                    ${priceRange[0].toFixed(2)} - ${priceRange[1].toFixed(2)}
+                    ₹{priceRange[0].toFixed(2)} - ₹{priceRange[1].toFixed(2)}
                   </p>
                   <div className="relative h-6 flex items-center mb-1 px-0.5">
                     <div className="absolute inset-x-0 h-1.5 rounded-full bg-zinc-200" />

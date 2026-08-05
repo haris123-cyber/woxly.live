@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 import { useParams, useRouter } from "next/navigation";
 import { PRODUCTS } from "@/lib/mock-data";
 import { useCartStore } from "@/store/useCartStore";
@@ -18,9 +19,9 @@ import {
   ShoppingBag,
   ChevronRight,
   ChevronLeft,
-  Check,
   ArrowLeft,
   Percent,
+  BadgePercent,
   ShieldCheck,
   ShieldAlert,
 } from "lucide-react";
@@ -38,6 +39,8 @@ export default function ProductDetailPage() {
   );
   const [imageIndex, setImageIndex] = useState(0);
   const [activeTab, setActiveTab] = useState<"description" | "reviews">("description");
+  const [isWarrantyOpen, setIsWarrantyOpen] = useState(false);
+  const [isDeliveryOpen, setIsDeliveryOpen] = useState(false);
 
   if (!product) {
     return (
@@ -153,17 +156,22 @@ export default function ProductDetailPage() {
             </button>
           </div>
 
+
+
           {/* Price + stock row */}
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-baseline gap-2 flex-wrap">
-              <span className="text-2xl font-bold text-primary">${product.price.toFixed(2)}</span>
+              <span className="text-2xl font-bold text-primary">₹{product.price.toFixed(2)}</span>
               {originalPrice && (
                 <span className="text-sm text-muted-foreground line-through">
-                  ${originalPrice.toFixed(2)}
+                  ₹{originalPrice.toFixed(2)}
                 </span>
               )}
               {discountPercentage > 0 && (
-                <span className="bg-[#16a34a] text-white text-[10px] font-bold px-2 py-0.5 rounded-sm ml-1 whitespace-nowrap">
+                <span
+                  className="bg-[#00a859] text-white text-[10px] font-bold pl-2 pr-3 py-0.5 ml-1 whitespace-nowrap"
+                  style={{ clipPath: "polygon(0 0, calc(100% - 6px) 0, 100% 100%, 0 100%)" }}
+                >
                   {discountPercentage}% OFF
                 </span>
               )}
@@ -173,19 +181,76 @@ export default function ProductDetailPage() {
             </span>
           </div>
 
+          {/* Quantity */}
+          <div className="flex items-center gap-3 mt-4 mb-4">
+            <span className="text-sm font-medium text-foreground">Qty</span>
+            <div className="flex items-center border border-border rounded-lg bg-background h-10">
+              <button
+                onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                className="w-9 h-full flex items-center justify-center text-muted-foreground"
+              >
+                <Minus className="w-3.5 h-3.5" />
+              </button>
+              <motion.span
+                key={quantity}
+                initial={{ opacity: 0, scale: 0.8, filter: "blur(2px)" }}
+                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                transition={{ duration: 0.15 }}
+                className="w-8 text-center text-sm font-semibold inline-block"
+              >
+                {quantity}
+              </motion.span>
+              <button
+                onClick={() => setQuantity(quantity + 1)}
+                className="w-9 h-full flex items-center justify-center text-muted-foreground"
+              >
+                <Plus className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+
           {/* Offers & Discounts */}
           <div className="mb-6 mt-6">
             <h3 className="text-[10px] text-muted-foreground uppercase tracking-[0.2em] mb-4 font-semibold">
               Offers & Discounts
             </h3>
 
-            <div className="bg-[#e6fbf1] border border-[#a7f3d0] rounded-md p-3 flex items-start gap-3 mb-5">
-              <div className="bg-[#bbf7d0] text-[#16a34a] p-1.5 rounded-full shrink-0">
-                <Percent className="w-3.5 h-3.5" />
+            <div className="relative overflow-hidden bg-[#f4faf5] rounded-xl flex items-stretch py-2 mb-5 w-full border border-[#dcfce7]">
+              {/* Icon */}
+              <div className="shrink-0 flex items-center justify-center pl-3 pr-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#55a630] rounded-[14px] flex items-center justify-center text-white relative shadow-sm rotate-45">
+                  <div className="-rotate-45 flex items-center justify-center relative w-full h-full">
+                    <BadgePercent className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
+                    <Star className="w-2 h-2 fill-yellow-300 text-yellow-300 absolute top-0.5 left-0.5" />
+                    <Star className="w-1.5 h-1.5 fill-yellow-300 text-yellow-300 absolute bottom-1 right-0.5" />
+                  </div>
+                </div>
               </div>
-              <div>
-                <h4 className="text-[11px] font-bold text-[#065f46] tracking-wider uppercase mb-0.5">Online Payment Offer</h4>
-                <p className="text-[13px] font-bold text-[#111827]">Pay online and save 10</p>
+
+              {/* Dashed line */}
+              <div className="w-px border-l-2 border-dashed border-[#bbf7d0] my-1.5"></div>
+
+              {/* Main text */}
+              <div className="px-3 flex flex-col justify-center flex-1 sm:flex-none">
+                <span className="text-[#064e3b] font-extrabold text-[15px] sm:text-[17px] leading-none mb-1 whitespace-nowrap">Save ₹50</span>
+                <span className="text-[#111827] font-bold text-[11px] sm:text-[12px] leading-none whitespace-nowrap">with online payment</span>
+              </div>
+
+              {/* Dashed line */}
+              <div className="hidden sm:block w-px border-l-2 border-dashed border-[#bbf7d0] my-1.5"></div>
+
+              {/* Sub text */}
+              <div className="hidden sm:flex px-3 flex-col justify-center flex-1">
+                <span className="text-gray-800 text-[10px] sm:text-[11px] leading-tight font-medium">Pay online</span>
+                <span className="text-gray-800 text-[10px] sm:text-[11px] leading-tight font-medium">& get extra discount</span>
+              </div>
+
+              {/* Decorative elements */}
+              <div className="absolute right-0 top-0 bottom-0 w-12 overflow-hidden pointer-events-none">
+                <div className="w-1.5 h-1.5 bg-[#84cc16] transform rotate-45 absolute top-2 right-4"></div>
+                <div className="w-1 h-1 bg-[#65a30d] transform rotate-45 absolute top-5 right-8"></div>
+                <div className="w-2 h-2 bg-[#a3e635] transform rotate-45 absolute bottom-2 right-6"></div>
+                <div className="w-1.5 h-1.5 bg-[#84cc16] transform rotate-45 absolute bottom-4 right-2"></div>
               </div>
             </div>
 
@@ -200,43 +265,53 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
-            <div className="border-t border-b border-border">
-              <div className="flex items-center justify-between py-4 border-b border-border">
-                <div className="flex items-center gap-3">
-                  <ShieldAlert className="w-4 h-4 text-foreground" />
-                  <span className="text-[12px] font-bold tracking-wider uppercase">WARRANTY</span>
-                </div>
-                <Plus className="w-4 h-4 text-muted-foreground" />
+            <div >
+              <div className="flex flex-col ">
+                <button
+                  onClick={() => setIsWarrantyOpen(!isWarrantyOpen)}
+                  className="flex items-center justify-between py-4 w-full hover:opacity-80 transition-opacity"
+                >
+                  <div className="flex items-center gap-3">
+                    <ShieldAlert className="w-4 h-4 text-foreground" />
+                    <span className="text-[12px] font-bold tracking-wider uppercase">WARRANTY</span>
+                  </div>
+                  {isWarrantyOpen ? (
+                    <Minus className="w-4 h-4 text-muted-foreground" />
+                  ) : (
+                    <Plus className="w-4 h-4 text-muted-foreground" />
+                  )}
+                </button>
+                {isWarrantyOpen && (
+                  <div className="pb-4 text-sm text-muted-foreground leading-relaxed">
+                    All products come with a standard 1-year warranty covering manufacturing defects. Extended warranty options are available at checkout.
+                  </div>
+                )}
               </div>
-              <div className="flex items-center justify-between py-4">
-                <div className="flex items-center gap-3">
-                  <Truck className="w-4 h-4 text-foreground" />
-                  <span className="text-[12px] font-bold tracking-wider uppercase">DELIVERY</span>
-                </div>
-                <Plus className="w-4 h-4 text-muted-foreground" />
+              <div className="flex flex-col">
+                <button
+                  onClick={() => setIsDeliveryOpen(!isDeliveryOpen)}
+                  className="flex items-center justify-between py-4 w-full hover:opacity-80 transition-opacity"
+                >
+                  <div className="flex items-center gap-3">
+                    <Truck className="w-4 h-4 text-foreground" />
+                    <span className="text-[12px] font-bold tracking-wider uppercase">DELIVERY</span>
+                  </div>
+                  {isDeliveryOpen ? (
+                    <Minus className="w-4 h-4 text-muted-foreground" />
+                  ) : (
+                    <Plus className="w-4 h-4 text-muted-foreground" />
+                  )}
+                </button>
+                {isDeliveryOpen && (
+                  <div className="pb-4 text-sm text-muted-foreground leading-relaxed">
+                    Free standard delivery on orders over ₹50. Next day delivery available for orders placed before 2 PM. Tracking information will be provided once dispatched.
+                  </div>
+                )}
               </div>
             </div>
           </div>
 
-          {/* Quantity */}
-          <div className="flex items-center gap-3 mb-6">
-            <span className="text-sm font-medium text-foreground">Qty</span>
-            <div className="flex items-center border border-border rounded-lg bg-background h-10">
-              <button
-                onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="w-9 h-full flex items-center justify-center text-muted-foreground"
-              >
-                <Minus className="w-3.5 h-3.5" />
-              </button>
-              <span className="w-8 text-center text-sm font-semibold">{quantity}</span>
-              <button
-                onClick={() => setQuantity(quantity + 1)}
-                className="w-9 h-full flex items-center justify-center text-muted-foreground"
-              >
-                <Plus className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </div>
+
 
           {/* Tabs: Description / Reviews */}
           <div className="mb-6">
@@ -338,7 +413,7 @@ export default function ProductDetailPage() {
           </Button>
           <Button
             onClick={handleBuyNow}
-            className="flex-1 h-12 rounded-xl bg-primary  hover:opacity-90 text-primary-foreground font-bold text-sm uppercase tracking-wide border-0"
+            className="flex-1 h-12 rounded-md bg-primary  hover:opacity-90 text-primary-foreground font-bold text-sm uppercase tracking-wide border-0"
           >
             Buy Now
           </Button>
@@ -393,14 +468,18 @@ export default function ProductDetailPage() {
             </div>
 
             <div className="flex items-center gap-3 mb-6 flex-wrap">
-              <span className="text-2xl font-bold text-foreground">${product.price.toFixed(2)}</span>
+              <span className="text-2xl font-bold text-foreground">₹{product.price.toFixed(2)}</span>
               {originalPrice && (
                 <span className="text-lg text-muted-foreground line-through">
-                  ${originalPrice.toFixed(2)}
+                  ₹{originalPrice.toFixed(2)}
                 </span>
               )}
+              {/* Green Discount Tag */}
               {discountPercentage > 0 && (
-                <span className="bg-[#16a34a] text-white text-xs font-bold px-2 py-1 rounded-sm">
+                <span
+                  className="bg-[#00a859] text-white text-[12px] font-bold pl-3.5 pr-4.5 py-1 whitespace-nowrap"
+                  style={{ clipPath: "polygon(0 0, calc(100% - 6px) 0, 100% 100%, 0 100%)" }}
+                >
                   {discountPercentage}% OFF
                 </span>
               )}
@@ -415,7 +494,15 @@ export default function ProductDetailPage() {
                   >
                     <Minus className="w-4 h-4" />
                   </button>
-                  <span className="flex-1 text-center font-bold text-base">{quantity}</span>
+                  <motion.span
+                    key={quantity}
+                    initial={{ opacity: 0, scale: 0.8, filter: "blur(2px)" }}
+                    animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                    transition={{ duration: 0.15 }}
+                    className="flex-1 text-center font-bold text-base inline-block"
+                  >
+                    {quantity}
+                  </motion.span>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
                     className="w-10 h-full flex items-center justify-center text-muted-foreground hover:bg-muted"
@@ -429,7 +516,7 @@ export default function ProductDetailPage() {
                   variant="outline"
                   className="flex-1 h-12 font-medium text-[15px] border-border text-foreground hover:bg-muted"
                 >
-                  <ShoppingBag className="w-4 h-4 mr-2" /> Add to cart — ${product.price.toFixed(2)}
+                  <ShoppingBag className="w-4 h-4 mr-2" /> Add to cart — ₹{product.price.toFixed(2)}
                 </Button>
 
                 <Button
@@ -443,7 +530,7 @@ export default function ProductDetailPage() {
 
               <Button
                 onClick={handleBuyNow}
-                className="w-full h-14 bg-primary hover:bg-[#31235b]/90 text-white font-bold text-[15px] uppercase tracking-wide"
+                className="w-full h-14 bg-primary rounded-lg hover:bg-primary/90 text-white font-bold text-[15px] uppercase tracking-wide"
               >
                 Buy Now
               </Button>
@@ -455,13 +542,42 @@ export default function ProductDetailPage() {
                 Offers & Discounts
               </h3>
 
-              <div className="bg-[#e6fbf1] border border-[#a7f3d0] rounded-md p-3 flex items-start gap-3 mb-5">
-                <div className="bg-[#bbf7d0] text-[#16a34a] p-1.5 rounded-full shrink-0">
-                  <Percent className="w-3.5 h-3.5" />
+              <div className="relative overflow-hidden bg-[#f4faf5] rounded-xl flex items-stretch py-2 mb-5 w-full border border-[#dcfce7]">
+                {/* Icon */}
+                <div className="shrink-0 flex items-center justify-center pl-3 pr-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#55a630] rounded-[14px] flex items-center justify-center text-white relative shadow-sm rotate-45">
+                    <div className="-rotate-45 flex items-center justify-center relative w-full h-full">
+                      <BadgePercent className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
+                      <Star className="w-2 h-2 fill-yellow-300 text-yellow-300 absolute top-0.5 left-0.5" />
+                      <Star className="w-1.5 h-1.5 fill-yellow-300 text-yellow-300 absolute bottom-1 right-0.5" />
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="text-[11px] font-bold text-[#065f46] tracking-wider uppercase mb-0.5">Online Payment Offer</h4>
-                  <p className="text-[13px] font-bold text-[#111827]">Pay online and save 10</p>
+
+                {/* Dashed line */}
+                <div className="w-px border-l-2 border-dashed border-[#bbf7d0] my-1.5"></div>
+
+                {/* Main text */}
+                <div className="px-3 flex flex-col justify-center flex-1 sm:flex-none">
+                  <span className="text-[#064e3b] font-extrabold text-[15px] sm:text-[17px] leading-none mb-1 whitespace-nowrap">Save ₹50</span>
+                  <span className="text-[#111827] font-bold text-[11px] sm:text-[12px] leading-none whitespace-nowrap">with online payment</span>
+                </div>
+
+                {/* Dashed line */}
+                <div className="hidden sm:block w-px border-l-2 border-dashed border-[#bbf7d0] my-1.5"></div>
+
+                {/* Sub text */}
+                <div className="hidden sm:flex px-3 flex-col justify-center flex-1">
+                  <span className="text-gray-800 text-[10px] sm:text-[11px] leading-tight font-medium">Pay online</span>
+                  <span className="text-gray-800 text-[10px] sm:text-[11px] leading-tight font-medium">& get extra discount</span>
+                </div>
+
+                {/* Decorative elements */}
+                <div className="absolute right-0 top-0 bottom-0 w-12 overflow-hidden pointer-events-none">
+                  <div className="w-1.5 h-1.5 bg-[#84cc16] transform rotate-45 absolute top-2 right-4"></div>
+                  <div className="w-1 h-1 bg-[#65a30d] transform rotate-45 absolute top-5 right-8"></div>
+                  <div className="w-2 h-2 bg-[#a3e635] transform rotate-45 absolute bottom-2 right-6"></div>
+                  <div className="w-1.5 h-1.5 bg-[#84cc16] transform rotate-45 absolute bottom-4 right-2"></div>
                 </div>
               </div>
 
@@ -477,19 +593,47 @@ export default function ProductDetailPage() {
               </div>
 
               <div className="border-t border-b border-border">
-                <div className="flex items-center justify-between py-4 border-b border-border">
-                  <div className="flex items-center gap-3">
-                    <ShieldAlert className="w-4 h-4 text-foreground" />
-                    <span className="text-[12px] font-bold tracking-wider uppercase">WARRANTY</span>
-                  </div>
-                  <Plus className="w-4 h-4 text-muted-foreground" />
+                <div className="flex flex-col border-b border-border">
+                  <button
+                    onClick={() => setIsWarrantyOpen(!isWarrantyOpen)}
+                    className="flex items-center justify-between py-4 w-full hover:opacity-80 transition-opacity"
+                  >
+                    <div className="flex items-center gap-3">
+                      <ShieldAlert className="w-4 h-4 text-foreground" />
+                      <span className="text-[12px] font-bold tracking-wider uppercase">WARRANTY</span>
+                    </div>
+                    {isWarrantyOpen ? (
+                      <Minus className="w-4 h-4 text-muted-foreground" />
+                    ) : (
+                      <Plus className="w-4 h-4 text-muted-foreground" />
+                    )}
+                  </button>
+                  {isWarrantyOpen && (
+                    <div className="pb-4 text-sm text-muted-foreground leading-relaxed">
+                      All products come with a standard 1-year warranty covering manufacturing defects. Extended warranty options are available at checkout.
+                    </div>
+                  )}
                 </div>
-                <div className="flex items-center justify-between py-4">
-                  <div className="flex items-center gap-3">
-                    <Truck className="w-4 h-4 text-foreground" />
-                    <span className="text-[12px] font-bold tracking-wider uppercase">DELIVERY</span>
-                  </div>
-                  <Plus className="w-4 h-4 text-muted-foreground" />
+                <div className="flex flex-col">
+                  <button
+                    onClick={() => setIsDeliveryOpen(!isDeliveryOpen)}
+                    className="flex items-center justify-between py-4 w-full hover:opacity-80 transition-opacity"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Truck className="w-4 h-4 text-foreground" />
+                      <span className="text-[12px] font-bold tracking-wider uppercase">DELIVERY</span>
+                    </div>
+                    {isDeliveryOpen ? (
+                      <Minus className="w-4 h-4 text-muted-foreground" />
+                    ) : (
+                      <Plus className="w-4 h-4 text-muted-foreground" />
+                    )}
+                  </button>
+                  {isDeliveryOpen && (
+                    <div className="pb-4 text-sm text-muted-foreground leading-relaxed">
+                      Free standard delivery on orders over ₹50. Next day delivery available for orders placed before 2 PM. Tracking information will be provided once dispatched.
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

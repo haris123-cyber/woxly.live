@@ -24,7 +24,7 @@ const ProductCarousel = ({ title, products, link, prependElement }: { title: str
             </div>
           )}
           {products.map((product) => (
-            <div key={product.id} className="w-[160px] sm:w-[200px] md:w-[240px] lg:w-[280px] shrink-0 snap-start">
+            <div key={product.id} className="w-[180px] sm:w-[200px] md:w-[240px] lg:w-[280px] shrink-0 snap-start">
               <ProductCard product={product} />
             </div>
           ))}
@@ -377,11 +377,11 @@ export default function Home() {
                 type="email"
                 name="email"
                 placeholder="email@example.com"
-                className="flex-1 h-14 sm:h-12 px-4   rounded-lg bg-zinc-100 border-0 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
+                className="w-full sm:flex-1 h-12 px-4 rounded-lg bg-zinc-100 border-0 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
               />
               <Button
                 type="submit"
-                className="h-11 sm:h-12 px-5 rounded-lg bg-zinc-500 hover:bg-zinc-600 text-white font-medium border-0 gap-2 shrink-0"
+                className="w-full sm:w-auto h-12 px-5 rounded-lg bg-zinc-500 hover:bg-zinc-600 text-white font-medium border-0 gap-2 shrink-0"
               >
                 <Mail className="w-4 h-4" />
                 Subscribe

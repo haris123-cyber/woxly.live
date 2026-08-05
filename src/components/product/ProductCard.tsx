@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, ShoppingCart, Star, Percent } from "lucide-react";
+import { Heart, ShoppingCart, Star, Percent, BadgePercent } from "lucide-react";
 import { type Product } from "@/store/useCartStore";
 import { useCartStore } from "@/store/useCartStore";
 import { useWatchlistStore } from "@/store/useWatchlistStore";
@@ -63,32 +63,40 @@ export function ProductCard({ product }: ProductCardProps) {
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
         />
 
-        {/* Top Right Tags */}
-        <div className="absolute top-10 right-0 z-10 flex flex-col gap-1 sm:gap-1.5 items-end pointer-events-none">
-          {isSale && (
-            <span className="bg-[#1e1b4b] text-white text-[7px] sm:text-[9px] font-bold px-1.5 py-1 sm:px-2 sm:py-1.5 rounded-l-sm uppercase tracking-wider shadow-sm">SALE</span>
-          )}
-          {isNewArrived && (
-            <span className="bg-[#1e1b4b] text-white text-[7px] sm:text-[9px] font-bold px-1.5 py-1 sm:px-2 sm:py-1.5 rounded-l-sm uppercase tracking-wider shadow-sm">NEW ARRIVED</span>
-          )}
-          {isLimited && (
-            <span className="bg-[#1e1b4b] text-white text-[7px] sm:text-[9px] font-bold px-1.5 py-1 sm:px-2 sm:py-1.5 rounded-l-sm uppercase tracking-wider shadow-sm">LIMITED</span>
-          )}
-        </div>
+        {/* Left Edge Badges (Ribbons) */}
+        <div className="absolute top-2 sm:top-4 left-0 z-10 flex flex-col gap-1.5 sm:gap-2 items-start pointer-events-none">
 
-        {/* Left Edge Badges (Hot Sale & Offer) */}
-        <div className="absolute top-2 sm:top-10 left-0 z-10 flex flex-col gap-1 sm:gap-2 items-start pointer-events-none">
           {isHotSale && (
-            <div className="bg-primary text-white text-[8px] sm:text-[10px] font-bold px-1.5 py-1 sm:px-2.5 sm:py-2 shadow-md uppercase tracking-wider rounded-r-md whitespace-nowrap">
+            <div
+              className="bg-blue-600 text-white text-[8px] sm:text-[10px] font-bold pl-2 pr-4 sm:pl-3 sm:pr-5 py-1 sm:py-1.5 shadow-md uppercase tracking-wider whitespace-nowrap"
+
+            >
               HOT SALE
             </div>
           )}
-          {hasOffer && (
-            <div className="bg-destructive text-white text-[8px] sm:text-[10px] font-bold px-1.5 py-1 sm:px-2.5 sm:py-2 shadow-md uppercase tracking-wider rounded-r-md flex items-center gap-0.5 sm:gap-1 whitespace-nowrap">
-              <Percent className="w-2 h-2 sm:w-3 sm:h-3" /> {discountPercentage}% OFFER
+          {isNewArrived && (
+            <div
+              className="bg-blue-600 text-white text-[8px] sm:text-[10px] font-bold pl-2 pr-4 sm:pl-3 sm:pr-5 py-1 sm:py-1.5 shadow-md uppercase tracking-wider whitespace-nowrap"
+
+            >
+              NEW ARRIVED
+            </div>
+          )}
+          {isLimited && (
+            <div
+              className="bg-green-600 text-white text-[8px] sm:text-[10px] font-bold pl-2 pr-4 sm:pl-3 sm:pr-5 py-1 sm:py-1.5 shadow-md uppercase tracking-wider whitespace-nowrap"
+
+            >
+              LIMITED
             </div>
           )}
         </div>
+        {/* Center Bottom Offer Tag */}
+        {hasOffer && (
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 bg-[#e3000f] text-white text-[9px] sm:text-[10px] font-bold px-3 sm:px-4 py-2.5 rounded-t-md uppercase tracking-wider flex items-center gap-1 shadow-sm">
+            <BadgePercent className="w-3 h-3 sm:w-3.5 sm:h-3.5" strokeWidth={2.5} /> OFFER
+          </div>
+        )}
 
         <button
           onClick={(e) => {
@@ -147,12 +155,15 @@ export function ProductCard({ product }: ProductCardProps) {
               alignItems: "center",
               justifyContent: "center",
               gap: "8px",
+
             }}
           >
             <ShoppingCart style={{ width: "15px", height: "15px" }} />
             {product.inStock ? "Add to Cart" : "Out of Stock"}
           </button>
         </div>
+
+
       </div>
 
       <div>
@@ -162,41 +173,45 @@ export function ProductCard({ product }: ProductCardProps) {
         <h3
           style={{ fontSize: "0.85rem", fontWeight: 500, color: "#374151", lineHeight: 1.35, marginBottom: "6px" }}
           title={product.name}
-          className="line-clamp-2"
+          className="truncate"
         >
           {product.name}
         </h3>
 
-        <div className="flex items-center gap-1.5 mb-2">
-          <div className="flex text-[#f97316]">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Star key={i} className={`w-3 h-3 ${i < Math.floor(product.rating || 0) ? "fill-current" : "text-gray-300 fill-gray-300"}`} />
-            ))}
-          </div>
-          <span className="text-[11px] text-gray-500 font-medium">({product.reviews || 0})</span>
+        <div className="flex items-center gap-1 sm:gap-2 mb-2">
+          <span className="text-[15px] sm:text-[0.95rem] font-bold text-gray-900 tracking-tight">
+            ₹{product.price.toFixed(2)}
+          </span>
+          {originalPrice && (
+            <span className="text-[11px] sm:text-[0.8rem] text-gray-400 line-through tracking-tight">
+              ₹{originalPrice.toFixed(2)}
+            </span>
+          )}
+          {/* Green Discount Tag */}
+          {discountPercentage > 0 && (
+            <span
+              className="bg-[#00a859] text-white text-[9px] font-bold pl-1.5 pr-2.5 py-0.5 whitespace-nowrap"
+              style={{ clipPath: "polygon(0 0, calc(100% - 6px) 0, 100% 100%, 0 100%)" }}
+            >
+              {discountPercentage}% OFF
+            </span>
+          )}
         </div>
 
         <div className="flex items-center justify-between">
-          <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
-            <span style={{ fontSize: "0.95rem", fontWeight: 700, color: "#111827" }}>
-              ${product.price.toFixed(2)}
-            </span>
-            {originalPrice && (
-              <span style={{ fontSize: "0.8rem", color: "#9ca3af", textDecoration: "line-through" }}>
-                ${originalPrice.toFixed(2)}
-              </span>
-            )}
-            {/* Green Discount Tag */}
-            {discountPercentage > 0 && (
-              <span className="bg-[#16a34a] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-sm ml-0.5 whitespace-nowrap">
-                {discountPercentage}% OFF
-              </span>
-            )}
+          <div className="flex items-center gap-1.5">
+            <div className="flex text-[#f97316]">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Star key={i} className={`w-3 h-3 ${i < Math.floor(product.rating || 0) ? "fill-current" : "text-gray-300 fill-gray-300"}`} />
+              ))}
+            </div>
+            <span className="text-[11px] text-gray-500 font-medium">({product.reviews || 0})</span>
           </div>
+          
           <button
             onClick={handleAddToCart}
             disabled={!product.inStock}
-            className={`md:hidden flex items-center justify-center w-8 h-8 rounded-full text-white shadow-sm transition-transform active:scale-95 ${product.inStock ? "bg-primary" : "bg-gray-400"}`}
+            className={`lg:hidden flex shrink-0 items-center justify-center w-8 h-8 rounded-full text-white shadow-sm transition-transform active:scale-95 ${product.inStock ? "bg-primary" : "bg-gray-400"}`}
             aria-label={product.inStock ? "Add to cart" : "Out of stock"}
           >
             <ShoppingCart className="w-4 h-4" />
