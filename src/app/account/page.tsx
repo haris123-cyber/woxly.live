@@ -13,7 +13,6 @@ const navItems = [
   { label: "Order History", icon: Package, id: "orders" },
   { label: "Account Details", icon: User, id: "details" },
   { label: "Address", icon: MapPin, id: "address" },
-  { label: "Earning Point", icon: Star, id: "points" },
   { label: "To Review", icon: MessageSquare, id: "reviews" },
 ];
 
@@ -53,7 +52,7 @@ const mockReviews = [
   },
 ];
 
-const PRIMARY = "#3bc4f5";
+const PRIMARY = "#2563eb";
 const PRIMARY_LIGHT = "#e0f2fe";
 const card: React.CSSProperties = {
   background: "#fff",
@@ -78,33 +77,37 @@ function DashboardPanel() {
   return (
     <div>
       <h2 style={{ fontSize: "1.25rem", fontWeight: 800, color: "#111827", marginBottom: "1.25rem" }}>My Dashboard</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-8">
         {[
           { icon: ShoppingBag, label: "Total Orders", value: "12" },
           { icon: CreditCard, label: "Saved Address", value: "2" },
-          { icon: TrendingUp, label: "Earning Points", value: "840" },
+
         ].map((stat) => {
           const Icon = stat.icon;
           return (
-            <div key={stat.label} style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: "12px", padding: "1.25rem", display: "flex", flexDirection: "column", gap: "8px" }}>
-              <div style={{ width: "44px", height: "44px", borderRadius: "50%", background: PRIMARY_LIGHT, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <Icon style={{ width: "20px", height: "20px", color: PRIMARY }} />
+            <div key={stat.label} className="  p-3 sm:p-5 flex flex-col gap-2 shadow-sm items-center sm:items-start text-center sm:text-left">
+              <div className="w-8 h-8 sm:w-11 sm:h-11 rounded-full bg-blue-50 flex items-center justify-center">
+                <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
               </div>
-              <p style={{ fontSize: "1.5rem", fontWeight: 800, color: "#111" }}>{stat.value}</p>
-              <p style={{ fontSize: "0.8rem", color: "#6b7280" }}>{stat.label}</p>
+              <p className="text-lg sm:text-2xl font-extrabold text-gray-900 mt-1 sm:mt-0">{stat.value}</p>
+              <p className="text-[10px] sm:text-xs text-gray-500 leading-tight">{stat.label}</p>
             </div>
           );
         })}
       </div>
       <h3 style={{ fontWeight: 700, fontSize: "1rem", color: "#111", marginBottom: "1rem" }}>Recent Orders</h3>
-      <div style={{ border: "1px solid #e5e7eb", borderRadius: "12px", overflowX: "auto" }}>
+      <div className="border overflow-hidden w-full">
         {mockOrders.map((order, idx) => (
-          <div key={order.id} style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr auto", gap: "12px", alignItems: "center", padding: "0.9rem 1.25rem", borderBottom: idx < mockOrders.length - 1 ? "1px solid #f3f4f6" : "none", minWidth: "600px" }}>
-            <span style={{ fontWeight: 700, fontSize: "0.85rem", color: "#111" }}>{order.id}</span>
-            <span style={{ fontSize: "0.8rem", color: "#6b7280" }}>{order.date}</span>
-            <span style={{ fontSize: "0.75rem", fontWeight: 600, padding: "3px 10px", borderRadius: "999px", background: order.status === "Delivered" ? "#f0fdf4" : "#fef9c3", color: order.status === "Delivered" ? PRIMARY : "#a16207", width: "fit-content" }}>{order.status}</span>
-            <span style={{ fontWeight: 700, fontSize: "0.85rem" }}>{order.total}</span>
-            <button style={{ padding: "5px 12px", border: `1px solid ${PRIMARY}`, borderRadius: "8px", color: PRIMARY, fontWeight: 600, fontSize: "0.75rem", background: "transparent", cursor: "pointer" }}>View</button>
+          <div key={order.id} className={`grid grid-cols-[1.5fr_1fr_1.2fr_1fr_auto] sm:grid-cols-[2fr_1fr_1fr_1fr_auto] gap-1 sm:gap-4 items-center p-2 sm:p-4 ${idx < mockOrders.length - 1 ? "border-b border-gray-100" : ""}`}>
+            <span className="font-bold text-[10px] sm:text-[0.85rem] text-gray-900 truncate pr-1">{order.id}</span>
+            <span className="text-[9px] sm:text-[0.8rem] text-gray-500 truncate">{order.date}</span>
+            <span className={`text-[9px] sm:text-[0.75rem] font-semibold px-1 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-center truncate ${order.status === "Delivered" ? "bg-green-50 text-green-600" : "bg-yellow-50 text-yellow-700"}`}>
+              {order.status}
+            </span>
+            <span className="font-bold text-[10px] sm:text-[0.85rem] text-right sm:text-left pr-1">{order.total}</span>
+            <button className="px-2 py-1 sm:px-3 sm:py-1 border border-primary text-primary font-semibold text-[9px] sm:text-[0.75rem] rounded-md hover:bg-primary/5 whitespace-nowrap">
+              View
+            </button>
           </div>
         ))}
       </div>
@@ -116,19 +119,23 @@ function OrdersPanel() {
   return (
     <div>
       <h2 style={{ fontSize: "1.25rem", fontWeight: 800, color: "#111827", marginBottom: "1.25rem" }}>Order History</h2>
-      <div style={{ border: "1px solid #e5e7eb", borderRadius: "12px", overflowX: "auto" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr auto", gap: "12px", padding: "0.75rem 1.25rem", background: "#f9fafb", borderBottom: "1px solid #e5e7eb", minWidth: "600px" }}>
+      <div className="border border-gray-200 rounded-xl overflow-hidden w-full">
+        <div className="grid grid-cols-[1.5fr_1fr_1.2fr_1fr_auto] sm:grid-cols-[2fr_1fr_1fr_1fr_auto] gap-1 sm:gap-4 p-2 sm:px-5 sm:py-3 bg-gray-50 border-b border-gray-200 w-full">
           {["Order ID", "Date", "Status", "Total", ""].map((h) => (
-            <span key={h} style={{ fontSize: "0.7rem", fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.05em" }}>{h}</span>
+            <span key={h} className="text-[8px] sm:text-[0.7rem] font-bold text-gray-400 uppercase tracking-wider truncate">{h}</span>
           ))}
         </div>
         {mockOrders.map((order, idx) => (
-          <div key={order.id} style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr auto", gap: "12px", alignItems: "center", padding: "0.9rem 1.25rem", borderBottom: idx < mockOrders.length - 1 ? "1px solid #f3f4f6" : "none", minWidth: "600px" }}>
-            <span style={{ fontWeight: 700, fontSize: "0.85rem", color: "#111" }}>{order.id}</span>
-            <span style={{ fontSize: "0.8rem", color: "#6b7280" }}>{order.date}</span>
-            <span style={{ fontSize: "0.75rem", fontWeight: 600, padding: "3px 10px", borderRadius: "999px", background: order.status === "Delivered" ? "#f0fdf4" : "#fef9c3", color: order.status === "Delivered" ? PRIMARY : "#a16207" }}>{order.status}</span>
-            <span style={{ fontWeight: 700, fontSize: "0.85rem" }}>{order.total}</span>
-            <button style={{ padding: "5px 12px", border: `1px solid ${PRIMARY}`, borderRadius: "8px", color: PRIMARY, fontWeight: 600, fontSize: "0.75rem", background: "transparent", cursor: "pointer" }}>View Details</button>
+          <div key={order.id} className={`grid grid-cols-[1.5fr_1fr_1.2fr_1fr_auto] sm:grid-cols-[2fr_1fr_1fr_1fr_auto] gap-1 sm:gap-4 items-center p-2 sm:px-5 sm:py-4 ${idx < mockOrders.length - 1 ? "border-b border-gray-100" : ""}`}>
+            <span className="font-bold text-[10px] sm:text-[0.85rem] text-gray-900 truncate pr-1">{order.id}</span>
+            <span className="text-[9px] sm:text-[0.8rem] text-gray-500 truncate">{order.date}</span>
+            <span className={`text-[9px] sm:text-[0.75rem] font-semibold px-1 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-center truncate ${order.status === "Delivered" ? "bg-green-50 text-green-600" : "bg-yellow-50 text-yellow-700"}`}>
+              {order.status}
+            </span>
+            <span className="font-bold text-[10px] sm:text-[0.85rem] text-right sm:text-left pr-1">{order.total}</span>
+            <button className="px-2 py-1 sm:px-3 sm:py-1 border border-primary text-primary font-semibold text-[9px] sm:text-[0.75rem] rounded-md hover:bg-primary/5 whitespace-nowrap">
+              View
+            </button>
           </div>
         ))}
       </div>
@@ -140,7 +147,7 @@ function DetailsPanel() {
   return (
     <div>
       <h2 style={{ fontSize: "1.25rem", fontWeight: 800, color: "#111827", marginBottom: "1.5rem" }}>Account Details</h2>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {[
           { label: "First Name", value: "Jenny" },
           { label: "Last Name", value: "Wilson" },
@@ -202,37 +209,7 @@ function AddressPanel() {
   );
 }
 
-function PointsPanel() {
-  return (
-    <div>
-      <h2 style={{ fontSize: "1.25rem", fontWeight: 800, color: "#111827", marginBottom: "1.5rem" }}>Earning Points</h2>
-      <div style={{ background: `linear-gradient(135deg, ${PRIMARY}, #15803d)`, borderRadius: "16px", padding: "2rem", color: "#fff", marginBottom: "1.5rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <div>
-          <p style={{ fontSize: "0.8rem", opacity: 0.8, marginBottom: "4px" }}>Total Points Balance</p>
-          <p style={{ fontSize: "2.5rem", fontWeight: 800, lineHeight: 1 }}>840</p>
-          <p style={{ fontSize: "0.75rem", opacity: 0.75, marginTop: "6px" }}>≈ $8.40 value</p>
-        </div>
-        <Gift style={{ width: "60px", height: "60px", opacity: 0.3 }} />
-      </div>
-      <div style={{ border: "1px solid #e5e7eb", borderRadius: "12px", overflow: "hidden" }}>
-        {[
-          { label: "Order #WOXLY-10244", date: "12 Jul 2023", points: "+150", positive: true },
-          { label: "Order #WOXLY-10198", date: "03 Jun 2023", points: "+90", positive: true },
-          { label: "Points Redeemed", date: "01 May 2023", points: "-200", positive: false },
-          { label: "Order #WOXLY-10101", date: "15 Apr 2023", points: "+220", positive: true },
-        ].map((txn, idx) => (
-          <div key={idx} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0.9rem 1.25rem", borderBottom: idx < 3 ? "1px solid #f3f4f6" : "none" }}>
-            <div>
-              <p style={{ fontWeight: 600, fontSize: "0.85rem", color: "#111" }}>{txn.label}</p>
-              <p style={{ fontSize: "0.75rem", color: "#9ca3af" }}>{txn.date}</p>
-            </div>
-            <span style={{ fontWeight: 800, fontSize: "1rem", color: txn.positive ? PRIMARY : "#ef4444" }}>{txn.points}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
+
 
 function ReviewsPanel() {
   const [activeTab, setActiveTab] = useState<"to-review" | "history">("history");
@@ -258,16 +235,18 @@ function ReviewsPanel() {
       <div style={{ border: "1px solid #e5e7eb", borderRadius: "12px", overflow: "hidden" }}>
         {mockReviews.map((review, idx) => (
           <div key={review.id} style={{ padding: "1.25rem", borderBottom: idx < mockReviews.length - 1 ? "1px solid #f3f4f6" : "none" }}>
-            <div style={{ display: "flex", alignItems: "flex-start", gap: "12px", marginBottom: "0.85rem" }}>
-              <div style={{ position: "relative", width: "44px", height: "44px", borderRadius: "8px", overflow: "hidden", background: "#f5f5f5", flexShrink: 0, border: "1px solid #e5e7eb" }}>
-                <Image src={review.image} alt={review.product} fill style={{ objectFit: "contain", padding: "4px" }} />
-              </div>
-              <div style={{ flex: 1 }}>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4">
+              <div className="flex items-center gap-3 flex-1">
+                <div style={{ position: "relative", width: "44px", height: "44px", borderRadius: "8px", overflow: "hidden", background: "#f5f5f5", flexShrink: 0, border: "1px solid #e5e7eb" }}>
+                  <Image src={review.image} alt={review.product} fill style={{ objectFit: "contain", padding: "4px" }} />
+                </div>
                 <p style={{ fontWeight: 600, fontSize: "0.875rem", color: "#111827", lineHeight: 1.4 }}>{review.product}</p>
               </div>
-              <div style={{ textAlign: "right", flexShrink: 0 }}>
-                <p style={{ fontSize: "0.65rem", color: "#9ca3af", marginBottom: "1px" }}>Purchased on</p>
-                <p style={{ fontSize: "0.75rem", fontWeight: 600, color: "#374151", marginBottom: "8px" }}>{review.purchasedOn}</p>
+              <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto shrink-0 border-t sm:border-0 pt-3 sm:pt-0 border-gray-100">
+                <div className="text-left sm:text-right">
+                  <p style={{ fontSize: "0.65rem", color: "#9ca3af", marginBottom: "1px" }}>Purchased on</p>
+                  <p style={{ fontSize: "0.75rem", fontWeight: 600, color: "#374151", marginBottom: "0px" }} className="sm:mb-2">{review.purchasedOn}</p>
+                </div>
                 <button style={{ background: PRIMARY, color: "#fff", border: "none", borderRadius: "8px", padding: "5px 14px", fontWeight: 600, fontSize: "0.75rem", cursor: "pointer" }}>
                   Edit Review
                 </button>
@@ -298,7 +277,7 @@ export default function AccountPage() {
     orders: <OrdersPanel />,
     details: <DetailsPanel />,
     address: <AddressPanel />,
-    points: <PointsPanel />,
+
     reviews: <ReviewsPanel />,
   };
 

@@ -201,7 +201,7 @@ export default function Home() {
                 <p className="text-white/90 text-xs sm:text-lg mb-3 sm:mb-6 drop-shadow-sm">
                   Step up your style game with our latest premium apparel collection.
                 </p>
-                <Button asChild style={{ background: "#38bdf8", color: "#fff", borderRadius: "8px", fontWeight: 700, padding: "7px 14px" }} className="hover:opacity-90 transition-opacity border-0 text-xs sm:text-base h-8 sm:h-auto">
+                <Button asChild style={{ background: "#2563eb", color: "#fff", borderRadius: "8px", fontWeight: 700, padding: "7px 14px" }} className="hover:opacity-90 transition-opacity border-0 text-xs sm:text-base h-8 sm:h-auto">
                   <Link href="/shop">
                     Explore Trends <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform" />
                   </Link>
@@ -231,7 +231,7 @@ export default function Home() {
                 <p className="text-white/90 text-xs sm:text-lg mb-3 sm:mb-6 drop-shadow-sm">
                   Discover the finest selection of beverages for your perfect evening.
                 </p>
-                <Button asChild style={{ background: "#38bdf8", color: "#fff", borderRadius: "8px", fontWeight: 700, padding: "7px 14px" }} className="hover:opacity-90 transition-opacity border-0 text-xs sm:text-base h-8 sm:h-auto">
+                <Button asChild style={{ background: "#2563eb", color: "#fff", borderRadius: "8px", fontWeight: 700, padding: "7px 14px" }} className="hover:opacity-90 transition-opacity border-0 text-xs sm:text-base h-8 sm:h-auto">
                   <Link href="/shop">
                     Explore Spirits <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform" />
                   </Link>
@@ -301,7 +301,7 @@ export default function Home() {
                     <h3 className="text-base sm:text-[1.75rem] font-bold text-zinc-900 leading-tight mb-3 sm:mb-6">
                       Discover our<br />accessories collection
                     </h3>
-                    <Button asChild style={{ background: "#38bdf8", color: "#fff", borderRadius: "8px", fontWeight: 700, padding: "0 16px" }} className="hover:opacity-90 transition-opacity border-0 h-8 sm:h-10 text-xs sm:text-sm">
+                    <Button asChild style={{ background: "#2563eb", color: "#fff", borderRadius: "8px", fontWeight: 700, padding: "0 16px" }} className="hover:opacity-90 transition-opacity border-0 h-8 sm:h-10 text-xs sm:text-sm">
                       <Link href="/shop?category=electronics">Shop Now</Link>
                     </Button>
                   </div>
@@ -314,7 +314,7 @@ export default function Home() {
                     <h3 className="text-base sm:text-[1.75rem] font-bold text-zinc-900 leading-tight mb-3 sm:mb-6">
                       Explore our shoes<br />collection
                     </h3>
-                    <Button asChild style={{ background: "#38bdf8", color: "#fff", borderRadius: "8px", fontWeight: 700, padding: "0 16px" }} className="hover:opacity-90 transition-opacity border-0 h-8 sm:h-10 text-xs sm:text-sm">
+                    <Button asChild style={{ background: "#2563eb", color: "#fff", borderRadius: "8px", fontWeight: 700, padding: "0 16px" }} className="hover:opacity-90 transition-opacity border-0 h-8 sm:h-10 text-xs sm:text-sm">
                       <Link href="/shop?category=fashion ">Shop Now</Link>
                     </Button>
                   </div>

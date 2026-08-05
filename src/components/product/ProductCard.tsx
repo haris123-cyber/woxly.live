@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, ShoppingCart, Star } from "lucide-react";
+import { Heart, ShoppingCart, Star, Percent } from "lucide-react";
 import { type Product } from "@/store/useCartStore";
 import { useCartStore } from "@/store/useCartStore";
 import { useWatchlistStore } from "@/store/useWatchlistStore";
@@ -26,8 +26,16 @@ export function ProductCard({ product }: ProductCardProps) {
     router.push("/cart");
   };
 
-  const originalPrice = product.originalPrice || +(product.price * 1.15).toFixed(2);
+  const originalPrice = product.originalPrice;
+  const discountPercentage = originalPrice ? Math.round(((originalPrice - product.price) / originalPrice) * 100) : 0;
   const brand = product.brand || product.name.split(" ")[0];
+
+  // Use the actual properties from the product rather than randomly generating them
+  const isSale = product.isSale || false;
+  const isHotSale = product.isHotSale || false;
+  const isNewArrived = product.isNewArrived || false;
+  const isLimited = product.isLimited || false;
+  const hasOffer = product.hasOffer || false;
 
   return (
     <Link
@@ -54,6 +62,33 @@ export function ProductCard({ product }: ProductCardProps) {
           className="group-hover:scale-105"
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
         />
+
+        {/* Top Right Tags */}
+        <div className="absolute top-10 right-0 z-10 flex flex-col gap-1 sm:gap-1.5 items-end pointer-events-none">
+          {isSale && (
+            <span className="bg-[#1e1b4b] text-white text-[7px] sm:text-[9px] font-bold px-1.5 py-1 sm:px-2 sm:py-1.5 rounded-l-sm uppercase tracking-wider shadow-sm">SALE</span>
+          )}
+          {isNewArrived && (
+            <span className="bg-[#1e1b4b] text-white text-[7px] sm:text-[9px] font-bold px-1.5 py-1 sm:px-2 sm:py-1.5 rounded-l-sm uppercase tracking-wider shadow-sm">NEW ARRIVED</span>
+          )}
+          {isLimited && (
+            <span className="bg-[#1e1b4b] text-white text-[7px] sm:text-[9px] font-bold px-1.5 py-1 sm:px-2 sm:py-1.5 rounded-l-sm uppercase tracking-wider shadow-sm">LIMITED</span>
+          )}
+        </div>
+
+        {/* Left Edge Badges (Hot Sale & Offer) */}
+        <div className="absolute top-2 sm:top-10 left-0 z-10 flex flex-col gap-1 sm:gap-2 items-start pointer-events-none">
+          {isHotSale && (
+            <div className="bg-primary text-white text-[8px] sm:text-[10px] font-bold px-1.5 py-1 sm:px-2.5 sm:py-2 shadow-md uppercase tracking-wider rounded-r-md whitespace-nowrap">
+              HOT SALE
+            </div>
+          )}
+          {hasOffer && (
+            <div className="bg-destructive text-white text-[8px] sm:text-[10px] font-bold px-1.5 py-1 sm:px-2.5 sm:py-2 shadow-md uppercase tracking-wider rounded-r-md flex items-center gap-0.5 sm:gap-1 whitespace-nowrap">
+              <Percent className="w-2 h-2 sm:w-3 sm:h-3" /> {discountPercentage}% OFFER
+            </div>
+          )}
+        </div>
 
         <button
           onClick={(e) => {
@@ -87,21 +122,20 @@ export function ProductCard({ product }: ProductCardProps) {
             position: "absolute",
             inset: 0,
             background: "rgba(214, 214, 214, 0.27)",
-            display: "flex",
             alignItems: "flex-end",
             justifyContent: "center",
             padding: "16px",
             transition: "opacity 0.3s ease",
             borderRadius: "16px",
           }}
-          className="opacity-0 group-hover:opacity-100"
+          className="hidden md:flex opacity-0 group-hover:opacity-100"
         >
           <button
             onClick={handleAddToCart}
             disabled={!product.inStock}
             style={{
               width: "100%",
-              background: product.inStock ? "#3bc4f5" : "#9ca3af",
+              background: product.inStock ? "#2563eb" : "#9ca3af",
               color: "#fff",
               border: "none",
               borderRadius: "9999px",
@@ -132,7 +166,7 @@ export function ProductCard({ product }: ProductCardProps) {
         >
           {product.name}
         </h3>
-        
+
         <div className="flex items-center gap-1.5 mb-2">
           <div className="flex text-[#f97316]">
             {Array.from({ length: 5 }).map((_, i) => (
@@ -142,13 +176,31 @@ export function ProductCard({ product }: ProductCardProps) {
           <span className="text-[11px] text-gray-500 font-medium">({product.reviews || 0})</span>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          <span style={{ fontSize: "0.95rem", fontWeight: 700, color: "#111827" }}>
-            ${product.price.toFixed(2)}
-          </span>
-          <span style={{ fontSize: "0.8rem", color: "#9ca3af", textDecoration: "line-through" }}>
-            ${originalPrice.toFixed(2)}
-          </span>
+        <div className="flex items-center justify-between">
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+            <span style={{ fontSize: "0.95rem", fontWeight: 700, color: "#111827" }}>
+              ${product.price.toFixed(2)}
+            </span>
+            {originalPrice && (
+              <span style={{ fontSize: "0.8rem", color: "#9ca3af", textDecoration: "line-through" }}>
+                ${originalPrice.toFixed(2)}
+              </span>
+            )}
+            {/* Green Discount Tag */}
+            {discountPercentage > 0 && (
+              <span className="bg-[#16a34a] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-sm ml-0.5 whitespace-nowrap">
+                {discountPercentage}% OFF
+              </span>
+            )}
+          </div>
+          <button
+            onClick={handleAddToCart}
+            disabled={!product.inStock}
+            className={`md:hidden flex items-center justify-center w-8 h-8 rounded-full text-white shadow-sm transition-transform active:scale-95 ${product.inStock ? "bg-primary" : "bg-gray-400"}`}
+            aria-label={product.inStock ? "Add to cart" : "Out of stock"}
+          >
+            <ShoppingCart className="w-4 h-4" />
+          </button>
         </div>
       </div>
     </Link>

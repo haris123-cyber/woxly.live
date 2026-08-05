@@ -3,11 +3,11 @@ import { Globe, Mail, MessageCircle, Share2 } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="bg-white pt-16 pb-8 pt-6 md:pt-8 border-t border-zinc-200 flex flex-col md:flex-row items-center justify-between gap-4">
+    <footer className="bg-white pt-10 md:pt-16 pb-28 md:pb-12 border-t border-zinc-200">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-8 md:gap-12 mb-8 md:mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-8 md:gap-12 mb-2 md:mb-2">
           {/* Brand */}
-          <div className="col-span-1 md:col-span-2">
+          <div className="col-span-1 md:col-span-2 ">
             <Link href="/" className="font-heading font-bold text-2xl tracking-tight uppercase mb-4 inline-block text-black">
               WOXLY
             </Link>
@@ -35,7 +35,7 @@ export function Footer() {
           </div>
 
           {/* Links — 3 columns inline on mobile */}
-          <div className="grid grid-cols-3 col-span-1 md:col-span-2 lg:col-span-3 gap-4 md:gap-0 md:contents">
+          <div className="grid grid-cols-3 col-span-1 md:col-span-2 lg:col-span-3 gap-4 md:gap-8 lg:gap-12">
             <div>
               <h3 className="font-bold mb-3 md:mb-4 text-black text-sm md:text-base">Shop</h3>
               <ul className="space-y-2 md:space-y-3 text-xs md:text-sm text-foreground">
@@ -50,7 +50,7 @@ export function Footer() {
             <div>
               <h3 className="font-bold mb-3 md:mb-4 text-black text-sm md:text-base">Company</h3>
               <ul className="space-y-2 md:space-y-3 text-xs md:text-sm text-foreground">
-                <li><Link href="/about" className="hover:text-foreground/80 transition-colors">About Us</Link></li>
+                <li><Link href="/about" className="hover:text-foreground/80 transition-colors ">About Us</Link></li>
                 <li><Link href="/contact" className="hover:text-foreground/80 transition-colors">Contact Us</Link></li>
                 <li><Link href="/blog" className="hover:text-foreground/80 transition-colors">Blog</Link></li>
                 <li><Link href="/careers" className="hover:text-foreground/80 transition-colors">Careers</Link></li>

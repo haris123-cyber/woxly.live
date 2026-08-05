@@ -4,13 +4,25 @@ import Link from "next/link";
 import { useWatchlistStore } from "@/store/useWatchlistStore";
 import { ProductCard } from "@/components/product/ProductCard";
 import { Button } from "@/components/ui/button";
-import { Heart } from "lucide-react";
+import { Heart, ChevronLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function WatchlistPage() {
+  const router = useRouter();
   const { items, clearWatchlist } = useWatchlistStore();
 
   return (
-    <div className="container mx-auto px-4 py-8 md:py-12 min-h-[70vh]">
+    <div className="bg-background min-h-screen pt-4 lg:pt-0">
+      <div className="lg:hidden px-4 mb-2">
+        <button
+          onClick={() => router.back()}
+          className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm border border-border"
+          aria-label="Back"
+        >
+          <ChevronLeft className="w-5 h-5 pr-0.5" />
+        </button>
+      </div>
+      <div className="container mx-auto px-4 py-4 md:py-12 min-h-[70vh]">
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold font-heading">My Watchlist</h1>
         {items.length > 0 && (
@@ -40,6 +52,7 @@ export default function WatchlistPage() {
           ))}
         </div>
       )}
+    </div>
     </div>
   );
 }

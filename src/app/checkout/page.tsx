@@ -162,18 +162,16 @@ export default function CheckoutPage() {
               className="relative z-10 flex flex-col items-center gap-1.5 flex-1"
             >
               <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-colors ${
-                  active || done
-                    ? "bg-primary border-primary text-primary-foreground"
-                    : "bg-background border-border text-muted-foreground"
-                }`}
+                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-colors ${active || done
+                  ? "bg-primary border-primary text-primary-foreground"
+                  : "bg-background border-border text-muted-foreground"
+                  }`}
               >
                 {done ? <Check className="w-4 h-4" /> : s.n}
               </div>
               <span
-                className={`text-[11px] font-medium ${
-                  active ? "text-foreground font-bold" : "text-muted-foreground"
-                }`}
+                className={`text-[11px] font-medium ${active ? "text-foreground font-bold" : "text-muted-foreground"
+                  }`}
               >
                 {s.label}
               </span>
@@ -187,7 +185,7 @@ export default function CheckoutPage() {
   return (
     <div className="bg-background min-h-screen overflow-x-hidden">
       {/* ── MOBILE CHECKOUT ── */}
-      <div className="lg:hidden pb-28">
+      <div className="lg:hidden pb-8">
         {/* Header */}
         <div className="flex items-center px-4 py-3 border-b border-border sticky top-0 bg-background z-30">
           <button onClick={goBack} className="p-2 -ml-2 rounded-full hover:bg-muted" aria-label="Back">
@@ -259,15 +257,13 @@ export default function CheckoutPage() {
                         key={addr.id}
                         type="button"
                         onClick={() => setSelectedAddress(addr.id)}
-                        className={`w-full text-left rounded-xl border-2 p-4 transition-colors ${
-                          selected ? "border-primary bg-primary/5" : "border-border bg-background"
-                        }`}
+                        className={`w-full text-left rounded-xl border-2 p-4 transition-colors ${selected ? "border-primary bg-primary/5" : "border-border bg-background"
+                          }`}
                       >
                         <div className="flex gap-3">
                           <div
-                            className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                              selected ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
-                            }`}
+                            className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${selected ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
+                              }`}
                           >
                             {addr.icon === "home" ? (
                               <Home className="w-5 h-5" />
@@ -314,14 +310,12 @@ export default function CheckoutPage() {
                         key={method.id}
                         type="button"
                         onClick={() => setDeliveryMethod(method.id)}
-                        className={`w-full flex items-center gap-3 px-4 py-3.5 text-left transition-colors ${
-                          selected ? "bg-primary/5" : "bg-background"
-                        }`}
+                        className={`w-full flex items-center gap-3 px-4 py-3.5 text-left transition-colors ${selected ? "bg-primary/5" : "bg-background"
+                          }`}
                       >
                         <span
-                          className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
-                            selected ? "border-primary" : "border-border"
-                          }`}
+                          className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${selected ? "border-primary" : "border-border"
+                            }`}
                         >
                           {selected && <span className="w-2.5 h-2.5 rounded-full bg-primary" />}
                         </span>
@@ -353,14 +347,12 @@ export default function CheckoutPage() {
                         key={opt.id}
                         type="button"
                         onClick={() => setPaymentMethod(opt.id)}
-                        className={`w-full flex items-center gap-3 px-4 py-3.5 text-left ${
-                          selected ? "bg-primary/5" : ""
-                        }`}
+                        className={`w-full flex items-center gap-3 px-4 py-3.5 text-left ${selected ? "bg-primary/5" : ""
+                          }`}
                       >
                         <div
-                          className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                            selected ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
-                          }`}
+                          className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${selected ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
+                            }`}
                         >
                           {opt.icon === "card" ? (
                             <CreditCard className="w-5 h-5" />
@@ -373,9 +365,8 @@ export default function CheckoutPage() {
                           <p className="text-xs text-muted-foreground">{opt.desc}</p>
                         </div>
                         <span
-                          className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
-                            selected ? "border-primary" : "border-border"
-                          }`}
+                          className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${selected ? "border-primary" : "border-border"
+                            }`}
                         >
                           {selected && <span className="w-2.5 h-2.5 rounded-full bg-primary" />}
                         </span>
@@ -401,9 +392,8 @@ export default function CheckoutPage() {
                           key={card.id}
                           type="button"
                           onClick={() => setSelectedCard(card.id)}
-                          className={`w-full flex items-center gap-3 rounded-xl border-2 px-4 py-3.5 text-left ${
-                            selected ? "border-primary bg-primary/5" : "border-border"
-                          }`}
+                          className={`w-full flex items-center gap-3 rounded-xl border-2 px-4 py-3.5 text-left ${selected ? "border-primary bg-primary/5" : "border-border"
+                            }`}
                         >
                           <div className="w-10 h-7 rounded bg-muted flex items-center justify-center text-[10px] font-bold text-muted-foreground shrink-0">
                             {card.brand === "Visa" ? "VISA" : "MC"}
@@ -507,8 +497,8 @@ export default function CheckoutPage() {
           )}
         </div>
 
-        {/* Sticky CTA */}
-        <div className="fixed bottom-0 left-0 right-0 z-40 bg-background border-t border-border px-5 py-3">
+        {/* CTA */}
+        <div className="mt-6 px-5 pb-8">
           <Button
             onClick={goNext}
             disabled={isSubmitting}
@@ -597,15 +587,13 @@ export default function CheckoutPage() {
                           key={addr.id}
                           type="button"
                           onClick={() => setSelectedAddress(addr.id)}
-                          className={`w-full text-left rounded-xl border-2 p-5 ${
-                            selected ? "border-primary bg-primary/5" : "border-border"
-                          }`}
+                          className={`w-full text-left rounded-xl border-2 p-5 ${selected ? "border-primary bg-primary/5" : "border-border"
+                            }`}
                         >
                           <div className="flex gap-4">
                             <div
-                              className={`w-11 h-11 rounded-xl flex items-center justify-center ${
-                                selected ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
-                              }`}
+                              className={`w-11 h-11 rounded-xl flex items-center justify-center ${selected ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
+                                }`}
                             >
                               {addr.icon === "home" ? <Home className="w-5 h-5" /> : <Building2 className="w-5 h-5" />}
                             </div>

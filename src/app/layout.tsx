@@ -42,7 +42,7 @@ export default function RootLayout({
         >
           <Header />
           <MobileMenu />
-          <main className="flex-1 pb-16 sm:pb-0">
+          <main className="flex-1">
             {children}
           </main>
           <Footer />

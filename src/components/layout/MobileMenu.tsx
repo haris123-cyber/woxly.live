@@ -3,15 +3,45 @@
 import Link from "next/link";
 import { useUIStore } from "@/store/useUIStore";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
-import { Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import {
+  Home,
+  ShoppingBag,
+  FileText,
+  Info,
+  User,
+  Heart,
+  Package,
+  Shield,
+  Truck,
+  RefreshCcw,
+  HelpCircle,
+  MessageSquare,
+  Mail,
+  X,
+} from "lucide-react";
 
 const navLinks = [
-  { name: "Home", href: "/" },
-  { name: "Shop", href: "/shop" },
-  { name: "Categories", href: "/shop" },
-  { name: "Blog", href: "/blog" },
-  { name: "About", href: "/about" },
+
+  { name: "Home", href: "/", icon: Home },
+  { name: "Shop", href: "/shop", icon: ShoppingBag },
+  { name: "WISHLIST", href: "/watchlist", icon: Heart },
+  { name: "ORDERS", href: "/account", icon: Package },
+  { name: "SIGN IN", href: "/login", icon: User },
+
+];
+
+
+
+const helpLinks = [
+  { name: "PRIVACY POLICY", href: "/privacy", icon: Shield },
+  { name: "TERMS OF SERVICE", href: "/terms", icon: FileText },
+  { name: "SHIPPING POLICY", href: "/shipping", icon: Truck },
+  { name: "RETURN POLICY", href: "/returns", icon: RefreshCcw },
+  { name: "Blog", href: "/blog", icon: FileText },
+  { name: "About", href: "/about", icon: Info },
+  { name: "FAQS", href: "/faq", icon: HelpCircle },
+  { name: "FEEDBACK", href: "/contact", icon: MessageSquare },
+  { name: "CONTACT", href: "/contact", icon: Mail },
 ];
 
 export function MobileMenu() {
@@ -19,46 +49,66 @@ export function MobileMenu() {
 
   return (
     <Sheet open={isMobileMenuOpen} onOpenChange={(open) => !open && closeMobileMenu()}>
-      <SheetContent side="left" className="w-[300px] sm:w-[400px] p-0 flex flex-col">
-        <div className="p-6 border-b">
-          <Link href="/" className="font-heading font-bold text-2xl tracking-tight uppercase" onClick={closeMobileMenu}>
-            WOXLY
-          </Link>
-        </div>
-        
-        <div className="p-6">
-          <div className="relative mb-8">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              type="text"
-              placeholder="Search products..."
-              className="w-full pl-10"
-            />
+      <SheetContent side="left" className="w-[85%] max-w-[280px] p-0 flex flex-col bg-[#f8f9fa] [&>button]:hidden border-0">
+        {/* Blue Curved Header */}
+        <div className="bg-[#2563eb] text-white rounded-br-[2.5rem] p-6 pb-8 shadow-sm relative z-10 shrink-0">
+          <div className="flex justify-between items-center mb-6">
+            <button onClick={closeMobileMenu} className="p-2 -ml-2 rounded-full hover:bg-white/10 transition-colors">
+              <X className="w-7 h-7" strokeWidth={2.5} />
+            </button>
+
           </div>
-          
-          <nav className="flex flex-col gap-6">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                onClick={closeMobileMenu}
-                className="text-lg font-medium hover:text-primary transition-colors"
-              >
-                {link.name}
-              </Link>
-            ))}
+          <h2 className="text-[22px] font-bold mb-1 tracking-tight">Welcome to Woxly</h2>
+          <p className="text-blue-100/90 text-sm font-medium">Discover premium quality products!</p>
+        </div>
+
+        {/* Navigation Links */}
+        <div className="flex-1 overflow-y-auto pt-6 px-6 pb-6">
+          <nav className="flex flex-col gap-1">
+            {navLinks.map((link) => {
+              const Icon = link.icon;
+              return (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  onClick={closeMobileMenu}
+                  className="flex items-center gap-4 py-3.5 px-2 text-[15px] font-semibold text-gray-700 hover:text-[#2563eb] hover:bg-black/5 rounded-xl transition-all"
+                >
+                  <Icon className="w-[22px] h-[22px] text-gray-500" strokeWidth={2} />
+                  {link.name}
+                </Link>
+              );
+            })}
           </nav>
-        </div>
-        
-        <div className="mt-auto p-6 border-t bg-muted/30">
-          <div className="flex flex-col gap-4">
-            <Link href="/login" onClick={closeMobileMenu} className="font-medium hover:text-primary transition-colors">
-              Log In
-            </Link>
-            <Link href="/signup" onClick={closeMobileMenu} className="font-medium hover:text-primary transition-colors">
-              Sign Up
-            </Link>
+
+          <div className="my-5 h-px bg-gray-200/80 mx-2" />
+
+
+          <div>
+            <h3 className="text-[11px] font-bold text-gray-400 tracking-wider mb-2 px-2">HELP & POLICIES</h3>
+            <nav className="flex flex-col gap-1">
+              {helpLinks.map((link) => {
+                const Icon = link.icon;
+                return (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    onClick={closeMobileMenu}
+                    className="flex items-center gap-4 py-3.5 px-2 text-[15px] font-semibold text-gray-700 hover:text-[#2563eb] hover:bg-black/5 rounded-xl transition-all"
+                  >
+                    <Icon className="w-[22px] h-[22px] text-gray-500" strokeWidth={2} />
+                    {link.name}
+                  </Link>
+                );
+              })}
+            </nav>
           </div>
+        </div>
+
+        {/* Footer */}
+        <div className="mt-auto p-6 pb-8 text-center shrink-0">
+
+          <p className="text-[13px] font-medium text-gray-400">© 2026 Woxly Store</p>
         </div>
       </SheetContent>
     </Sheet>

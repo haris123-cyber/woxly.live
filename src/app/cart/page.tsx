@@ -4,10 +4,12 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCartStore } from "@/store/useCartStore";
-import { Minus, Plus, ShoppingBag, Trash2, ChevronDown } from "lucide-react";
+import { Minus, Plus, ShoppingBag, Trash2, ChevronDown, ChevronLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
 export default function CartPage() {
+  const router = useRouter();
   const { items, removeItem, updateQuantity, getCartTotal } = useCartStore();
   const [coupon, setCoupon] = useState("");
   const [couponApplied, setCouponApplied] = useState(false);
@@ -36,7 +38,16 @@ export default function CartPage() {
   }
 
   return (
-    <div className="bg-[#f9fafb] min-h-screen py-10">
+    <div className="bg-[#f9fafb] min-h-screen py-6 lg:py-10">
+      <div className="lg:hidden px-4 mb-2">
+        <button
+          onClick={() => router.back()}
+          className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm"
+          aria-label="Back"
+        >
+          <ChevronLeft className="w-5 h-5 pr-0.5" />
+        </button>
+      </div>
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-16">
 

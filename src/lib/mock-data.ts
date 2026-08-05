@@ -17,9 +17,10 @@ export const CATEGORIES = [
 export const PRODUCTS: Product[] = [
   // GROCERY
   {
-    id: '1', name: 'Quaker Oats 1kg', slug: 'quaker-oats-1kg', price: 2.99,
+    id: '1', name: 'Quaker Oats 1kg', slug: 'quaker-oats-1kg', price: 2.99, originalPrice: 3.49,
     image: '/images/product_placeholder.png',
-    category: 'Grocery', brand: 'Quaker', rating: 4.6, reviews: 89, description: 'Healthy and nutritious oats.', inStock: true
+    category: 'Grocery', brand: 'Quaker', rating: 4.6, reviews: 89, description: 'Healthy and nutritious oats.', inStock: true,
+    isSale: true, isHotSale: true, hasOffer: true
   },
   {
     id: '2', name: 'India Gate Rice 1kg', slug: 'india-gate-rice-1kg', price: 3.19,
@@ -32,9 +33,10 @@ export const PRODUCTS: Product[] = [
     category: 'Grocery', brand: 'Barilla', rating: 4.5, reviews: 150, description: 'Healthy whole wheat penne pasta.', inStock: true
   },
   {
-    id: '4', name: 'Extra Virgin Olive Oil 500ml', slug: 'olive-oil-500ml', price: 6.49,
+    id: '4', name: 'Extra Virgin Olive Oil 500ml', slug: 'olive-oil-500ml', price: 6.49, originalPrice: 7.99,
     image: '/images/product_placeholder.png',
-    category: 'Grocery', brand: 'Filippo Berio', rating: 4.8, reviews: 340, description: 'Premium cold pressed olive oil.', inStock: true
+    category: 'Grocery', brand: 'Filippo Berio', rating: 4.8, reviews: 340, description: 'Premium cold pressed olive oil.', inStock: true,
+    isNewArrived: true, isLimited: true, hasOffer: true
   },
 
   // FRUITS & VEG
@@ -54,9 +56,10 @@ export const PRODUCTS: Product[] = [
     category: 'Fruits & Veg', brand: 'Berry Farm', rating: 4.9, reviews: 320, description: 'Sweet and fresh strawberries.', inStock: true
   },
   {
-    id: '8', name: 'Fresh Avocados (Pack of 3)', slug: 'fresh-avocados', price: 3.99,
+    id: '8', name: 'Fresh Avocados (Pack of 3)', slug: 'fresh-avocados', price: 3.99, originalPrice: 5.00,
     image: '/images/product_placeholder.png',
-    category: 'Fruits & Veg', brand: 'Fresh Farm', rating: 4.7, reviews: 198, description: 'Ripe and ready to eat avocados.', inStock: true
+    category: 'Fruits & Veg', brand: 'Fresh Farm', rating: 4.7, reviews: 198, description: 'Ripe and ready to eat avocados.', inStock: true,
+    isSale: true, hasOffer: true
   },
 
   // DAIRY & EGGS

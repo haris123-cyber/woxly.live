@@ -47,11 +47,11 @@ export function HeroSlider() {
   }, [next]);
 
   return (
-    <section className="container mx-auto px-5 sm:px-6 pt-3 sm:pt-4 ">
+    <section className="container mx-auto px-0 sm:px-6 pt-0 sm:pt-4">
       {/* ── PROMO BANNER STRIP ── */}
       <Link
         href="/shop"
-        className="relative block w-full overflow-hidden rounded-lg sm:rounded-xl"
+        className="relative block w-full overflow-hidden rounded-none sm:rounded-xl"
       >
         <Image
           src="/images/promo_card.png"
@@ -64,8 +64,8 @@ export function HeroSlider() {
 
       {/* ── MAIN SLIDER ── */}
       <div
-        className="relative overflow-hidden bg-zinc-900 shadow-lg"
-        style={{ minHeight: "clamp(260px, 55vw, 460px)", borderRadius: "6px" }}
+        className="relative overflow-hidden bg-zinc-900 shadow-lg mt-0 sm:mt-0 rounded-none sm:rounded-[6px]"
+        style={{ minHeight: "clamp(260px, 55vw, 460px)" }}
       >
         {/* Image track — slides side by side, track moves via translateX */}
         <div
@@ -153,7 +153,7 @@ export function HeroSlider() {
                 {slide.subtitle}
               </p>
 
-              <Button asChild style={{ background: "#38bdf8", color: "#fff", borderRadius: "8px", fontWeight: 700, padding: "0 24px" }} className="hover:opacity-90 transition-opacity border-0">
+              <Button asChild style={{ background: "#2563eb", color: "#fff", borderRadius: "8px", fontWeight: 700, padding: "0 24px" }} className="hover:opacity-90 transition-opacity border-0">
                 <Link href={slide.link}>
                   Shop Now <ArrowRight className="ml-2 w-4 h-4" />
                 </Link>

@@ -15,6 +15,11 @@ export interface Product {
   description?: string;
   inStock: boolean;
   isNew?: boolean;
+  isSale?: boolean;
+  isHotSale?: boolean;
+  isNewArrived?: boolean;
+  isLimited?: boolean;
+  hasOffer?: boolean;
   colors?: string[];
   sizes?: string[];
 }
