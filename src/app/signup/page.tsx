@@ -4,27 +4,33 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { Eye } from "lucide-react";
 import { useState } from "react";
 
-const loginSchema = z.object({
+const signupSchema = z.object({
+  name: z.string().min(2, { message: "Name is required" }),
   email: z.string().email({ message: "Invalid email address" }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
+  password: z.string().min(8, { message: "Password must be at least 8 characters" }),
+  confirmPassword: z.string()
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
 });
 
-export default function LoginPage() {
+export default function SignupPage() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-  const form = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: { email: "", password: "" },
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  
+  const form = useForm<z.infer<typeof signupSchema>>({
+    resolver: zodResolver(signupSchema),
+    defaultValues: { name: "", email: "", password: "", confirmPassword: "" },
   });
 
-  const onSubmit = (data: z.infer<typeof loginSchema>) => {
+  const onSubmit = (data: z.infer<typeof signupSchema>) => {
     router.push("/account");
   };
 
@@ -34,10 +40,10 @@ export default function LoginPage() {
       {/* Headings */}
       <div className="text-center mb-8">
         <h1 className="text-3xl sm:text-[2rem] leading-tight font-bold text-gray-900 mb-3 tracking-tight">
-          Sign in to your<br />Woxly account
+          Create your<br />Woxly account
         </h1>
         <p className="text-gray-600 text-[15px]">
-          New here? <Link href="/signup" className="text-[#8b5cf6] font-medium hover:underline transition-all">Create an account</Link>
+          Already have an account? <Link href="/login" className="text-[#8b5cf6] font-medium hover:underline transition-all">Sign in</Link>
         </p>
       </div>
 
@@ -76,7 +82,7 @@ export default function LoginPage() {
         <button 
           type="button" 
           onClick={() => router.push("/shop")}
-          className="w-full h-[52px] bg-white border border-gray-200 hover:bg-gray-50 hover:border-gray-300 text-gray-800 rounded-xl text-[15px] font-semibold transition-all mb-6"
+          className="w-full h-[52px] bg-[#f5f3ff] hover:bg-[#ede9fe] text-[#7c3aed] rounded-xl text-[15px] font-semibold transition-all mb-6"
         >
           Continue as a guest
         </button>
@@ -87,12 +93,26 @@ export default function LoginPage() {
             <div className="w-full border-t border-gray-200"></div>
           </div>
           <div className="relative flex justify-center text-[11px] uppercase">
-            <span className="bg-white px-4 text-gray-400 font-medium tracking-widest">OR SIGN IN WITH EMAIL</span>
+            <span className="bg-white px-4 text-gray-400 font-medium tracking-widest">OR CONTINUE WITH EMAIL</span>
           </div>
         </div>
 
         {/* Form */}
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+          <div className="space-y-2">
+            <Label htmlFor="name" className="text-[14px] font-bold text-gray-900">Full name</Label>
+            <Input 
+              id="name" 
+              type="text" 
+              placeholder="Your name" 
+              className="h-[52px] rounded-xl border-gray-200 focus-visible:ring-1 focus-visible:ring-[#8b5cf6] focus-visible:border-[#8b5cf6] text-[15px] px-4 placeholder:text-gray-400" 
+              {...form.register("name")} 
+            />
+            {form.formState.errors.name && (
+              <span className="text-xs text-red-500 font-medium">{form.formState.errors.name.message}</span>
+            )}
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="email" className="text-[14px] font-bold text-gray-900">Email address</Label>
             <Input 
@@ -108,17 +128,12 @@ export default function LoginPage() {
           </div>
           
           <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="password" className="text-[14px] font-bold text-gray-900">Password</Label>
-              <Link href="#" className="text-[13px] text-[#8b5cf6] hover:underline font-semibold transition-all">
-                Forgot password?
-              </Link>
-            </div>
+            <Label htmlFor="password" className="text-[14px] font-bold text-gray-900">Password</Label>
             <div className="relative">
               <Input 
                 id="password" 
                 type={showPassword ? "text" : "password"} 
-                placeholder="••••••••" 
+                placeholder="Min 8 chars, uppercase, lowercase, special" 
                 className="h-[52px] rounded-xl border-gray-200 focus-visible:ring-1 focus-visible:ring-[#8b5cf6] focus-visible:border-[#8b5cf6] text-[15px] px-4 pr-12 placeholder:text-gray-400" 
                 {...form.register("password")} 
               />
@@ -130,23 +145,66 @@ export default function LoginPage() {
                 <Eye className="w-5 h-5" />
               </button>
             </div>
+            
+            <div className="text-[12px] text-gray-500 mt-2 space-y-1">
+              <div className="flex items-center gap-1.5">
+                <div className="w-1.5 h-1.5 rounded-sm border border-gray-400"></div>
+                <span>At least 8 characters</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <div className="w-1.5 h-1.5 rounded-sm border border-gray-400"></div>
+                <span>At least one capital letter (A-Z)</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <div className="w-1.5 h-1.5 rounded-sm border border-gray-400"></div>
+                <span>At least one lowercase letter (a-z)</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <div className="w-1.5 h-1.5 rounded-sm border border-gray-400"></div>
+                <span>At least one symbol (like ! or @)</span>
+              </div>
+            </div>
+
             {form.formState.errors.password && (
               <span className="text-xs text-red-500 font-medium">{form.formState.errors.password.message}</span>
             )}
           </div>
           
+          <div className="space-y-2">
+            <Label htmlFor="confirmPassword" className="text-[14px] font-bold text-gray-900">Confirm password</Label>
+            <div className="relative">
+              <Input 
+                id="confirmPassword" 
+                type={showConfirmPassword ? "text" : "password"} 
+                placeholder="Re-enter password" 
+                className="h-[52px] rounded-xl border-gray-200 focus-visible:ring-1 focus-visible:ring-[#8b5cf6] focus-visible:border-[#8b5cf6] text-[15px] px-4 pr-12 placeholder:text-gray-400" 
+                {...form.register("confirmPassword")} 
+              />
+              <button 
+                type="button" 
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors focus:outline-none"
+              >
+                <Eye className="w-5 h-5" />
+              </button>
+            </div>
+            {form.formState.errors.confirmPassword && (
+              <span className="text-xs text-red-500 font-medium">{form.formState.errors.confirmPassword.message}</span>
+            )}
+          </div>
+
           <button 
             type="submit" 
             className="w-full h-[52px] bg-white border border-gray-200 hover:bg-gray-50 hover:border-gray-300 text-gray-800 rounded-xl text-[15px] font-semibold transition-all mt-6"
           >
-            Sign in
+            Create account
           </button>
         </form>
       </div>
 
       {/* Footer text */}
       <p className="text-center text-[13px] text-gray-500 mt-8 max-w-sm">
-        By signing in, you agree to our <Link href="#" className="text-[#8b5cf6] hover:underline font-medium">Terms</Link> and <Link href="#" className="text-[#8b5cf6] hover:underline font-medium">Privacy Policy</Link>.
+        By creating an account, you agree to our <Link href="#" className="text-[#8b5cf6] hover:underline font-medium">Terms</Link> and <Link href="#" className="text-[#8b5cf6] hover:underline font-medium">Privacy Policy</Link>.
       </p>
 
     </div>

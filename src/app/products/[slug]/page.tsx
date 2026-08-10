@@ -27,6 +27,7 @@ import {
   ShieldAlert,
   BadgeCheck,
   CheckCircle2,
+  Flame,
 } from "lucide-react";
 
 const WhatsAppIcon = ({ className }: { className?: string }) => (
@@ -273,15 +274,7 @@ export default function ProductDetailPage() {
       {/* ── MOBILE LAYOUT ── */}
       <div className="lg:hidden pb-6">
         {/* Header */}
-        <div className="px-4 py-4">
-          <button
-            onClick={() => router.back()}
-            className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm"
-            aria-label="Back"
-          >
-            <ChevronLeft className="w-5 h-5 pr-0.5" />
-          </button>
-        </div>
+
 
         <div className="px-5 pt-4">
           {/* Title first (structure like reference) */}
@@ -349,11 +342,13 @@ export default function ProductDetailPage() {
 
           {/* Action CTAs */}
           <div ref={inPageCTARef} className="flex flex-col gap-3 mt-4 mb-6">
-            <div className="flex items-center">
-              <span className="text-[11px] font-bold text-[#ef4444] bg-[#fee2e2] px-2 py-0.5 rounded-full border border-[#fca5a5]">
-                only9 kgleft!
-              </span>
-            </div>
+            {product.isLimited && (
+              <div className="flex items-center">
+                <span className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#ef4444] bg-[#fee2e2] px-2.5 py-1 rounded-md border border-[#fca5a5] shadow-sm animate-pulse">
+                  <Flame className="w-3.5 h-3.5" /> Hurry, only 9 left in stock!
+                </span>
+              </div>
+            )}
             <div className="flex items-center gap-3 h-12">
               <div className="flex items-center border border-border rounded-xl bg-background h-full shrink-0 px-1">
                 <button
@@ -409,46 +404,81 @@ export default function ProductDetailPage() {
               Offers & Discounts
             </h3>
 
-            <div className="relative overflow-hidden bg-[#f4faf5] rounded-xl flex items-stretch py-2 mb-5 w-full border border-[#dcfce7]">
-              {/* Icon */}
-              <div className="shrink-0 flex items-center justify-center pl-3 pr-4">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#55a630] rounded-[14px] flex items-center justify-center text-white relative shadow-sm rotate-45">
-                  <div className="-rotate-45 flex items-center justify-center relative w-full h-full">
-                    <BadgePercent className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
-                    <Star className="w-2 h-2 fill-yellow-300 text-yellow-300 absolute top-0.5 left-0.5" />
-                    <Star className="w-1.5 h-1.5 fill-yellow-300 text-yellow-300 absolute bottom-1 right-0.5" />
+            <div className="flex items-stretch w-full h-[62px] sm:h-[68px]">
+
+              {/* LEFT TICKET TAB */}
+              <div className="relative w-[58px] sm:w-[68px] shrink-0 bg-[#dc2626] rounded-l-lg flex flex-col items-center justify-center overflow-hidden">
+
+                {/* Left cutout */}
+                <div className="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-white rounded-full" />
+
+
+
+                <span
+                  className="text-white text-[7px] font-bold tracking-widest mt-1"
+                  style={{
+                    writingMode: "vertical-rl",
+                    transform: "rotate(180deg)",
+                  }}
+                >
+                  DISCOUNT %
+                </span>
+              </div>
+
+
+              {/* DASHED SEPARATOR */}
+              <div className="relative w-0 border-l-[2px] border-dashed border-white bg-[#dc2626] z-10" />
+
+
+              {/* CENTER SECTION */}
+              <div className="relative flex-1 bg-[#dc2626] flex items-center px-3 sm:px-5">
+
+                <div className="flex items-center gap-2 sm:gap-3">
+
+                  <BadgePercent
+                    className="w-8 h-8 sm:w-9 sm:h-9 text-white shrink-0"
+                    strokeWidth={2.5}
+                  />
+
+                  <div className="flex flex-col">
+                    <span className="text-white font-bold text-[10px] sm:text-[11px] leading-none mb-1">
+                      Online payment offer
+                    </span>
+
+                    <span className="text-white font-extrabold text-[20px] sm:text-[24px] leading-none">
+                      10% OFF
+                    </span>
                   </div>
+
                 </div>
+
               </div>
 
-              {/* Dashed line */}
-              <div className="w-px border-l-2 border-dashed border-[#bbf7d0] my-1.5"></div>
 
-              {/* Main text */}
-              <div className="px-3 flex flex-col justify-center flex-1 sm:flex-none">
-                <span className="text-[#064e3b] font-extrabold text-[15px] sm:text-[17px] leading-none mb-1 whitespace-nowrap">Save ₹50</span>
-                <span className="text-[#111827] font-bold text-[11px] sm:text-[12px] leading-none whitespace-nowrap">with online payment</span>
+              {/* DASHED SEPARATOR */}
+              <div className="relative w-0 border-l-[2px] border-dashed border-white bg-[#dc2626] z-10" />
+
+
+              {/* RIGHT TICKET TAB */}
+              <div className="relative w-[58px] sm:w-[68px] shrink-0 bg-[#dc2626] rounded-r-lg flex items-center justify-center overflow-hidden">
+
+                {/* Right cutout */}
+                <div className="absolute -right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-white rounded-full" />
+
+                <span
+                  className="text-white text-[8px] font-bold tracking-widest"
+                  style={{
+                    writingMode: "vertical-rl",
+                  }}
+                >
+                  SAVE
+                </span>
+
               </div>
 
-              {/* Dashed line */}
-              <div className="hidden sm:block w-px border-l-2 border-dashed border-[#bbf7d0] my-1.5"></div>
-
-              {/* Sub text */}
-              <div className="hidden sm:flex px-3 flex-col justify-center flex-1">
-                <span className="text-gray-800 text-[10px] sm:text-[11px] leading-tight font-medium">Pay online</span>
-                <span className="text-gray-800 text-[10px] sm:text-[11px] leading-tight font-medium">& get extra discount</span>
-              </div>
-
-              {/* Decorative elements */}
-              <div className="absolute right-0 top-0 bottom-0 w-12 overflow-hidden pointer-events-none">
-                <div className="w-1.5 h-1.5 bg-[#84cc16] transform rotate-45 absolute top-2 right-4"></div>
-                <div className="w-1 h-1 bg-[#65a30d] transform rotate-45 absolute top-5 right-8"></div>
-                <div className="w-2 h-2 bg-[#a3e635] transform rotate-45 absolute bottom-2 right-6"></div>
-                <div className="w-1.5 h-1.5 bg-[#84cc16] transform rotate-45 absolute bottom-4 right-2"></div>
-              </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 pb-6 mb-2">
+            <div className="grid grid-cols-2 gap-4 pb-6 mb-2 mt-2">
               <div className="flex flex-col items-center justify-center text-center gap-2">
                 <Truck className="w-6 h-6 text-[#1e1b4b]" />
                 <span className="text-[11px] font-bold text-[#1e1b4b]">No Return</span>
@@ -712,42 +742,33 @@ export default function ProductDetailPage() {
                 Offers & Discounts
               </h3>
 
-              <div className="relative overflow-hidden bg-[#f4faf5] rounded-xl flex items-stretch py-2 mb-5 w-full border border-[#dcfce7]">
-                {/* Icon */}
-                <div className="shrink-0 flex items-center justify-center pl-3 pr-4">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#55a630] rounded-[14px] flex items-center justify-center text-white relative shadow-sm rotate-45">
-                    <div className="-rotate-45 flex items-center justify-center relative w-full h-full">
-                      <BadgePercent className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
-                      <Star className="w-2 h-2 fill-yellow-300 text-yellow-300 absolute top-0.5 left-0.5" />
-                      <Star className="w-1.5 h-1.5 fill-yellow-300 text-yellow-300 absolute bottom-1 right-0.5" />
+              <div className="flex w-full mb-5 drop-shadow-sm h-[80px]">
+                {/* Left Section */}
+                <div className="relative w-12 bg-[#dc2626] rounded-l-lg flex flex-col items-center justify-center shrink-0 overflow-hidden border-y border-l border-[#dc2626]">
+                  {/* Left Cutout */}
+                  <div className="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-white rounded-full"></div>
+
+                  <span className="text-white font-bold text-lg leading-none mb-1 ml-1">%</span>
+                  <span className="text-white text-[8px] font-bold tracking-widest ml-1" style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>DISCOUNT</span>
+                </div>
+
+                {/* Dashed Separator */}
+                <div className="w-0 border-l-[3px] border-dashed border-[#dc2626] bg-white relative z-10"></div>
+
+                {/* Right Section */}
+                <div className="relative flex-1 bg-white border-y border-r border-[#dc2626] rounded-r-lg flex items-center px-4 overflow-hidden">
+                  {/* Right Cutout */}
+                  <div className="absolute -right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-white border border-[#dc2626] rounded-full z-10"></div>
+
+                  <div className="flex items-center gap-3 w-full">
+                    <div className="shrink-0 flex items-center justify-center">
+                      <BadgePercent className="w-9 h-9 text-[#dc2626]" strokeWidth={2.5} />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-[#dc2626] font-bold text-[11px] sm:text-[12px] leading-none mb-1">DISCOUNT COUPON</span>
+                      <span className="text-[#dc2626] font-extrabold text-[22px] sm:text-[24px] leading-none">10% OFF</span>
                     </div>
                   </div>
-                </div>
-
-                {/* Dashed line */}
-                <div className="w-px border-l-2 border-dashed border-[#bbf7d0] my-1.5"></div>
-
-                {/* Main text */}
-                <div className="px-3 flex flex-col justify-center flex-1 sm:flex-none">
-                  <span className="text-[#064e3b] font-extrabold text-[15px] sm:text-[17px] leading-none mb-1 whitespace-nowrap">Save ₹50</span>
-                  <span className="text-[#111827] font-bold text-[11px] sm:text-[12px] leading-none whitespace-nowrap">with online payment</span>
-                </div>
-
-                {/* Dashed line */}
-                <div className="hidden sm:block w-px border-l-2 border-dashed border-[#bbf7d0] my-1.5"></div>
-
-                {/* Sub text */}
-                <div className="hidden sm:flex px-3 flex-col justify-center flex-1">
-                  <span className="text-gray-800 text-[10px] sm:text-[11px] leading-tight font-medium">Pay online</span>
-                  <span className="text-gray-800 text-[10px] sm:text-[11px] leading-tight font-medium">& get extra discount</span>
-                </div>
-
-                {/* Decorative elements */}
-                <div className="absolute right-0 top-0 bottom-0 w-12 overflow-hidden pointer-events-none">
-                  <div className="w-1.5 h-1.5 bg-[#84cc16] transform rotate-45 absolute top-2 right-4"></div>
-                  <div className="w-1 h-1 bg-[#65a30d] transform rotate-45 absolute top-5 right-8"></div>
-                  <div className="w-2 h-2 bg-[#a3e635] transform rotate-45 absolute bottom-2 right-6"></div>
-                  <div className="w-1.5 h-1.5 bg-[#84cc16] transform rotate-45 absolute bottom-4 right-2"></div>
                 </div>
               </div>
 

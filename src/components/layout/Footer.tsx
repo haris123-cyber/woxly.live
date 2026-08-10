@@ -1,7 +1,13 @@
+"use client";
+
 import Link from "next/link";
 import { Mail, Phone, MessageCircle } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 export function Footer() {
+  const pathname = usePathname();
+  if (pathname === '/login' || pathname === '/signup') return null;
+
   return (
     <footer className="bg-white pt-10 md:pt-16 pb-6 border-t border-zinc-200 font-sans">
       <div className="container mx-auto px-4 lg:px-8 max-w-7xl">

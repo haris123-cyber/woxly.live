@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/product/ProductCard";
 import { HeroSlider } from "@/components/home/HeroSlider";
 import { PRODUCTS } from "@/lib/mock-data";
-import { ChevronRight, Truck, RefreshCcw, ShieldCheck, Headphones, ArrowRight, Lock, Banknote, Mail } from "lucide-react";
+import { ChevronRight, ShieldCheck, Headphones, ArrowRight, Mail } from "lucide-react";
+import { IconTruck, IconRefresh, IconLock, IconCash } from "@tabler/icons-react";
 
 // Reusable Product Carousel Component
 const ProductCarousel = ({
@@ -262,7 +263,7 @@ export default function Home() {
 
       {drinkProducts.length > 0 && (
         <>
-          <section className="container mx-auto px-5 sm:px-6 mt-6">
+          <section className="container mx-auto px-5 sm:px-6 mt-6 mb-5">
             <div className="relative rounded-0 sm:rounded-lg overflow-hidden bg-zinc-900 h-44 -mt-10 sm:h-64 md:h-80 flex items-center shadow-lg group">
               <Image
                 src="/images/hero_liquor.png"
@@ -294,7 +295,7 @@ export default function Home() {
           />
 
           {/* ── Stella-Style 3-Panel Banners ── */}
-          <section className="container mx-auto px-5 sm:px-6 mt-4 mb-16">
+          <section className="container mx-auto px-5 sm:px-6 mt-5 mb-16">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:h-[500px]">
 
               {/* Left Large Banner — teal text | image split */}
@@ -409,10 +410,10 @@ export default function Home() {
         {/* Service highlights */}
         <div className="grid grid-cols-4 sm:border sm:border-zinc-200 rounded-xl overflow-hidden mb-0 sm:mb-16 ">
           {[
-            { icon: Truck, title: "Free Delivery", desc: "On orders above ₹499" },
-            { icon: RefreshCcw, title: "Easy Returns", desc: "30-day hassle-free" },
-            { icon: Lock, title: "Secure Payment", desc: "UPI, cards, net banking" },
-            { icon: Banknote, title: "Cash on Delivery", desc: "Available on select pincodes" },
+            { icon: IconTruck, title: "Free Delivery", desc: "On orders above ₹499" },
+            { icon: IconRefresh, title: "Easy Returns", desc: "30-day hassle-free" },
+            { icon: IconLock, title: "Secure Payment", desc: "UPI, cards, net banking" },
+            { icon: IconCash, title: "Cash on Delivery", desc: "Available on select pincodes" },
           ].map((item, i) => (
             <div
               key={item.title}
@@ -420,7 +421,7 @@ export default function Home() {
                 }`}
             >
               <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-full bg-zinc-100 flex items-center justify-center shrink-0">
-                <item.icon className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-zinc-700" strokeWidth={1.75} />
+                <item.icon className="w-5.5 h-5.5 sm:w-5 sm:h-5 text-zinc-700" strokeWidth={1.75} />
               </div>
               <div className="min-w-0">
                 <p className="font-semibold text-[10px] sm:text-base text-foreground leading-tight">{item.title}</p>
@@ -431,7 +432,7 @@ export default function Home() {
         </div>
 
         {/* Newsletter */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 lg:gap-12">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 lg:gap-12 mt-5">
           <div className="max-w-md">
             <h2 className="font-heading text-2xl sm:text-3xl font-bold text-foreground mb-2">
               Stay in the loop

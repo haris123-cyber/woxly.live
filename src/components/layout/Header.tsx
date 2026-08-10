@@ -20,6 +20,8 @@ export function Header() {
     setIsMounted(true);
   }, []);
 
+  if (pathname === '/login' || pathname === '/signup') return null;
+
   return (
     <>
       {/* Marquee Announcement Bar */}
@@ -35,116 +37,127 @@ export function Header() {
 
       <header className="w-full bg-background border-b border-border/50 sticky top-0 z-50 flex flex-col">
         {/* Main Header Row */}
-      <div className="container mx-auto px-4 sm:px-6 py-3 md:py-4 flex items-center gap-1.5 sm:gap-4 max-w-full shrink-0">
-        {/* Menu Toggle */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="md:hidden shrink-0 hover:bg-muted/50 rounded-full w-9 h-9 sm:w-10 sm:h-10"
-          onClick={toggleMobileMenu}
-        >
-          <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
-        </Button>
+        <div className="container mx-auto px-4 sm:px-6 py-3 md:py-4 flex items-center gap-1.5 sm:gap-4 max-w-full shrink-0">
+          {/* Menu Toggle */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden shrink-0 hover:bg-muted/50 rounded-full w-9 h-9 sm:w-10 sm:h-10"
+            onClick={toggleMobileMenu}
+          >
+            <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
+          </Button>
 
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 shrink-0">
-          <span className="font-heading font-bold text-lg sm:text-2xl leading-none text-foreground">Woxly</span>
-        </Link>
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2 shrink-0">
+            <span className="font-heading font-bold text-lg sm:text-2xl leading-none text-foreground">Woxly</span>
+          </Link>
 
-        {/* Search Bar */}
-        <div className="flex-1 flex justify-center px-4">
-          <div className="relative w-full max-w-xl">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
+          {/* Search Bar */}
+          <div className="flex-1 flex justify-center px-4">
+            <div className="relative w-full max-w-xl">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
 
-            <input
-              suppressHydrationWarning
-              type="text"
-              placeholder="Search..."
-              className="w-full h-11 pl-11 pr-4 rounded-full border border-border/80 bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm placeholder:text-muted-foreground/60 shadow-sm"
-            />
+              <input
+                suppressHydrationWarning
+                type="text"
+                placeholder="Search..."
+                className="w-full h-11 pl-11 pr-4 rounded-full border border-border/80 bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm placeholder:text-muted-foreground/60 shadow-sm"
+              />
+            </div>
+          </div>
+
+
+          {/* Right Actions - Hidden on mobile */}
+          <div className="hidden sm:flex items-center gap-2 shrink-0">
+            {/* Watchlist */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="relative text-muted-foreground hover:text-primary w-10 h-10"
+              asChild
+            >
+              <Link href="/watchlist">
+                <Heart className="w-6 h-6" />
+                {isMounted && watchlistCount > 0 && (
+                  <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#2563eb] text-[9px] font-bold text-white border border-background">
+                    {watchlistCount > 9 ? "9+" : watchlistCount}
+                  </span>
+                )}
+              </Link>
+            </Button>
+
+            {/* Cart */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="relative w-10 h-10 text-muted-foreground hover:text-primary transition-colors"
+              asChild
+            >
+              <Link href="/cart">
+                <ShoppingBag className="w-6 h-6" />
+                {isMounted && itemCount > 0 && (
+                  <span className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#2563eb] text-xs font-bold text-white border border-background">
+                    {itemCount > 99 ? "99+" : itemCount}
+                  </span>
+                )}
+              </Link>
+            </Button>
+
+            {/* Profile */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="w-10 h-10 text-muted-foreground hover:text-primary transition-colors"
+              asChild
+            >
+              <Link href="/account" aria-label="Profile">
+                <User className="w-6 h-6" />
+              </Link>
+            </Button>
           </div>
         </div>
 
+        {/* Mobile Bottom Navigation Bar */}
+        <div className="sm:hidden fixed bottom-2 left-2 right-2 z-50 flex items-center justify-between px-4 h-[66px] bg-white rounded-[33px] shadow-[0_8px_30px_rgba(0,0,0,0.25)]">
+          <Link href="/" className="relative flex items-center justify-center w-12 h-12 rounded-full transition-all">
+            <div className={`flex items-center justify-center w-11 h-11 rounded-full transition-colors ${pathname === '/' ? 'bg-primary text-white' : 'text-primary'}`}>
+              <Home className="w-[22px] h-[22px]" />
+            </div>
+            <span className="sr-only">Home</span>
+          </Link>
 
-        {/* Right Actions - Hidden on mobile */}
-        <div className="hidden sm:flex items-center gap-2 shrink-0">
-          {/* Watchlist */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="relative text-muted-foreground hover:text-primary w-10 h-10"
-            asChild
-          >
-            <Link href="/watchlist">
-              <Heart className="w-6 h-6" />
-              {isMounted && watchlistCount > 0 && (
-                <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#2563eb] text-[9px] font-bold text-white border border-background">
-                  {watchlistCount > 9 ? "9+" : watchlistCount}
-                </span>
-              )}
-            </Link>
-          </Button>
+          <Link href="/watchlist" className="relative flex items-center justify-center w-12 h-12 rounded-full transition-all">
+            <div className={`flex items-center justify-center w-11 h-11 rounded-full transition-colors ${pathname === '/watchlist' ? 'bg-primary text-white' : 'text-primary'}`}>
+              <Heart className="w-[22px] h-[22px]" />
+            </div>
+            <span className="sr-only">Wishlist</span>
+            {isMounted && watchlistCount > 0 && (
+              <span className="absolute top-1 right-0 flex h-[18px] min-w-[18px] px-1 items-center justify-center rounded-full bg-white text-[9px] font-bold text-black border-1 border-[#003135]">
+                {watchlistCount > 9 ? "9+" : watchlistCount}
+              </span>
+            )}
+          </Link>
 
-          {/* Cart */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="relative w-10 h-10 text-muted-foreground hover:text-primary transition-colors"
-            asChild
-          >
-            <Link href="/cart">
-              <ShoppingBag className="w-6 h-6" />
-              {isMounted && itemCount > 0 && (
-                <span className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#2563eb] text-xs font-bold text-white border border-background">
-                  {itemCount > 99 ? "99+" : itemCount}
-                </span>
-              )}
-            </Link>
-          </Button>
+          <Link href="/cart" className="relative flex items-center justify-center w-12 h-12 rounded-full transition-all">
+            <div className={`flex items-center justify-center w-11 h-11 rounded-full transition-colors ${pathname === '/cart' ? 'bg-primary text-white' : 'text-primary'}`}>
+              <ShoppingBag className="w-[22px] h-[22px]" />
+            </div>
+            <span className="sr-only">Cart</span>
+            {isMounted && itemCount > 0 && (
+              <span className="absolute top-1 right-0 flex h-[18px] min-w-[18px] px-1 items-center justify-center rounded-full bg-white text-[9px] font-bold text-primary ">
+                {itemCount > 99 ? "99+" : itemCount}
+              </span>
+            )}
+          </Link>
 
-          {/* Profile */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="w-10 h-10 text-muted-foreground hover:text-primary transition-colors"
-            asChild
-          >
-            <Link href="/account" aria-label="Profile">
-              <User className="w-6 h-6" />
-            </Link>
-          </Button>
+          <Link href="/account" className="relative flex items-center justify-center w-12 h-12 rounded-full transition-all">
+            <div className={`flex items-center justify-center w-11 h-11 rounded-full transition-colors ${pathname === '/account' ? 'bg-primary text-white' : 'text-primary'}`}>
+              <User className="w-[22px] h-[22px]" />
+            </div>
+            <span className="sr-only">Profile</span>
+          </Link>
         </div>
-      </div>
-
-      {/* Mobile Bottom Navigation Bar */}
-      <div className="sm:hidden fixed bottom-0 left-0 right-0 bg-background border-t border-border z-50 flex items-center justify-around h-14 px-2 pb-safe shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
-        <Link href="/" className={`flex flex-col items-center gap-1 transition-colors py-1 px-3 ${pathname === '/' ? 'text-primary' : 'text-muted-foreground hover:text-primary'}`}>
-          <Home className="w-5 h-5" />
-          <span className="text-[10px] font-medium">Home</span>
-        </Link>
-        <Link href="/watchlist" className={`relative flex flex-col items-center gap-1 transition-colors py-1 px-3 ${pathname === '/watchlist' ? 'text-primary' : 'text-muted-foreground hover:text-primary'}`}>
-          <Heart className="w-5 h-5" />
-          <span className="text-[10px] font-medium">Wishlist</span>
-          {isMounted && watchlistCount > 0 && (
-            <span className="absolute top-0 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-[#2563eb] text-[9px] font-bold text-white border border-background shadow-sm">
-              {watchlistCount > 9 ? "9+" : watchlistCount}
-            </span>
-          )}
-        </Link>
-        <Link href="/cart" className={`relative flex flex-col items-center gap-1 transition-colors py-1 px-3 ${pathname === '/cart' ? 'text-primary' : 'text-muted-foreground hover:text-primary'}`}>
-          <ShoppingBag className="w-5 h-5" />
-          <span className="text-[10px] font-medium">Cart</span>
-          {isMounted && itemCount > 0 && (
-            <span className="absolute top-0 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-[#2563eb] text-[9px] font-bold text-white border border-background shadow-sm">
-              {itemCount > 99 ? "99+" : itemCount}
-            </span>
-          )}
-        </Link>
-        <Link href="/account" className={`flex flex-col items-center gap-1 transition-colors py-1 px-3 ${pathname === '/account' ? 'text-primary' : 'text-muted-foreground hover:text-primary'}`}>
-          <User className="w-5 h-5" />
-          <span className="text-[10px] font-medium">Profile</span>
-        </Link>
-      </div>
       </header>
     </>
   );
