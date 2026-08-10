@@ -65,7 +65,7 @@ export function CartDrawer() {
                         {item.selectedColor} {item.selectedSize ? `/ ${item.selectedSize}` : ''}
                       </p>
                     )}
-                    <p className="font-medium mt-1">₹{(item.price || 0).toFixed(2)}</p>
+                    <p className="font-medium mt-1">₹{(item.price || 0).toFixed(2).replace(/\.00$/, '')}</p>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="flex items-center border rounded-md">
@@ -95,7 +95,7 @@ export function CartDrawer() {
           <div className="p-6 border-t bg-background">
             <div className="flex items-center justify-between font-medium text-lg mb-4">
               <span>Subtotal</span>
-              <span>₹{(getCartTotal() || 0).toFixed(2)}</span>
+              <span>₹{(getCartTotal() || 0).toFixed(2).replace(/\.00$/, '')}</span>
             </div>
             <p className="text-sm text-muted-foreground mb-6">
               Shipping and taxes calculated at checkout.

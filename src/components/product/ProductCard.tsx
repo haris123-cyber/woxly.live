@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, ShoppingCart, Star, Percent, BadgePercent } from "lucide-react";
+import { Heart, ShoppingCart, Star, Percent } from "lucide-react";
 import { type Product } from "@/store/useCartStore";
 import { useCartStore } from "@/store/useCartStore";
 import { useWatchlistStore } from "@/store/useWatchlistStore";
@@ -10,6 +10,36 @@ import { useRouter } from "next/navigation";
 
 interface ProductCardProps {
   product: Product;
+}
+
+function OfferLabel({ discountPercentage }: { discountPercentage: number }) {
+  const labelText = discountPercentage > 0 ? `${discountPercentage} OFF` : "OFFER";
+
+  return (
+    <div className="absolute bottom-0 left-1/2 z-10 w-[62%] sm:w-[58%] -translate-x-1/2 pointer-events-none transition-opacity duration-300 md:group-hover:opacity-0">
+      <div className="relative w-full">
+        <svg
+          viewBox="0 0 140 24"
+          preserveAspectRatio="none"
+          className="block w-full h-[30px] sm:h-[44px]"
+          aria-hidden
+        >
+          <path
+            d="M14 2 Q14 0 17 0 H123 Q126 0 126 2 L140 24 H0 Z"
+            fill="#e3000f"
+          />
+        </svg>
+        <div className="absolute inset-0 flex items-center justify-center gap-1 text-white">
+          <span className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-white/20 flex items-center justify-center shrink-0">
+            <Percent className="w-2 h-2 sm:w-2.5 sm:h-2.5" strokeWidth={3} />
+          </span>
+          <span className="text-[10px] sm:text-[13px] font-extrabold uppercase tracking-wider leading-none">
+            OFFER
+          </span>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export function ProductCard({ product }: ProductCardProps) {
@@ -40,7 +70,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Link
       href={`/products/${product.slug}`}
-      className="group block"
+      className="group block min-w-0"
       style={{ textDecoration: "none" }}
     >
       <div
@@ -91,12 +121,8 @@ export function ProductCard({ product }: ProductCardProps) {
             </div>
           )}
         </div>
-        {/* Center Bottom Offer Tag */}
-        {hasOffer && (
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 bg-[#e3000f] text-white text-[9px] sm:text-[10px] font-bold px-3 sm:px-4 py-2.5 rounded-t-md uppercase tracking-wider flex items-center gap-1 shadow-sm">
-            <BadgePercent className="w-3 h-3 sm:w-3.5 sm:h-3.5" strokeWidth={2.5} /> OFFER
-          </div>
-        )}
+        {/* Offer tab */}
+        {hasOffer && <OfferLabel discountPercentage={discountPercentage} />}
 
         <button
           onClick={(e) => {
@@ -136,7 +162,7 @@ export function ProductCard({ product }: ProductCardProps) {
             transition: "opacity 0.3s ease",
             borderRadius: "16px",
           }}
-          className="hidden md:flex opacity-0 group-hover:opacity-100"
+          className="hidden md:flex opacity-0 group-hover:opacity-100 z-20"
         >
           <button
             onClick={handleAddToCart}
@@ -178,13 +204,13 @@ export function ProductCard({ product }: ProductCardProps) {
           {product.name}
         </h3>
 
-        <div className="flex items-center gap-1 sm:gap-2 mb-2">
+        <div className="flex flex-wrap items-center gap-1 sm:gap-2 mb-2">
           <span className="text-[15px] sm:text-[0.95rem] font-bold text-gray-900 tracking-tight">
-            ₹{product.price.toFixed(2)}
+            ₹{product.price.toFixed(2).replace(/\.00$/, '')}
           </span>
           {originalPrice && (
             <span className="text-[11px] sm:text-[0.8rem] text-gray-400 line-through tracking-tight">
-              ₹{originalPrice.toFixed(2)}
+              ₹{originalPrice.toFixed(2).replace(/\.00$/, '')}
             </span>
           )}
           {/* Green Discount Tag */}

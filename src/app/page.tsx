@@ -7,13 +7,36 @@ import { PRODUCTS } from "@/lib/mock-data";
 import { ChevronRight, Truck, RefreshCcw, ShieldCheck, Headphones, ArrowRight, Lock, Banknote, Mail } from "lucide-react";
 
 // Reusable Product Carousel Component
-const ProductCarousel = ({ title, products, link, prependElement }: { title: string, products: typeof PRODUCTS, link: string, prependElement?: React.ReactNode }) => {
+const ProductCarousel = ({
+  title,
+  description,
+  products,
+  link,
+  prependElement,
+}: {
+  title: string;
+  description?: string;
+  products: typeof PRODUCTS;
+  link: string;
+  prependElement?: React.ReactNode;
+}) => {
   return (
-    <section className="container  mx-auto px-5 sm:px-6 py-6">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="font-heading text-lg sm:text-2xl font-bold">{title}</h2>
-        <Link href={link} className="text-foreground font-medium hover:text-foreground/80 text-xs sm:text-sm font-bold">
-          View all
+    <section className="container  mx-auto px-5 sm:px-6 py-6 mb-1">
+      <h2 className="font-heading text-lg sm:text-2xl font-bold mb-1">{title}</h2>
+      <div className="flex items-center justify-between gap-0 sm:gap-0 mb-1">
+        {description ? (
+          <p className="text-[10px] sm:text-xs text-zinc-500 uppercase tracking-[0.12em] font-medium truncate min-w-0 flex-1 mb-">
+            {description}
+          </p>
+        ) : (
+          <span className="flex-1" />
+        )}
+        <Link
+          href={link}
+          className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.12em] text-black-600 hover:text-black-700 shrink-0 inline-flex items-center gap-1 text-muted-foreground"
+        >
+          See all
+          <ArrowRight className="w-3.5 h-3.5 " strokeWidth={2} />
         </Link>
       </div>
       <div className="relative">
@@ -90,10 +113,17 @@ export default function Home() {
 
       {/* Shop by Category - Horizontal Carousel */}
       <section className="container mx-auto px-5 sm:px-6 py-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="font-heading text-lg sm:text-2xl font-bold">Shop by Category</h2>
-          <Link href="/shop" className="text-foreground font-bold hover:underline text-xs sm:text-sm">
-            View all
+        <h2 className="font-heading text-lg sm:text-2xl font-bold mb-0">Shop by Category</h2>
+        <div className="flex items-center justify-between gap-3 sm:gap-4 mb-4">
+          <p className="text-[10px] sm:text-xs text-zinc-500 uppercase tracking-[0.12em] font-medium truncate min-w-0 flex-1">
+            Browse everything you need. From groceries to fashion and more.
+          </p>
+          <Link
+            href="/shop"
+            className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.12em] text-black-600 hover:text-black-700 shrink-0 inline-flex items-center gap-1 text-muted-foreground"
+          >
+            See all
+            <ArrowRight className="w-3.5 h-3.5" strokeWidth={2} />
           </Link>
         </div>
 
@@ -176,11 +206,23 @@ export default function Home() {
       </section>
 
       {/* Best Sellers */}
-      <ProductCarousel title="Best Sellers" products={bestSellers} link="/shop" />
+      <ProductCarousel
+        title="Best Sellers"
+
+        description="Our most loved picks. Top-rated customer favorites."
+        products={bestSellers}
+        link="/shop"
+      />
 
       {/* Specific Category Sections */}
       {fruitsProducts.length > 0 && (
-        <ProductCarousel title="Fresh Fruits & Veg" products={fruitsProducts} link="/shop" prependElement={fruitsPromo} />
+        <ProductCarousel
+          title="Fresh Fruits & Veg"
+          description="Farm-fresh produce picked daily. Delivered to your door."
+          products={fruitsProducts}
+          link="/shop"
+          prependElement={fruitsPromo}
+        />
       )}
 
       {fashionProducts.length > 0 && (
@@ -209,7 +251,12 @@ export default function Home() {
               </div>
             </div>
           </section>
-          <ProductCarousel title="Fashion & Apparel" products={fashionProducts} link="/shop" />
+          <ProductCarousel
+            title="Fashion & Apparel"
+            description="Latest trends and essentials. Start with the right style."
+            products={fashionProducts}
+            link="/shop"
+          />
         </>
       )}
 
@@ -239,7 +286,12 @@ export default function Home() {
               </div>
             </div>
           </section>
-          <ProductCarousel title="Beverages & Drinks" products={drinkProducts} link="/shop" />
+          <ProductCarousel
+            title="Beverages & Drinks"
+            description="Stay refreshed. Juices, drinks, tea, coffee and more."
+            products={drinkProducts}
+            link="/shop"
+          />
 
           {/* ── Stella-Style 3-Panel Banners ── */}
           <section className="container mx-auto px-5 sm:px-6 mt-4 mb-16">
@@ -334,10 +386,28 @@ export default function Home() {
         </>
       )}
 
+      {/* Bottom Banner Slots */}
+      <section className="container mx-auto px-5 sm:px-6 py-6 sm:py-8">
+        <div className="flex flex-col gap-2 sm:gap-2">
+          <Link
+            href="/shop"
+            className="relative flex w-full aspect-[2/1] sm:aspect-[3/1] items-center justify-center  bg-zinc-900 overflow-hidden hover:opacity-95 transition-opacity"
+          >
+            <span className="text-sm sm:text-base font-medium text-white/50 select-none">600 × 200</span>
+          </Link>
+          <Link
+            href="/shop"
+            className="relative flex w-full min-h-[100px] aspect-[3/1] sm:min-h-[88px] sm:aspect-[6/1] items-center justify-center  bg-zinc-800 overflow-hidden hover:opacity-95 transition-opacity"
+          >
+            <span className="text-xs sm:text-sm font-medium text-white/40 select-none">Banner</span>
+          </Link>
+        </div>
+      </section>
+
       {/* Features + Newsletter */}
       <section className="container mx-auto px-5 sm:px-6 mt-2 mb-5">
         {/* Service highlights */}
-        <div className="grid grid-cols-4 sm:border sm:border-zinc-200 rounded-xl overflow-hidden mb-12 sm:mb-16 ">
+        <div className="grid grid-cols-4 sm:border sm:border-zinc-200 rounded-xl overflow-hidden mb-0 sm:mb-16 ">
           {[
             { icon: Truck, title: "Free Delivery", desc: "On orders above ₹499" },
             { icon: RefreshCcw, title: "Easy Returns", desc: "30-day hassle-free" },

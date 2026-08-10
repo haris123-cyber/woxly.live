@@ -1,55 +1,26 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
   LayoutDashboard, Package, User, MapPin, Star, MessageSquare, LogOut,
-  CreditCard, ShoppingBag, TrendingUp, Gift
+  CreditCard, ShoppingBag, TrendingUp, Gift, RefreshCcw, ChevronDown, ChevronUp
 } from "lucide-react";
+import { useAddressStore, Address } from "@/store/useAddressStore";
 
 const navItems = [
-  { label: "Dashboard", icon: LayoutDashboard, id: "dashboard" },
   { label: "Order History", icon: Package, id: "orders" },
+  { label: "Returns", icon: RefreshCcw, id: "returns" },
   { label: "Account Details", icon: User, id: "details" },
   { label: "Address", icon: MapPin, id: "address" },
-  { label: "To Review", icon: MessageSquare, id: "reviews" },
+  { label: "Reward Coins", icon: Gift, id: "rewards" },
 ];
 
 const mockOrders = [
   { id: "WOXLY-10244", date: "12 Jul 2023", status: "Delivered", total: "₹149.99", items: 3 },
   { id: "WOXLY-10198", date: "03 Jun 2023", status: "Processing", total: "₹89.00", items: 1 },
   { id: "WOXLY-10101", date: "15 Apr 2023", status: "Delivered", total: "₹220.50", items: 5 },
-];
-
-const mockReviews = [
-  {
-    id: 1,
-    product: "Apple Watch Series 8 GPS 45mm Silver Aluminum Case Sport Band.",
-    image: "/images/product_placeholder.png",
-    purchasedOn: "12 Jul 2023",
-    rating: 4,
-    reviewText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore adipiscing elit, sed do eiusmod",
-    photos: ["/images/product_placeholder.png", "/images/product_placeholder.png", "/images/product_placeholder.png"],
-  },
-  {
-    id: 2,
-    product: "Apple Watch Series 8 GPS 45mm Silver Aluminum Case Sport Band.",
-    image: "/images/product_placeholder.png",
-    purchasedOn: "12 Jul 2023",
-    rating: 4,
-    reviewText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore adipiscing elit, sed do eiusmod",
-    photos: ["/images/product_placeholder.png", "/images/product_placeholder.png", "/images/product_placeholder.png"],
-  },
-  {
-    id: 3,
-    product: "Apple Watch Series 8 GPS 45mm Silver Aluminum Case Sport Band.",
-    image: "/images/product_placeholder.png",
-    purchasedOn: "12 Jul 2023",
-    rating: 4,
-    reviewText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore adipiscing elit, sed do eiusmod",
-    photos: ["/images/product_placeholder.png", "/images/product_placeholder.png", "/images/product_placeholder.png"],
-  },
 ];
 
 const PRIMARY = "#2563eb";
@@ -72,72 +43,198 @@ function StarRating({ count }: { count: number }) {
   );
 }
 
-// ─── Panel components ────────────────────────────────────
-function DashboardPanel() {
-  return (
-    <div>
-      <h2 style={{ fontSize: "1.25rem", fontWeight: 800, color: "#111827", marginBottom: "1.25rem" }}>My Dashboard</h2>
-      <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-8">
-        {[
-          { icon: ShoppingBag, label: "Total Orders", value: "12" },
-          { icon: CreditCard, label: "Saved Address", value: "2" },
 
-        ].map((stat) => {
-          const Icon = stat.icon;
-          return (
-            <div key={stat.label} className="  p-3 sm:p-5 flex flex-col gap-2 shadow-sm items-center sm:items-start text-center sm:text-left">
-              <div className="w-8 h-8 sm:w-11 sm:h-11 rounded-full bg-blue-50 flex items-center justify-center">
-                <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-              </div>
-              <p className="text-lg sm:text-2xl font-extrabold text-gray-900 mt-1 sm:mt-0">{stat.value}</p>
-              <p className="text-[10px] sm:text-xs text-gray-500 leading-tight">{stat.label}</p>
-            </div>
-          );
-        })}
-      </div>
-      <h3 style={{ fontWeight: 700, fontSize: "1rem", color: "#111", marginBottom: "1rem" }}>Recent Orders</h3>
-      <div className="border overflow-hidden w-full">
-        {mockOrders.map((order, idx) => (
-          <div key={order.id} className={`grid grid-cols-[1.5fr_1fr_1.2fr_1fr_auto] sm:grid-cols-[2fr_1fr_1fr_1fr_auto] gap-1 sm:gap-4 items-center p-2 sm:p-4 ${idx < mockOrders.length - 1 ? "border-b border-gray-100" : ""}`}>
-            <span className="font-bold text-[10px] sm:text-[0.85rem] text-gray-900 truncate pr-1">{order.id}</span>
-            <span className="text-[9px] sm:text-[0.8rem] text-gray-500 truncate">{order.date}</span>
-            <span className={`text-[9px] sm:text-[0.75rem] font-semibold px-1 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-center truncate ${order.status === "Delivered" ? "bg-green-50 text-green-600" : "bg-yellow-50 text-yellow-700"}`}>
-              {order.status}
-            </span>
-            <span className="font-bold text-[10px] sm:text-[0.85rem] text-right sm:text-left pr-1">{order.total}</span>
-            <button className="px-2 py-1 sm:px-3 sm:py-1 border border-primary text-primary font-semibold text-[9px] sm:text-[0.75rem] rounded-md hover:bg-primary/5 whitespace-nowrap">
-              View
-            </button>
+
+type OrderItem = {
+  id: string;
+  title: string;
+  color: string;
+  size: string;
+  price: string;
+  image: string;
+  status: string;
+  statusColor: string;
+  statusDesc: string;
+  refundBox?: boolean;
+  refundTitle?: string;
+  refundId?: string;
+  refundDesc?: string;
+  reviewAction?: boolean;
+  cancelAction?: boolean;
+  returnAction?: boolean;
+};
+
+const initialOrders: OrderItem[] = [
+  {
+    id: "WOXLY-10250",
+    title: "Fresh Bananas 1kg",
+    color: "",
+    size: "1kg",
+    price: "₹99",
+    image: "/images/product_placeholder.png",
+    status: "Processing",
+    statusColor: "yellow",
+    statusDesc: "Your order is being processed and packed.",
+    cancelAction: true,
+  },
+  {
+    id: "WOXLY-10249",
+    title: "India Gate Rice 1kg",
+    color: "",
+    size: "1kg",
+    price: "₹249",
+    image: "/images/product_placeholder.png",
+    status: "Delivered on Jul 17, 2025",
+    statusColor: "green",
+    statusDesc: "Your item has been delivered",
+    reviewAction: true,
+    returnAction: true,
+  },
+  {
+    id: "WOXLY-10248",
+    title: "Quaker Oats 1kg",
+    color: "",
+    size: "1kg",
+    price: "₹229",
+    image: "/images/product_placeholder.png",
+    status: "Refund completed",
+    statusColor: "red",
+    statusDesc: "",
+    refundBox: true,
+    refundTitle: "Refund Completed",
+    refundId: "(Refund ID: CR25103010590619819232002)",
+    refundDesc: "Refund was added to your UPI linked bank account on Oct 31 2025, 10:59 AM. If you can't see the refund in your bank statement, contact your bank and share refund reference number 852409773035 to track it.",
+  },
+  {
+    id: "WOXLY-10251",
+    title: "Extra Virgin Olive Oil 500ml",
+    color: "",
+    size: "500ml",
+    price: "₹509",
+    image: "/images/product_placeholder.png",
+    status: "Cancelled on Mar 19, 2025",
+    statusColor: "red",
+    statusDesc: "Your order was cancelled as per your request.",
+  }
+];
+
+function OrderCard({ order, showCancelBtn = false, showRefundBox = true, onCancel, onReturn }: {
+  order: OrderItem;
+  showCancelBtn?: boolean;
+  showRefundBox?: boolean;
+  onCancel?: (id: string) => void;
+  onReturn?: (id: string) => void;
+}) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  return (
+    <div className="border border-gray-200  p-4 bg-white">
+      <div className="flex flex-col md:flex-row gap-6">
+        {/* Left: Product Info */}
+        <div className="flex gap-4 md:w-5/12">
+          <div className="w-16 h-16 shrink-0 relative overflow-hidden">
+            <Image src={order.image} alt={order.title} fill className="object-contain" />
           </div>
-        ))}
+          <div>
+            <h3 className="text-[13px] text-gray-800 line-clamp-1 mb-1.5">{order.title}</h3>
+            <p className="text-[11px] text-gray-500">
+              {order.color && <span>Color: {order.color}</span>}
+              {order.size && <span className="ml-2">Size: {order.size}</span>}
+            </p>
+          </div>
+        </div>
+
+        {/* Middle: Price */}
+        <div className="md:w-2/12 flex items-start mt-2 md:mt-0">
+          <span className="text-[13px] text-gray-900">{order.price}</span>
+        </div>
+
+        {/* Right: Status and Actions */}
+        <div className="md:w-5/12 flex flex-col sm:flex-row items-start justify-between mt-2 md:mt-0 gap-4">
+          <div className="flex flex-col w-full">
+            <div
+              className="flex items-center justify-between cursor-pointer md:cursor-default w-full"
+              onClick={() => setIsExpanded(!isExpanded)}
+            >
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className={`w-2 h-2 rounded-full shrink-0 ${order.statusColor === 'red' ? 'bg-[#ff6161]' :
+                  order.statusColor === 'yellow' ? 'bg-[#f59e0b]' :
+                    'bg-[#26a541]'
+                  }`}></span>
+                <span className="text-[13px] font-bold text-gray-900">{order.status}</span>
+              </div>
+              <button className="text-gray-400 md:hidden p-1 -mr-1">
+                {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+              </button>
+            </div>
+
+            <div className={`mt-2 ${isExpanded ? 'block' : 'hidden md:block'}`}>
+              {order.statusDesc && (
+                <p className="text-[12px] text-gray-800 mb-2">{order.statusDesc}</p>
+              )}
+              {order.reviewAction && (
+                <div className="mt-1">
+                  <button className="flex items-center gap-1.5 text-[#2874f0] font-semibold text-[13px] hover:underline w-fit">
+                    <Star className="w-4 h-4 fill-[#2874f0]" /> Rate & Review Product
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className={`flex flex-row sm:flex-col items-start sm:items-end shrink-0 gap-2 w-full sm:w-auto ${isExpanded ? 'flex' : 'hidden md:flex'}`}>
+            {showCancelBtn && order.cancelAction && (
+              <button
+                onClick={() => onCancel?.(order.id)}
+                className="px-4 py-1.5 border border-red-500 text-red-600 rounded text-[12px] font-semibold hover:bg-red-50 transition-colors shadow-sm w-full sm:w-auto"
+              >
+                Cancel Order
+              </button>
+            )}
+            {order.returnAction && (
+              <button
+                onClick={() => onReturn?.(order.id)}
+                className="px-4 py-1.5 border border-[#2874f0] text-[#2874f0] rounded text-[12px] font-semibold hover:bg-blue-50 transition-colors shadow-sm w-full sm:w-auto"
+              >
+                Return Item
+              </button>
+            )}
+          </div>
+        </div>
       </div>
+
+      {/* Refund Box */}
+      {showRefundBox && order.refundBox && (
+        <div className={`mt-5 border border-gray-100 rounded-sm p-4 bg-[#fafafa] ${isExpanded ? 'block' : 'hidden md:block'}`}>
+          <p className="text-[13px] mb-2">
+            <span className="font-semibold text-[#26a541]">{order.refundTitle}</span>
+            <span className="text-gray-500 ml-1">{order.refundId}</span>
+          </p>
+          <ul className="list-disc pl-4 text-[12px] text-gray-800 space-y-2">
+            <li>{order.refundDesc}</li>
+          </ul>
+          <p className="text-[11px] text-gray-500 mt-2">
+            If you can't see the refund in your bank statement(bank app/passbook), contact your bank and share refund reference number 852409773035 to track it.
+          </p>
+        </div>
+      )}
     </div>
   );
 }
 
-function OrdersPanel() {
+function OrdersPanel({ orders, onCancel, onReturn }: { orders: OrderItem[], onCancel: (id: string) => void, onReturn: (id: string) => void }) {
   return (
     <div>
       <h2 style={{ fontSize: "1.25rem", fontWeight: 800, color: "#111827", marginBottom: "1.25rem" }}>Order History</h2>
-      <div className="border border-gray-200 rounded-xl overflow-hidden w-full">
-        <div className="grid grid-cols-[1.5fr_1fr_1.2fr_1fr_auto] sm:grid-cols-[2fr_1fr_1fr_1fr_auto] gap-1 sm:gap-4 p-2 sm:px-5 sm:py-3 bg-gray-50 border-b border-gray-200 w-full">
-          {["Order ID", "Date", "Status", "Total", ""].map((h) => (
-            <span key={h} className="text-[8px] sm:text-[0.7rem] font-bold text-gray-400 uppercase tracking-wider truncate">{h}</span>
-          ))}
-        </div>
-        {mockOrders.map((order, idx) => (
-          <div key={order.id} className={`grid grid-cols-[1.5fr_1fr_1.2fr_1fr_auto] sm:grid-cols-[2fr_1fr_1fr_1fr_auto] gap-1 sm:gap-4 items-center p-2 sm:px-5 sm:py-4 ${idx < mockOrders.length - 1 ? "border-b border-gray-100" : ""}`}>
-            <span className="font-bold text-[10px] sm:text-[0.85rem] text-gray-900 truncate pr-1">{order.id}</span>
-            <span className="text-[9px] sm:text-[0.8rem] text-gray-500 truncate">{order.date}</span>
-            <span className={`text-[9px] sm:text-[0.75rem] font-semibold px-1 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-center truncate ${order.status === "Delivered" ? "bg-green-50 text-green-600" : "bg-yellow-50 text-yellow-700"}`}>
-              {order.status}
-            </span>
-            <span className="font-bold text-[10px] sm:text-[0.85rem] text-right sm:text-left pr-1">{order.total}</span>
-            <button className="px-2 py-1 sm:px-3 sm:py-1 border border-primary text-primary font-semibold text-[9px] sm:text-[0.75rem] rounded-md hover:bg-primary/5 whitespace-nowrap">
-              View
-            </button>
-          </div>
+      <div className="flex flex-col gap-4">
+        {orders.map((order) => (
+          <OrderCard key={order.id} order={order} showCancelBtn={true} onCancel={onCancel} onReturn={onReturn} />
         ))}
+        <div className="flex justify-center mt-4">
+          <button className="px-6 py-2 border border-gray-200 text-[#2874f0] font-semibold text-[13px] bg-white shadow-sm hover:bg-gray-50">
+            No More Results To Display
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -179,90 +276,222 @@ function DetailsPanel() {
 }
 
 function AddressPanel() {
+  const { addresses, addAddress, updateAddress, deleteAddress } = useAddressStore();
+  const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [formData, setFormData] = useState<Partial<Address>>({});
+
+  const handleAddNew = () => {
+    setEditingId(null);
+    setFormData({
+      name: "",
+      phone: "+91 ",
+      email: "",
+      addressLine: "",
+      pinCode: "",
+      city: "",
+      state: "Kerala",
+      label: "Home"
+    });
+    setShowForm(true);
+  };
+
+  const handleEdit = (addr: Address) => {
+    setEditingId(addr.id);
+    setFormData(addr);
+    setShowForm(true);
+  };
+
+  const handleSave = () => {
+    if (!formData.addressLine || !formData.pinCode || !formData.phone) return;
+
+    if (editingId) {
+      updateAddress(editingId, formData as Address);
+    } else {
+      addAddress({
+        ...formData,
+        id: `addr-${Date.now()}`,
+        icon: formData.label?.toLowerCase() === "office" ? "office" : "home"
+      } as Address);
+    }
+    setShowForm(false);
+  };
+
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.25rem" }}>
         <h2 style={{ fontSize: "1.25rem", fontWeight: 800, color: "#111827" }}>My Addresses</h2>
-        <button style={{ background: PRIMARY, color: "#fff", border: "none", borderRadius: "10px", padding: "0.5rem 1.25rem", fontWeight: 700, fontSize: "0.8rem", cursor: "pointer" }}>+ Add Address</button>
+        <button
+          onClick={() => {
+            if (showForm) {
+              setShowForm(false);
+            } else {
+              handleAddNew();
+            }
+          }}
+          style={{ background: PRIMARY, color: "#fff", border: "none", borderRadius: "10px", padding: "0.5rem 1.25rem", fontWeight: 700, fontSize: "0.8rem", cursor: "pointer" }}
+        >
+          {showForm ? "Cancel" : "+ Add Address"}
+        </button>
       </div>
-      <div style={{ border: "1px solid #e5e7eb", borderRadius: "12px", padding: "1.25rem", marginBottom: "12px" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.5rem" }}>
-          <span style={{ fontWeight: 700, fontSize: "0.875rem" }}>Home</span>
-          <div style={{ display: "flex", gap: "8px" }}>
-            <button style={{ fontSize: "0.75rem", color: PRIMARY, background: "transparent", border: "none", cursor: "pointer", fontWeight: 600 }}>Edit</button>
-            <button style={{ fontSize: "0.75rem", color: "#ef4444", background: "transparent", border: "none", cursor: "pointer", fontWeight: 600 }}>Delete</button>
+
+      {addresses.map((addr) => (
+        <div key={addr.id} style={{ border: "1px solid #e5e7eb", borderRadius: "12px", padding: "1.25rem", marginBottom: "12px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.5rem" }}>
+            <span style={{ fontWeight: 700, fontSize: "0.875rem" }}>{addr.label || "Address"}</span>
+            <div style={{ display: "flex", gap: "8px" }}>
+              <button onClick={() => handleEdit(addr)} style={{ fontSize: "0.75rem", color: PRIMARY, background: "transparent", border: "none", cursor: "pointer", fontWeight: 600 }}>Edit</button>
+              <button onClick={() => deleteAddress(addr.id)} style={{ fontSize: "0.75rem", color: "#ef4444", background: "transparent", border: "none", cursor: "pointer", fontWeight: 600 }}>Delete</button>
+            </div>
+          </div>
+          <p style={{ fontSize: "0.82rem", color: "#6b7280", lineHeight: 1.6 }}>
+            {addr.name && <>{addr.name}<br /></>}
+            {addr.addressLine}<br />
+            {addr.city}, {addr.state} {addr.pinCode}<br />
+            {addr.phone}
+          </p>
+        </div>
+      ))}
+
+      {showForm && (
+        <div className="bg-white rounded-xl border border-gray-200 p-6 mt-6">
+          <p className="text-gray-500 mb-6 text-sm">
+            {editingId ? "Update your address details." : "Add a new address for faster checkout."}
+          </p>
+
+          <div className="space-y-5">
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-1.5">Label <span className="text-gray-400 font-normal">(e.g. Home, Office)</span></label>
+              <input type="text" placeholder="Home" value={formData.label || ""} onChange={(e) => setFormData({ ...formData, label: e.target.value })} className="w-full rounded-lg border-2 border-gray-200 focus:border-[#8b5cf6] px-4 py-2.5 focus:outline-none focus:ring-4 focus:ring-[#8b5cf6]/20 transition-all" />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-1.5">Full name <span className="text-gray-400 font-normal">(Optional)</span></label>
+              <input type="text" placeholder="Your name" value={formData.name || ""} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="w-full rounded-lg border-2 border-gray-200 focus:border-[#8b5cf6] px-4 py-2.5 focus:outline-none focus:ring-4 focus:ring-[#8b5cf6]/20 transition-all" />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-1.5">Mobile number <span className="text-red-500">*</span></label>
+              <div className="flex border border-gray-300 rounded-lg overflow-hidden focus-within:border-[#8b5cf6] focus-within:ring-4 focus-within:ring-[#8b5cf6]/20 transition-all">
+                <button type="button" className="flex items-center gap-2 px-3 bg-gray-50 border-r border-gray-300">
+                  <span className="text-lg leading-none">🇮🇳</span>
+                  <span className="text-xs text-gray-600 font-medium">↕</span>
+                </button>
+                <input type="tel" value={formData.phone || ""} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="flex-1 px-4 py-2.5 focus:outline-none" />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-1.5">Email address <span className="text-gray-400 font-normal">(Optional)</span></label>
+              <input type="email" value={formData.email || ""} onChange={(e) => setFormData({ ...formData, email: e.target.value })} placeholder="Email" className="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:outline-none focus:border-[#8b5cf6] focus:ring-4 focus:ring-[#8b5cf6]/20 transition-all" />
+              <p className="text-xs text-gray-500 mt-1.5">Optional. Used for order updates and receipts.</p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-1.5">Address <span className="text-red-500">*</span></label>
+              <textarea rows={3} value={formData.addressLine || ""} onChange={(e) => setFormData({ ...formData, addressLine: e.target.value })} className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:border-[#8b5cf6] focus:ring-4 focus:ring-[#8b5cf6]/20 transition-all resize-none"></textarea>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-1.5">Pin code <span className="text-red-500">*</span></label>
+              <input type="text" value={formData.pinCode || ""} onChange={(e) => setFormData({ ...formData, pinCode: e.target.value })} className="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:outline-none focus:border-[#8b5cf6] focus:ring-4 focus:ring-[#8b5cf6]/20 transition-all" />
+              {formData.pinCode && formData.pinCode.length > 5 && (
+                <div className="mt-2 space-y-1">
+                  <p className="text-xs text-emerald-600 font-medium flex items-center gap-1">✓ Location found • {formData.city || "Kozhikode"}, {formData.state || "Kerala"}</p>
+                  <p className="text-xs text-emerald-600">Delivery via Ekart Logistics Surface</p>
+                </div>
+              )}
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-900 mb-1.5">City <span className="text-red-500">*</span></label>
+                <input type="text" value={formData.city || ""} onChange={(e) => setFormData({ ...formData, city: e.target.value })} className="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:outline-none focus:border-[#8b5cf6]" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-900 mb-1.5">State <span className="text-gray-400 font-normal">(Optional)</span></label>
+                <div className="relative">
+                  <select value={formData.state || ""} onChange={(e) => setFormData({ ...formData, state: e.target.value })} className="w-full appearance-none rounded-lg border border-gray-300 px-4 py-2.5 text-gray-500 bg-gray-50 focus:outline-none">
+                    <option value="Kerala">Kerala</option>
+                    <option value="Karnataka">Karnataka</option>
+                    <option value="Tamil Nadu">Tamil Nadu</option>
+                    <option value="Maharashtra">Maharashtra</option>
+                    <option value="Delhi">Delhi</option>
+                  </select>
+                  <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                  </div>
+                </div>
+                <p className="text-xs text-gray-500 mt-1.5 flex items-center gap-1">
+                  <MapPin className="w-3 h-3" /> Auto-filled from PIN
+                </p>
+              </div>
+            </div>
+
+            <div className="pt-2 flex items-center gap-3">
+              <button onClick={handleSave} type="button" className="bg-[#8b5cf6] hover:bg-[#7c3aed] text-white px-6 py-2.5 rounded-lg font-bold text-sm">
+                Save Address
+              </button>
+              <button onClick={() => setShowForm(false)} type="button" className="text-gray-500 hover:text-gray-900 font-medium text-sm">
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
-        <p style={{ fontSize: "0.82rem", color: "#6b7280", lineHeight: 1.6 }}>123 Main Street, Apt 4B<br />New York, NY 10001<br />United States</p>
-      </div>
-      <div style={{ border: "1px solid #e5e7eb", borderRadius: "12px", padding: "1.25rem" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.5rem" }}>
-          <span style={{ fontWeight: 700, fontSize: "0.875rem" }}>Office</span>
-          <div style={{ display: "flex", gap: "8px" }}>
-            <button style={{ fontSize: "0.75rem", color: PRIMARY, background: "transparent", border: "none", cursor: "pointer", fontWeight: 600 }}>Edit</button>
-            <button style={{ fontSize: "0.75rem", color: "#ef4444", background: "transparent", border: "none", cursor: "pointer", fontWeight: 600 }}>Delete</button>
-          </div>
-        </div>
-        <p style={{ fontSize: "0.82rem", color: "#6b7280", lineHeight: 1.6 }}>450 Park Avenue, Floor 12<br />New York, NY 10022<br />United States</p>
-      </div>
+      )}
     </div>
   );
 }
 
 
 
-function ReviewsPanel() {
-  const [activeTab, setActiveTab] = useState<"to-review" | "history">("history");
+function RewardPanel() {
   return (
     <div>
-      {/* Tabs */}
-      <div style={{ display: "flex", gap: "8px", marginBottom: "1.25rem" }}>
-        {(["to-review", "history"] as const).map((tab) => {
-          const isActive = activeTab === tab;
-          return (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              style={{ padding: "0.4rem 1.1rem", border: isActive ? "none" : "1px solid #e5e7eb", borderRadius: "8px", background: isActive ? PRIMARY : "#fff", color: isActive ? "#fff" : "#6b7280", fontWeight: 600, fontSize: "0.83rem", cursor: "pointer", transition: "all 0.15s ease" }}
-            >
-              {tab === "to-review" ? "To Review" : "Review History"}
-            </button>
-          );
-        })}
-      </div>
+      <h2 style={{ fontSize: "1.25rem", fontWeight: 800, color: "#111827", marginBottom: "1.25rem" }}>My Reward Coins</h2>
 
-      {/* Review list */}
-      <div style={{ border: "1px solid #e5e7eb", borderRadius: "12px", overflow: "hidden" }}>
-        {mockReviews.map((review, idx) => (
-          <div key={review.id} style={{ padding: "1.25rem", borderBottom: idx < mockReviews.length - 1 ? "1px solid #f3f4f6" : "none" }}>
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4">
-              <div className="flex items-center gap-3 flex-1">
-                <div style={{ position: "relative", width: "44px", height: "44px", borderRadius: "8px", overflow: "hidden", background: "#f5f5f5", flexShrink: 0, border: "1px solid #e5e7eb" }}>
-                  <Image src={review.image} alt={review.product} fill style={{ objectFit: "contain", padding: "4px" }} />
-                </div>
-                <p style={{ fontWeight: 600, fontSize: "0.875rem", color: "#111827", lineHeight: 1.4 }}>{review.product}</p>
-              </div>
-              <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto shrink-0 border-t sm:border-0 pt-3 sm:pt-0 border-gray-100">
-                <div className="text-left sm:text-right">
-                  <p style={{ fontSize: "0.65rem", color: "#9ca3af", marginBottom: "1px" }}>Purchased on</p>
-                  <p style={{ fontSize: "0.75rem", fontWeight: 600, color: "#374151", marginBottom: "0px" }} className="sm:mb-2">{review.purchasedOn}</p>
-                </div>
-                <button style={{ background: PRIMARY, color: "#fff", border: "none", borderRadius: "8px", padding: "5px 14px", fontWeight: 600, fontSize: "0.75rem", cursor: "pointer" }}>
-                  Edit Review
-                </button>
-              </div>
-            </div>
-            <div style={{ marginBottom: "0.6rem" }}><StarRating count={review.rating} /></div>
-            <p style={{ fontSize: "0.8rem", color: "#6b7280", lineHeight: 1.65, marginBottom: "0.85rem" }}>{review.reviewText}</p>
-            <div style={{ display: "flex", gap: "8px" }}>
-              {review.photos.map((photo, i) => (
-                <div key={i} style={{ position: "relative", width: "72px", height: "60px", borderRadius: "8px", overflow: "hidden", background: "#1a1a2e" }}>
-                  <Image src={photo} alt="Review photo" fill style={{ objectFit: "cover", opacity: 0.85 }} />
-                </div>
-              ))}
+      <div className="bg-gradient-to-r from-[#f0fdf4] to-[#dcfce7] rounded-sm p-6 sm:p-8 border border-[#bbf7d0] flex flex-col sm:flex-row items-center sm:items-start justify-between gap-6 mb-8 shadow-sm">
+        <div className="flex items-center gap-5">
+          <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center shrink-0">
+            <Gift className="w-8 h-8 text-[#16a34a]" />
+          </div>
+          <div>
+            <p className="text-[#166534] text-sm font-semibold mb-1 uppercase tracking-wider">Available Balance</p>
+            <div className="flex items-end gap-2">
+              <span className="text-4xl font-black text-[#14532d] leading-none">450</span>
+              <span className="text-[#15803d] font-bold text-lg mb-0.5">Coins</span>
             </div>
           </div>
-        ))}
+        </div>
+
+        <button className="w-full sm:w-auto bg-[#16a34a] hover:bg-[#15803d] text-white font-bold py-3 px-8 rounded-sm transition-colors shadow-sm">
+          Redeem Now
+        </button>
+      </div>
+
+      <h3 className="font-bold text-gray-900 text-lg mb-4">How it works</h3>
+      <div className="grid sm:grid-cols-3 gap-4">
+        <div className="bg-white border border-gray-100 rounded-xl p-5 shadow-sm">
+          <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center mb-3">
+            <ShoppingBag className="w-5 h-5 text-blue-600" />
+          </div>
+          <h4 className="font-bold text-gray-900 mb-2">Shop</h4>
+          <p className="text-xs text-gray-500 leading-relaxed">Earn 1 Woxly Coin for every $10 spent on our store.</p>
+        </div>
+        <div className="bg-white border border-gray-100 rounded-xl p-5 shadow-sm">
+          <div className="w-10 h-10 rounded-full bg-purple-50 flex items-center justify-center mb-3">
+            <Star className="w-5 h-5 text-purple-600" />
+          </div>
+          <h4 className="font-bold text-gray-900 mb-2">Review</h4>
+          <p className="text-xs text-gray-500 leading-relaxed">Earn 50 coins for every photo review you leave on products.</p>
+        </div>
+        <div className="bg-white border border-gray-100 rounded-xl p-5 shadow-sm">
+          <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center mb-3">
+            <Gift className="w-5 h-5 text-green-600" />
+          </div>
+          <h4 className="font-bold text-gray-900 mb-2">Redeem</h4>
+          <p className="text-xs text-gray-500 leading-relaxed">Use your coins for discounts! 100 coins = $5 off your order.</p>
+        </div>
       </div>
     </div>
   );
@@ -270,34 +499,79 @@ function ReviewsPanel() {
 
 // ─── Main Page ────────────────────────────────────────────
 export default function AccountPage() {
-  const [activeNav, setActiveNav] = useState("reviews");
+  const [activeNav, setActiveNav] = useState("orders");
+  const [orders, setOrders] = useState<OrderItem[]>(initialOrders);
+
+  const cancelOrder = (id: string) => {
+    const today = new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+    setOrders((prev) =>
+      prev.map((o) =>
+        o.id === id
+          ? {
+            ...o,
+            status: `Cancelled on ${today}`,
+            statusColor: "red",
+            statusDesc: "Your order was cancelled as per your request.",
+            cancelAction: false,
+            refundBox: true,
+            refundTitle: "Refund Initiated",
+            refundId: `(Refund ID: REF${Date.now()})`,
+            refundDesc: `A refund of ${o.price} will be credited to your original payment method within 5-7 business days.`,
+          }
+          : o
+      )
+    );
+  };
+
+  const returnOrder = (id: string) => {
+    const today = new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+    setOrders((prev) =>
+      prev.map((o) =>
+        o.id === id
+          ? {
+            ...o,
+            status: `Return requested on ${today}`,
+            statusColor: "yellow",
+            statusDesc: "Your return request is being processed. A pickup will be scheduled soon.",
+            returnAction: false,
+            reviewAction: false,
+            refundBox: true,
+            refundTitle: "Return Requested",
+            refundId: `(Return ID: RET${Date.now()})`,
+            refundDesc: `Once the item is picked up and verified, a refund of ${o.price} will be credited to your original payment method.`,
+          }
+          : o
+      )
+    );
+  };
 
   const panelMap: Record<string, React.ReactNode> = {
-    dashboard: <DashboardPanel />,
-    orders: <OrdersPanel />,
+    orders: <OrdersPanel orders={orders} onCancel={cancelOrder} onReturn={returnOrder} />,
+    returns: <OrdersPanel orders={orders.filter(o => o.status.includes('Return'))} onCancel={cancelOrder} onReturn={returnOrder} />,
     details: <DetailsPanel />,
     address: <AddressPanel />,
-
-    reviews: <ReviewsPanel />,
+    rewards: <RewardPanel />,
   };
 
   return (
     <div style={{ minHeight: "100vh", background: "#f8fafc", paddingBottom: "3rem" }}>
-      <div className="max-w-[1100px] mx-auto pt-8 px-5 grid grid-cols-1 md:grid-cols-[220px_1fr] gap-6 items-start">
+      <div className="max-w-[1100px] mx-auto pt-8 px-5 flex flex-col gap-6">
 
-        {/* ── Sidebar ── */}
-        <div style={{ ...card }}>
-          {/* Avatar */}
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "1.75rem 1rem 1.25rem", borderBottom: "1px solid #f3f4f6" }}>
-            <div style={{ width: "72px", height: "72px", borderRadius: "50%", background: "#e5e7eb", overflow: "hidden", marginBottom: "0.75rem", position: "relative", border: "3px solid #fff", boxShadow: "0 2px 8px rgba(0,0,0,0.12)" }}>
-              <Image src="/images/product_placeholder.png" alt="Avatar" fill style={{ objectFit: "cover" }} />
+        {/* ── Top Navigation Header ── */}
+        <div className=" border border-gray-100  overflow-hidden flex flex-col lg:flex-row items-center justify-between p-4 lg:px-6 gap-4">
+          {/* Avatar Profile */}
+          <div className="flex items-center gap-3 w-full lg:w-auto shrink-0 justify-left lg:justify-start">
+            <div className="w-12 h-12 rounded-full bg-gray-200 overflow-hidden relative border-2 border-white shadow-sm shrink-0">
+              <Image src="/images/product_placeholder.png" alt="Avatar" fill className="object-cover" />
             </div>
-            <p style={{ fontSize: "0.7rem", color: "#9ca3af", marginBottom: "2px" }}>Hello,</p>
-            <p style={{ fontWeight: 700, fontSize: "0.95rem", color: "#111827" }}>Jenny Wilson</p>
+            <div>
+              <p className="text-[11px] text-gray-400 m-0 leading-tight">Hello,</p>
+              <p className="font-bold text-gray-900 text-[15px] m-0 leading-tight">Jenny Wilson</p>
+            </div>
           </div>
 
-          {/* Nav */}
-          <nav style={{ padding: "0.5rem 0 0.75rem" }}>
+          {/* Nav Links */}
+          <nav className="grid grid-cols-2 lg:flex lg:flex-nowrap items-center justify-center gap-2 lg:gap-1.5 w-full lg:w-auto">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeNav === item.id;
@@ -305,22 +579,29 @@ export default function AccountPage() {
                 <button
                   key={item.id}
                   onClick={() => setActiveNav(item.id)}
-                  style={{ width: "100%", display: "flex", alignItems: "center", gap: "10px", padding: "0.65rem 1.25rem", border: "none", borderLeft: isActive ? `3px solid ${PRIMARY}` : "3px solid transparent", background: isActive ? PRIMARY_LIGHT : "transparent", color: isActive ? PRIMARY : "#6b7280", fontWeight: isActive ? 700 : 400, fontSize: "0.875rem", cursor: "pointer", textAlign: "left", transition: "all 0.15s ease" }}
+                  className={`flex items-center justify-center lg:justify-start gap-1.5 px-2 lg:px-4 py-2 border border-gray-300 rounded-sm transition-all whitespace-nowrap ${isActive
+                    ? "bg-[#e0f2fe] text-[#2563eb] font-bold"
+                    : "text-gray-500 hover:bg-gray-50 font-medium"
+                    }`}
                 >
-                  <Icon style={{ width: "16px", height: "16px", flexShrink: 0 }} />
-                  {item.label}
+                  <Icon className="w-4 h-4 shrink-0" />
+                  <span className="text-[12px] lg:text-[13px]">{item.label}</span>
                 </button>
               );
             })}
-            <Link href="/" style={{ display: "flex", alignItems: "center", gap: "10px", padding: "0.65rem 1.25rem", borderLeft: "3px solid transparent", color: "#ef4444", fontWeight: 400, fontSize: "0.875rem", textDecoration: "none" }}>
-              <LogOut style={{ width: "16px", height: "16px" }} />
-              Logout
+            <div className="w-[1px] h-6 bg-gray-200 mx-1 hidden lg:block"></div>
+            <Link
+              href="/"
+              className="flex items-center  border border-gray-300 rounded-sm justify-center lg:justify-start gap-1.5 px-2 lg:px-4 py-2 text-red-500 hover:bg-red-50  transition-all font-medium whitespace-nowrap"
+            >
+              <LogOut className="w-4 h-4 shrink-0" />
+              <span className="text-[12px] lg:text-[13px]">Logout</span>
             </Link>
           </nav>
         </div>
 
         {/* ── Main Content panel ── */}
-        <div style={{ ...card, padding: "1.5rem" }}>
+        <div className="bg-white  border border-gray-200 shadow-sm overflow-hidden p-6">
           {panelMap[activeNav]}
         </div>
       </div>

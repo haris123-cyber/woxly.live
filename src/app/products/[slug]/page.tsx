@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -17,6 +17,7 @@ import {
   Plus,
   Heart,
   ShoppingBag,
+  ShoppingCart,
   ChevronRight,
   ChevronLeft,
   ArrowLeft,
@@ -24,7 +25,22 @@ import {
   BadgePercent,
   ShieldCheck,
   ShieldAlert,
+  BadgeCheck,
+  CheckCircle2,
 } from "lucide-react";
+
+const WhatsAppIcon = ({ className }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    width="24"
+    height="24"
+    className={className}
+    fill="currentColor"
+  >
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a5.29 5.29 0 0 0-.571-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.052 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z" />
+  </svg>
+);
 
 export default function ProductDetailPage() {
   const { slug } = useParams();
@@ -32,6 +48,34 @@ export default function ProductDetailPage() {
   const addItem = useCartStore((state) => state.addItem);
   const { toggleItem, isInWatchlist } = useWatchlistStore();
   const router = useRouter();
+
+  const [showStickyCTAs, setShowStickyCTAs] = useState(false);
+  const inPageCTARef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // Show sticky CTAs when the in-page CTA is NOT visible
+        setShowStickyCTAs(!entry.isIntersecting);
+      },
+      {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0,
+      }
+    );
+
+    const currentRef = inPageCTARef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, []);
 
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState<string | undefined>(
@@ -79,7 +123,7 @@ export default function ProductDetailPage() {
 
   const handleBuyNow = () => {
     addItem(product, quantity, selectedColor, product.sizes?.[0]);
-    router.push("/checkout");
+    router.push("/cart");
   };
 
   const relatedProducts = PRODUCTS.filter(
@@ -88,19 +132,141 @@ export default function ProductDetailPage() {
 
   const reviews = [
     {
-      name: "Cameron Williamson",
-      text: "I recently bought this and I'm thrilled with my purchase!",
+      name: "Sinsar Dg",
+      date: "Apr, 2026",
+      rating: 5,
+      title: "Best and Fresh",
+      text: "Very fresh Atlantic salmon, no fishy smell at all. The cut was generous and cooked beautifully. Highly recommend.",
+      verified: false
     },
     {
-      name: "Brooklyn Simmons",
-      text: "Great quality and arrived on time. Highly recommend!",
+      name: "Sunitha KV",
+      date: "Apr, 2026",
+      rating: 5,
+      title: "Best salmon I have ordered online",
+      text: "",
+      verified: true
     },
     {
-      name: "Dianne Russell",
+      name: "Rahul",
+      date: "Apr, 2026",
       rating: 4,
-      text: "Good product overall. Delivery was a day late.",
+      title: "Good quality fish",
+      text: "Nice thick fillet, good colour. Cooked it the same day and it was delicious. Delivery was quick too.",
+      verified: false
     },
+    {
+      name: "Priya Nair",
+      date: "Apr, 2026",
+      rating: 5,
+      title: "Fresh and perfectly cut",
+      text: "The salmon arrived very fresh. Cooked it pan-seared with lemon and it was restaurant quality. Will definitely order again.",
+      verified: true
+    }
   ];
+
+  const renderReviewsTab = () => (
+    <div className="flex flex-col mt-2">
+      <h3 className="font-bold text-lg mb-6">Customer reviews</h3>
+
+      {/* Rating Overview */}
+      <div className="flex flex-row items-center gap-4 sm:gap-10 py-6 border-y border-gray-100 mb-6">
+        <div className="flex flex-col items-center w-24 sm:w-32 shrink-0">
+          <span className="text-4xl font-bold text-gray-900 mb-1">4.8</span>
+          <div className="flex items-center gap-0.5 sm:gap-1 mb-1">
+            {[...Array(5)].map((_, i) => (
+              <Star
+                key={i}
+                className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${i < 4
+                  ? "fill-[#f89820] text-[#f89820]"
+                  : "text-[#f89820]"
+                  }`}
+              />
+            ))}
+          </div>
+          <span className="text-xs sm:text-[13px] text-gray-400">{reviews.length} reviews</span>
+        </div>
+
+        {/* Vertical Divider */}
+        <div className="w-[1px] h-20 bg-gray-100 shrink-0"></div>
+
+        <div className="flex-1 w-full max-w-[280px] space-y-2 pl-2 sm:pl-0">
+          {[
+            { stars: 5, percent: 75, count: 3 },
+            { stars: 4, percent: 25, count: 1 },
+            { stars: 3, percent: 0, count: 0 },
+            { stars: 2, percent: 0, count: 0 },
+            { stars: 1, percent: 0, count: 0 },
+          ].map((bar) => (
+            <div key={bar.stars} className="flex items-center gap-2 sm:gap-3">
+              <div className="flex items-center gap-1 w-6 sm:w-8 shrink-0 justify-end">
+                <span className="text-xs font-medium text-gray-700">{bar.stars}</span>
+                <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-[#f89820] text-[#f89820]" />
+              </div>
+              <div className="flex-1 h-1.5 sm:h-2 rounded-full bg-[#f4eefc] overflow-hidden">
+                <div
+                  className="h-full bg-[#f89820] rounded-full"
+                  style={{ width: `${bar.percent}%` }}
+                />
+              </div>
+              <span className="text-[10px] sm:text-xs text-gray-400 w-3 sm:w-4 text-right">{bar.count}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Reviews List */}
+      <div className="flex flex-col">
+        {reviews.map((review, idx) => (
+          <div key={idx} className="flex gap-4 p-5 mb-4 bg-white rounded-2xl border border-gray-100">
+            <div className="w-10 h-10 rounded-full bg-[#f3edff] text-[#8b5cf6] flex items-center justify-center text-xs font-bold shrink-0 uppercase">
+              {review.name.split(" ").map(n => n[0]).join("").substring(0, 2)}
+            </div>
+            <div className="flex-1">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1 mb-2">
+                <div className="flex flex-col gap-0.5">
+                  <span className="text-sm font-semibold text-gray-900">{review.name}</span>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    {review.verified && (
+                      <span className="flex items-center gap-1 text-[#00a859] text-[11px] font-bold">
+                        <CheckCircle2 className="w-3.5 h-3.5 fill-[#00a859] text-white" />
+                        Verified buyer
+                      </span>
+                    )}
+                    {review.verified && <span className="text-gray-300 text-[10px]">•</span>}
+                    <span className="text-[11px] text-gray-500">{review.date}</span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center gap-1 mb-3">
+                {[...Array(5)].map((_, i) => (
+                  <Star
+                    key={i}
+                    className={`w-3.5 h-3.5 ${i < (review.rating || 5)
+                      ? "fill-[#f89820] text-[#f89820]"
+                      : "fill-gray-200 text-gray-200"
+                      }`}
+                  />
+                ))}
+              </div>
+              {review.title && (
+                <h4 className="text-[13px] font-bold text-gray-900 mb-1.5">{review.title}</h4>
+              )}
+              {review.text && (
+                <p className="text-[13px] text-gray-600 leading-relaxed">
+                  {review.text}
+                </p>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-4 pt-4 text-[13px] text-gray-500">
+        <Link href="/login" className="text-[#8b5cf6] underline hover:text-[#7c3aed] transition-colors">Sign in</Link> to leave a review.
+      </div>
+    </div>
+  );
 
   return (
     <div className="bg-background min-h-screen overflow-x-hidden">
@@ -161,10 +327,10 @@ export default function ProductDetailPage() {
           {/* Price + stock row */}
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-baseline gap-2 flex-wrap">
-              <span className="text-2xl font-bold text-primary">₹{product.price.toFixed(2)}</span>
+              <span className="text-2xl font-bold text-primary">₹{product.price.toFixed(2).replace(/\.00$/, '')}</span>
               {originalPrice && (
                 <span className="text-sm text-muted-foreground line-through">
-                  ₹{originalPrice.toFixed(2)}
+                  ₹{originalPrice.toFixed(2).replace(/\.00$/, '')}
                 </span>
               )}
               {discountPercentage > 0 && (
@@ -181,32 +347,60 @@ export default function ProductDetailPage() {
             </span>
           </div>
 
-          {/* Quantity */}
-          <div className="flex items-center gap-3 mt-4 mb-4">
-            <span className="text-sm font-medium text-foreground">Qty</span>
-            <div className="flex items-center border border-border rounded-lg bg-background h-10">
-              <button
-                onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="w-9 h-full flex items-center justify-center text-muted-foreground"
-              >
-                <Minus className="w-3.5 h-3.5" />
-              </button>
-              <motion.span
-                key={quantity}
-                initial={{ opacity: 0, scale: 0.8, filter: "blur(2px)" }}
-                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                transition={{ duration: 0.15 }}
-                className="w-8 text-center text-sm font-semibold inline-block"
-              >
-                {quantity}
-              </motion.span>
-              <button
-                onClick={() => setQuantity(quantity + 1)}
-                className="w-9 h-full flex items-center justify-center text-muted-foreground"
-              >
-                <Plus className="w-3.5 h-3.5" />
-              </button>
+          {/* Action CTAs */}
+          <div ref={inPageCTARef} className="flex flex-col gap-3 mt-4 mb-6">
+            <div className="flex items-center">
+              <span className="text-[11px] font-bold text-[#ef4444] bg-[#fee2e2] px-2 py-0.5 rounded-full border border-[#fca5a5]">
+                only9 kgleft!
+              </span>
             </div>
+            <div className="flex items-center gap-3 h-12">
+              <div className="flex items-center border border-border rounded-xl bg-background h-full shrink-0 px-1">
+                <button
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  className="w-10 h-full flex items-center justify-center text-muted-foreground"
+                >
+                  <Minus className="w-4 h-4" />
+                </button>
+                <motion.span
+                  key={quantity}
+                  initial={{ opacity: 0, scale: 0.8, filter: "blur(2px)" }}
+                  animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                  transition={{ duration: 0.15 }}
+                  className="w-8 text-center text-sm font-semibold inline-block"
+                >
+                  {quantity}
+                </motion.span>
+                <button
+                  onClick={() => setQuantity(quantity + 1)}
+                  className="w-10 h-full flex items-center justify-center text-muted-foreground"
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+              </div>
+
+              <Button
+                onClick={handleAddToCart}
+                variant="outline"
+                className="flex-1 h-full rounded-xl border border-border text-foreground font-bold text-[13px] sm:text-sm bg-background hover:bg-muted"
+              >
+                <ShoppingBag className="w-4 h-4 mr-1.5" /> Add to cart — ₹{(product.price * quantity).toFixed(2).replace(/\.00$/, '')}
+              </Button>
+            </div>
+
+            <Button
+              onClick={handleBuyNow}
+              className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-sm uppercase tracking-wide border-0 shadow-sm"
+            >
+              Buy Now
+            </Button>
+
+            <Button
+              onClick={() => window.open("https://wa.me/1234567890", "_blank")}
+              className="w-full h-12 rounded-xl bg-[#25D366] hover:bg-[#128C7E] text-white font-bold text-sm uppercase tracking-wide border-0 shadow-sm"
+            >
+              <WhatsAppIcon className="w-5 h-5 mr-2" /> Enquire on WhatsApp
+            </Button>
           </div>
 
           {/* Offers & Discounts */}
@@ -343,43 +537,7 @@ export default function ProductDetailPage() {
               </p>
             )}
 
-            {activeTab === "reviews" && (
-              <div className="flex flex-col gap-4">
-                {reviews.map((review, idx) => (
-                  <div
-                    key={idx}
-                    className="border border-border p-4 bg-background rounded-lg"
-                  >
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="w-8 h-8 rounded-full bg-muted relative overflow-hidden shrink-0">
-                        <Image
-                          src="/images/product_placeholder.png"
-                          alt={review.name}
-                          fill
-                          className="object-cover p-0.5"
-                          sizes="32px"
-                        />
-                      </div>
-                      <span className="text-xs font-bold">{review.name}</span>
-                    </div>
-                    <div className="flex items-center gap-1 mb-1.5">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`w-3 h-3 ${i < (review.rating || 5)
-                            ? "fill-[#facc15] text-[#facc15]"
-                            : "fill-gray-200 text-gray-200"
-                            }`}
-                        />
-                      ))}
-                    </div>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
-                      {review.text}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            )}
+            {activeTab === "reviews" && renderReviewsTab()}
           </div>
 
           {/* Related — horizontal */}
@@ -403,21 +561,26 @@ export default function ProductDetailPage() {
         </div>
 
         {/* Sticky bottom CTAs — side by side */}
-        <div className="fixed bottom-[calc(3.5rem+env(safe-area-inset-bottom))] left-0 right-0 z-40 bg-transparent  px-4 py-3 flex gap-3 shadow-[0_-4px_10px_rgba(0,0,0,0.03)]">
-          <Button
-            onClick={handleAddToCart}
-            variant="outline"
-            className="flex-1 h-12 rounded-xl bg-white  text-foreground  font-bold text-sm uppercase tracking-wide"
-          >
-            Add to Cart
-          </Button>
-          <Button
-            onClick={handleBuyNow}
-            className="flex-1 h-12 rounded-md bg-primary  hover:opacity-90 text-primary-foreground font-bold text-sm uppercase tracking-wide border-0"
-          >
-            Buy Now
-          </Button>
-        </div>
+        <AnimatePresence>
+          {showStickyCTAs && (
+            <motion.div
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ duration: 0.2 }}
+              className="fixed bottom-[calc(3.5rem+env(safe-area-inset-bottom))] lg:hidden left-0 right-0 z-40  bg-transparent border-none px-4 py-3 flex gap-3 "
+            >
+              <Button
+                onClick={handleAddToCart}
+                variant="outline"
+                className="flex-2 sm:w-[70%] h-12 rounded-xl bg-background border-[1px] border-gray-600 text-primary font-bold text-sm uppercase tracking-wide"
+              >
+                Add to Cart
+              </Button>
+
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* ── DESKTOP LAYOUT ── */}
@@ -468,10 +631,10 @@ export default function ProductDetailPage() {
             </div>
 
             <div className="flex items-center gap-3 mb-6 flex-wrap">
-              <span className="text-2xl font-bold text-foreground">₹{product.price.toFixed(2)}</span>
+              <span className="text-2xl font-bold text-foreground">₹{product.price.toFixed(2).replace(/\.00$/, '')}</span>
               {originalPrice && (
                 <span className="text-lg text-muted-foreground line-through">
-                  ₹{originalPrice.toFixed(2)}
+                  ₹{originalPrice.toFixed(2).replace(/\.00$/, '')}
                 </span>
               )}
               {/* Green Discount Tag */}
@@ -516,7 +679,7 @@ export default function ProductDetailPage() {
                   variant="outline"
                   className="flex-1 h-12 font-medium text-[15px] border-border text-foreground hover:bg-muted"
                 >
-                  <ShoppingBag className="w-4 h-4 mr-2" /> Add to cart — ₹{product.price.toFixed(2)}
+                  <ShoppingBag className="w-4 h-4 mr-2" /> Add to cart — ₹{product.price.toFixed(2).replace(/\.00$/, '')}
                 </Button>
 
                 <Button
@@ -533,6 +696,13 @@ export default function ProductDetailPage() {
                 className="w-full h-14 bg-primary rounded-lg hover:bg-primary/90 text-white font-bold text-[15px] uppercase tracking-wide"
               >
                 Buy Now
+              </Button>
+
+              <Button
+                onClick={() => window.open("https://wa.me/1234567890", "_blank")}
+                className="w-full h-14 rounded-lg bg-[#25D366] hover:bg-[#128C7E] text-white font-bold text-[15px] uppercase tracking-wide border-0 shadow-sm"
+              >
+                <WhatsAppIcon className="w-5 h-5 mr-2" /> Enquire on WhatsApp
               </Button>
             </div>
 
@@ -676,40 +846,7 @@ export default function ProductDetailPage() {
             </div>
           )}
 
-          {activeTab === "reviews" && (
-            <div className="flex flex-col gap-4 mt-4">
-              {reviews.map((review, idx) => (
-                <div key={idx} className="border border-border p-5 bg-background rounded-xl">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 rounded-full bg-muted relative overflow-hidden shrink-0">
-                      <Image
-                        src="/images/product_placeholder.png"
-                        alt={review.name}
-                        fill
-                        className="object-cover p-1"
-                        sizes="40px"
-                      />
-                    </div>
-                    <span className="text-sm font-bold">{review.name}</span>
-                  </div>
-                  <div className="flex items-center gap-1 mb-2">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-3.5 h-3.5 ${i < (review.rating || 5)
-                          ? "fill-[#facc15] text-[#facc15]"
-                          : "fill-gray-200 text-gray-200"
-                          }`}
-                      />
-                    ))}
-                  </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    {review.text}
-                  </p>
-                </div>
-              ))}
-            </div>
-          )}
+          {activeTab === "reviews" && renderReviewsTab()}
         </div>
 
         <section className="py-8 border-t border-border">

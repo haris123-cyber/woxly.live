@@ -80,6 +80,12 @@ export default function ShopPage() {
   const [priceOpen, setPriceOpen] = useState(true);
   const [sortMenuOpen, setSortMenuOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
+  const [openCategoryGroups, setOpenCategoryGroups] = useState<string[]>([
+    "Food & Grocery",
+    "Beverages & Liquor",
+    "Beauty & Fashion",
+    "Home & Electronics"
+  ]);
 
   const sortOptions = [
     { value: "popular", label: "Popularity" },
@@ -167,6 +173,67 @@ export default function ShopPage() {
     else setter([...arr, value]);
   };
 
+  const renderCategoryFilter = () => (
+    <div className="mb-6">
+      <h3 className="font-bold text-gray-900 text-[18px] mb-4">Categories</h3>
+      <div className="border border-[#eaeff5] rounded-[16px] p-5 bg-[#fcfdfe]">
+        {[
+          {
+            title: "Food & Grocery",
+            items: ["Grocery", "Fruits & Veg", "Dairy & Eggs", "Snacks"]
+          },
+          {
+            title: "Beverages & Liquor",
+            items: ["Beverages", "Liquor"]
+          },
+          {
+            title: "Beauty & Fashion",
+            items: ["Beauty", "Fashion"]
+          },
+          {
+            title: "Home & Electronics",
+            items: ["Home Care", "Electronics", "More"]
+          }
+        ].map((cat, index) => {
+          const isOpen = openCategoryGroups.includes(cat.title);
+          return (
+            <div key={cat.title} className={index !== 3 ? "mb-5" : ""}>
+              <button
+                type="button"
+                onClick={() => toggleArrayItem(openCategoryGroups, cat.title, setOpenCategoryGroups)}
+                className="flex items-center justify-between font-bold text-[#0a1128] text-[14px] mb-3 text-left w-full hover:text-primary transition-colors"
+              >
+                <span>{cat.title}</span>
+
+              </button>
+              {cat.items.length > 0 && isOpen && (
+                <div className="border-l border-[#d3dae3] ml-[6px] py-1 space-y-[14px]">
+                  {cat.items.map((item) => {
+                    const isActive = selectedTypes.includes(item);
+                    return (
+                      <div key={item} className="relative pl-5 flex items-center">
+                        {isActive && (
+                          <div className="absolute -left-[1px] top-[-2px] bottom-[-2px] w-[2.5px] bg-primary rounded-full" />
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => toggleArrayItem(selectedTypes, item, setSelectedTypes)}
+                          className={`block text-[13.5px] transition-colors text-left w-full ${isActive ? 'text-primary font-bold' : 'text-[#5e6a7e] hover:text-[#0a1128]'}`}
+                        >
+                          {item}
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+
   const renderSidebar = () => (
     <div className="w-full pr-4 text-sm scroll">
       <div className="mb-6">
@@ -206,25 +273,7 @@ export default function ShopPage() {
       <div className="border-t border-gray-200 my-4" />
 
       {/* ── Categories ── */}
-      <div className="mb-4">
-        <span className="font-bold text-gray-900 text-[13px]">Categories</span>
-        <div className="mt-1">
-          {typeCounts.map(([name, count]) => {
-            const isActive = selectedTypes.includes(name);
-            return (
-              <button
-                key={name}
-                onClick={() => toggleArrayItem(selectedTypes, name, setSelectedTypes)}
-                className={`flex items-center justify-between w-full py-2 px-1 rounded-md transition-colors hover:bg-gray-50 ${isActive ? "text-gray-900 font-semibold" : "text-gray-600 font-normal"
-                  }`}
-              >
-                <span className="text-[13px]">{name}</span>
-                <span className={`text-[13px] tabular-nums ${isActive ? "text-gray-900 font-semibold" : "text-gray-400"}`}>{count}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
+      {renderCategoryFilter()}
 
       <div className="border-t border-gray-200 my-4" />
 
@@ -356,17 +405,7 @@ export default function ShopPage() {
       <div className="lg:hidden px-5 pt-4 pb-8">
         <h1 className="text-xl font-bold text-foreground mb-4">Product List</h1>
 
-        {/* Search */}
-        <div className="relative mb-4">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search Your Product"
-            className="w-full h-11 pl-10 pr-4 rounded-full border border-border bg-background text-sm placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-          />
-        </div>
+
 
         {/* Sort / Filter bar */}
         <div className="relative mb-4">
@@ -497,37 +536,8 @@ export default function ShopPage() {
             <div className="overflow-y-auto px-5 py-4 pb-28 max-h-[calc(90vh-120px)]">
 
 
-              {/* Category chips */}
-              <div className="mb-5">
-                <button
-                  type="button"
-                  onClick={() => setTypeOpen(!typeOpen)}
-                  className="flex items-center justify-between w-full mb-3"
-                >
-                  <span className="font-bold text-sm text-foreground">Category</span>
-                  {typeOpen ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
-                </button>
-                {typeOpen && (
-                  <div className="flex flex-wrap gap-2">
-                    {typeCounts.map(([name]) => {
-                      const selected = selectedTypes.includes(name);
-                      return (
-                        <button
-                          key={name}
-                          type="button"
-                          onClick={() => toggleArrayItem(selectedTypes, name, setSelectedTypes)}
-                          className={`px-3.5 py-2 rounded-lg text-xs font-semibold border transition-colors ${selected
-                            ? "bg-primary text-primary-foreground border-primary"
-                            : "bg-background text-foreground border-border"
-                            }`}
-                        >
-                          {name}
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
+              {/* Category filter */}
+              {renderCategoryFilter()}
 
               {/* Price */}
               <div className="mb-2">
@@ -536,7 +546,7 @@ export default function ShopPage() {
 
                 <div>
                   <p className="text-sm font-medium text-foreground mb-3">
-                    ₹{priceRange[0].toFixed(2)} - ₹{priceRange[1].toFixed(2)}
+                    ₹{priceRange[0].toFixed(2).replace(/\.00$/, '')} - ₹{priceRange[1].toFixed(2).replace(/\.00$/, '')}
                   </p>
                   <div className="relative h-6 flex items-center mb-1 px-0.5">
                     <div className="absolute inset-x-0 h-1.5 rounded-full bg-zinc-200" />

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Search, ShoppingBag, Menu, Heart, User, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/store/useCartStore";
@@ -9,6 +10,7 @@ import { useUIStore } from "@/store/useUIStore";
 import { useWatchlistStore } from "@/store/useWatchlistStore";
 
 export function Header() {
+  const pathname = usePathname();
   const [isMounted, setIsMounted] = useState(false);
   const itemCount = useCartStore((state) => state.getItemCount());
   const watchlistCount = useWatchlistStore((state) => state.getWatchlistCount());
@@ -21,10 +23,10 @@ export function Header() {
   return (
     <>
       {/* Marquee Announcement Bar */}
-      <div className="w-full bg-primary overflow-hidden whitespace-nowrap py-1.5 sm:py-2 flex items-center shrink-0">
+      <div className="w-full bg-primary overflow-hidden whitespace-nowrap py-2.5 sm:py-3 flex items-center shrink-0">
         <div className="animate-marquee flex whitespace-nowrap w-max">
           {[...Array(10)].map((_, i) => (
-            <span key={i} className="text-white text-[10px] sm:text-[11px] tracking-wider px-4 font-medium inline-block">
+            <span key={i} className="text-white text-[12px] sm:text-[14px] tracking-wider px-4 font-medium inline-block">
               use <strong className="font-bold uppercase">WELOCOM10</strong> code to 10% off on every product
             </span>
           ))}
@@ -55,6 +57,7 @@ export function Header() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
 
             <input
+              suppressHydrationWarning
               type="text"
               placeholder="Search..."
               className="w-full h-11 pl-11 pr-4 rounded-full border border-border/80 bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm placeholder:text-muted-foreground/60 shadow-sm"
@@ -115,11 +118,11 @@ export function Header() {
 
       {/* Mobile Bottom Navigation Bar */}
       <div className="sm:hidden fixed bottom-0 left-0 right-0 bg-background border-t border-border z-50 flex items-center justify-around h-14 px-2 pb-safe shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
-        <Link href="/" className="flex flex-col items-center gap-1 text-muted-foreground hover:text-primary transition-colors py-1 px-3">
+        <Link href="/" className={`flex flex-col items-center gap-1 transition-colors py-1 px-3 ${pathname === '/' ? 'text-primary' : 'text-muted-foreground hover:text-primary'}`}>
           <Home className="w-5 h-5" />
           <span className="text-[10px] font-medium">Home</span>
         </Link>
-        <Link href="/watchlist" className="relative flex flex-col items-center gap-1 text-muted-foreground hover:text-primary transition-colors py-1 px-3">
+        <Link href="/watchlist" className={`relative flex flex-col items-center gap-1 transition-colors py-1 px-3 ${pathname === '/watchlist' ? 'text-primary' : 'text-muted-foreground hover:text-primary'}`}>
           <Heart className="w-5 h-5" />
           <span className="text-[10px] font-medium">Wishlist</span>
           {isMounted && watchlistCount > 0 && (
@@ -128,7 +131,7 @@ export function Header() {
             </span>
           )}
         </Link>
-        <Link href="/cart" className="relative flex flex-col items-center gap-1 text-muted-foreground hover:text-primary transition-colors py-1 px-3">
+        <Link href="/cart" className={`relative flex flex-col items-center gap-1 transition-colors py-1 px-3 ${pathname === '/cart' ? 'text-primary' : 'text-muted-foreground hover:text-primary'}`}>
           <ShoppingBag className="w-5 h-5" />
           <span className="text-[10px] font-medium">Cart</span>
           {isMounted && itemCount > 0 && (
@@ -137,7 +140,7 @@ export function Header() {
             </span>
           )}
         </Link>
-        <Link href="/account" className="flex flex-col items-center gap-1 text-muted-foreground hover:text-primary transition-colors py-1 px-3">
+        <Link href="/account" className={`flex flex-col items-center gap-1 transition-colors py-1 px-3 ${pathname === '/account' ? 'text-primary' : 'text-muted-foreground hover:text-primary'}`}>
           <User className="w-5 h-5" />
           <span className="text-[10px] font-medium">Profile</span>
         </Link>

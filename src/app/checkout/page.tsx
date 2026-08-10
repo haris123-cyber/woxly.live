@@ -4,39 +4,29 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCartStore } from "@/store/useCartStore";
-import { Button } from "@/components/ui/button";
 import {
-  ArrowLeft,
-  Check,
+  ShoppingBag,
+  Truck,
   CreditCard,
   Wallet,
-  Shield,
   Home,
   Building2,
-  Plus,
+  Check,
   Lock,
-  Pencil,
+  Plus,
+  MapPin,
+  Smartphone,
+  BadgePercent,
+  ShieldCheck,
+  ChevronRight
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { useAddressStore } from "@/store/useAddressStore";
 
-type Step = 1 | 2 | 3 | 4;
+type Step = 1 | 2 | 3;
 
-const SAVED_ADDRESSES = [
-  {
-    id: "home",
-    label: "Home",
-    icon: "home" as const,
-    lines: ["123 Main Street, Apt 4B", "New York, NY 10001", "United States"],
-    phone: "+1 (555) 123-4567",
-  },
-  {
-    id: "office",
-    label: "Office",
-    icon: "office" as const,
-    lines: ["456 Business Ave, Floor 12", "New York, NY 10018", "United States"],
-    phone: "+1 (555) 987-6543",
-  },
-];
+
 
 const DELIVERY_METHODS = [
   { id: "standard", name: "Standard Shipping", eta: "5–7 business days", price: 0 },
@@ -56,33 +46,47 @@ const SAVED_CARDS = [
 ];
 
 const STEPS = [
-  { n: 1, label: "Cart" },
-  { n: 2, label: "Address" },
-  { n: 3, label: "Payment" },
-  { n: 4, label: "Review" },
+  { n: 1, label: "CART", icon: ShoppingBag },
+  { n: 2, label: "SHIPPING", icon: Truck },
+  { n: 3, label: "PAY", icon: CreditCard },
 ] as const;
 
 export default function CheckoutPage() {
-  const { items, getCartTotal, clearCart } = useCartStore();
   const router = useRouter();
+  const { items, getCartTotal, clearCart } = useCartStore();
+  const { addresses } = useAddressStore();
 
-  const [step, setStep] = useState<Step>(1);
-  const [selectedAddress, setSelectedAddress] = useState(SAVED_ADDRESSES[0].id);
+  const [step, setStep] = useState<Step>(2); // Start at Shipping
+  const [selectedAddress, setSelectedAddress] = useState(addresses[0]?.id || "");
   const [deliveryMethod, setDeliveryMethod] = useState(DELIVERY_METHODS[0].id);
   const [paymentMethod, setPaymentMethod] = useState("card");
   const [selectedCard, setSelectedCard] = useState(SAVED_CARDS[0].id);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [orderNotes, setOrderNotes] = useState("");
 
   const subtotal = getCartTotal();
-  const delivery = DELIVERY_METHODS.find((d) => d.id === deliveryMethod);
-  const shipping = delivery?.price ?? (subtotal > 99 ? 0 : 15);
-  const tax = subtotal * 0.08;
-  const total = subtotal + shipping + tax;
+  const onlineDiscount = step === 3 ? 10 : 0;
+  const discount = 0; // Handled in cart, usually pass via state or store in real app
+
+  const shipping = step === 3 ? 53.36 : 0; // Using the exact shipping price from the image on the pay step
+
+  const tax = (subtotal - discount) * 0.08;
+  const total = step === 3
+    ? (subtotal - onlineDiscount + shipping + tax)
+    : (subtotal - discount + shipping + tax);
   const advanceAmount = total * 0.2;
   const codAmount = total - advanceAmount;
 
-  const address = SAVED_ADDRESSES.find((a) => a.id === selectedAddress)!;
-  const payment = PAYMENT_OPTIONS.find((p) => p.id === paymentMethod)!;
+  const stepTitles: Record<Step, string> = {
+    1: "Cart",
+    2: "Continue to Payment",
+    3: "Place Order",
+  };
+
+  const goNext = () => {
+    if (step < 3) setStep((s) => (s + 1) as Step);
+    else placeOrder();
+  };
 
   const placeOrder = () => {
     setIsSubmitting(true);
@@ -94,676 +98,287 @@ export default function CheckoutPage() {
     }, 1200);
   };
 
+  // ── Empty state ──────────────────────────────
   if (items.length === 0 && !isSubmitting) {
     return (
-      <div className="container mx-auto px-5 py-20 text-center">
-        <h1 className="text-2xl font-bold mb-4">Your cart is empty</h1>
-        <Button asChild>
-          <Link href="/shop">Go to Shop</Link>
+      <div className="min-h-[80vh] flex flex-col items-center justify-center text-center py-16 px-4 bg-[#f9fafb]">
+        <div className="w-24 h-24 rounded-full bg-[#f4eefc] flex items-center justify-center mb-6">
+          <ShoppingBag className="w-11 h-11 text-primary" />
+        </div>
+        <h1 className="text-3xl font-bold text-gray-900 mb-3">Your cart is empty</h1>
+        <p className="text-gray-500 text-base mb-8 max-w-sm">
+          Return to cart to add items.
+        </p>
+        <Button asChild size="lg" className="rounded-xl px-8 font-bold bg-primary hover:bg-[#7c3aed]">
+          <Link href="/cart">Back to Cart</Link>
         </Button>
       </div>
     );
   }
 
-  const stepTitles: Record<Step, string> = {
-    1: "Continue to Address",
-    2: "Continue to Payment",
-    3: "Continue to Review",
-    4: "Place Order",
-  };
-
-  const goNext = () => {
-    if (step < 4) setStep((s) => (s + 1) as Step);
-    else placeOrder();
-  };
-
-  const goBack = () => {
-    if (step > 1) setStep((s) => (s - 1) as Step);
-    else router.push("/cart");
-  };
-
-  const TotalsBlock = ({ highlightTotal = false }: { highlightTotal?: boolean }) => (
-    <div className="space-y-2.5 text-sm">
-      <div className="flex justify-between">
-        <span className="text-muted-foreground">Subtotal</span>
-        <span className="font-medium">${subtotal.toFixed(2)}</span>
-      </div>
-      <div className="flex justify-between">
-        <span className="text-muted-foreground">Shipping</span>
-        <span className={`font-medium ${shipping === 0 ? "text-emerald-600" : ""}`}>
-          {shipping === 0 ? "Free" : `₹${shipping.toFixed(2)}`}
-        </span>
-      </div>
-      <div className="flex justify-between">
-        <span className="text-muted-foreground">Tax</span>
-        <span className="font-medium">${tax.toFixed(2)}</span>
-      </div>
-      <div className="flex justify-between items-center pt-2 border-t border-border">
-        <span className="font-bold text-base">Total</span>
-        <span className={`font-bold text-lg ${highlightTotal ? "text-primary" : "text-foreground"}`}>
-          ${total.toFixed(2)}
-        </span>
-      </div>
-    </div>
-  );
-
-  const Stepper = () => (
-    <div className="px-5 py-4">
-      <div className="flex items-start justify-between relative">
-        <div className="absolute top-4 left-[12%] right-[12%] h-0.5 bg-border" />
-        {STEPS.map((s) => {
-          const active = step === s.n;
-          const done = step > s.n;
-          return (
-            <button
-              key={s.n}
-              type="button"
-              onClick={() => done && setStep(s.n as Step)}
-              className="relative z-10 flex flex-col items-center gap-1.5 flex-1"
-            >
-              <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-colors ${active || done
-                  ? "bg-primary border-primary text-primary-foreground"
-                  : "bg-background border-border text-muted-foreground"
-                  }`}
-              >
-                {done ? <Check className="w-4 h-4" /> : s.n}
-              </div>
-              <span
-                className={`text-[11px] font-medium ${active ? "text-foreground font-bold" : "text-muted-foreground"
-                  }`}
-              >
-                {s.label}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-
   return (
-    <div className="bg-background min-h-screen overflow-x-hidden">
-      {/* ── MOBILE CHECKOUT ── */}
-      <div className="lg:hidden pb-8">
-        {/* Header */}
-        <div className="flex items-center px-4 py-3 border-b border-border sticky top-0 bg-background z-30">
-          <button onClick={goBack} className="p-2 -ml-2 rounded-full hover:bg-muted" aria-label="Back">
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-          <h1 className="flex-1 text-center font-bold text-base">Checkout</h1>
-          <div className="p-2 -mr-2">
-            <Shield className="w-5 h-5 text-primary" />
-          </div>
-        </div>
+    <div className="bg-[#f9fafb] min-h-screen py-6 lg:py-10">
+      <div className="container mx-auto px-4 max-w-6xl">
 
-        <Stepper />
-
-        <div className="px-5 space-y-5">
-          {/* STEP 1 — Cart / Shopping Summary */}
-          {step === 1 && (
-            <>
-              <div className="flex items-start gap-2.5 rounded-xl bg-primary/10 border border-primary/20 px-3.5 py-3">
-                <Lock className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                <p className="text-xs text-foreground leading-relaxed">
-                  <span className="font-bold">Secure Checkout:</span> Your data is protected with 256-bit encryption.
-                </p>
-              </div>
-
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <h2 className="font-bold text-foreground">Shopping Summary</h2>
-                  <Link href="/cart" className="text-sm text-primary font-medium">
-                    Edit
-                  </Link>
-                </div>
-                <div className="rounded-xl border border-border divide-y divide-border overflow-hidden">
-                  {items.map((item) => (
-                    <div key={item.cartItemId} className="flex gap-3 p-3.5">
-                      <div className="relative w-14 h-14 rounded-lg bg-muted overflow-hidden shrink-0">
-                        <Image src={item.image} alt={item.name} fill className="object-cover" sizes="56px" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-sm text-foreground line-clamp-1">{item.name}</p>
-                        <p className="text-xs text-muted-foreground mt-0.5">
-                          {[item.selectedColor, item.selectedSize].filter(Boolean).join(" • ") || item.brand}
-                        </p>
-                      </div>
-                      <div className="text-right shrink-0">
-                        <p className="font-semibold text-sm">${(item.price * item.quantity).toFixed(2)}</p>
-                        <p className="text-xs text-muted-foreground mt-0.5">Qty: {item.quantity}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="rounded-xl border border-border p-4">
-                <TotalsBlock highlightTotal />
-              </div>
-            </>
-          )}
-
-          {/* STEP 2 — Address selection (no fill form) */}
-          {step === 2 && (
-            <>
-              <div>
-                <h2 className="font-bold text-foreground mb-3">Shipping Address</h2>
-                <div className="space-y-3">
-                  {SAVED_ADDRESSES.map((addr) => {
-                    const selected = selectedAddress === addr.id;
-                    return (
-                      <button
-                        key={addr.id}
-                        type="button"
-                        onClick={() => setSelectedAddress(addr.id)}
-                        className={`w-full text-left rounded-xl border-2 p-4 transition-colors ${selected ? "border-primary bg-primary/5" : "border-border bg-background"
-                          }`}
-                      >
-                        <div className="flex gap-3">
-                          <div
-                            className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${selected ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
-                              }`}
-                          >
-                            {addr.icon === "home" ? (
-                              <Home className="w-5 h-5" />
-                            ) : (
-                              <Building2 className="w-5 h-5" />
-                            )}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center justify-between mb-1">
-                              <span className="font-bold text-sm text-foreground">{addr.label}</span>
-                              {selected ? (
-                                <Check className="w-5 h-5 text-primary" />
-                              ) : (
-                                <span className="w-5 h-5 rounded-full border-2 border-border" />
-                              )}
-                            </div>
-                            {addr.lines.map((line) => (
-                              <p key={line} className="text-xs text-muted-foreground leading-relaxed">
-                                {line}
-                              </p>
-                            ))}
-                            <p className="text-xs text-muted-foreground mt-1">{addr.phone}</p>
-                          </div>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
+        {/* Stepper (Desktop & Mobile) */}
+        <div className="max-w-xl mx-auto mb-10 px-4">
+          <div className="flex items-start justify-between relative">
+            <div className="absolute top-5 left-[15%] right-[15%] h-[1px] bg-gray-200" />
+            {STEPS.map((s) => {
+              const active = step === s.n;
+              const done = step > s.n;
+              const Icon = s.icon;
+              return (
                 <button
+                  key={s.n}
                   type="button"
-                  className="mt-3 flex items-center gap-1.5 text-sm font-medium text-primary"
+                  onClick={() => {
+                    if (s.n === 1) {
+                      router.push("/cart");
+                    } else if (done) {
+                      setStep(s.n as Step);
+                    }
+                  }}
+                  className="relative z-10 flex flex-col items-center gap-2 flex-1"
                 >
-                  <Plus className="w-4 h-4" /> Add New Address
+                  <div
+                    className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${active || done || s.n === 1
+                      ? "bg-primary text-white"
+                      : "bg-white border border-gray-200 text-gray-400"
+                      }`}
+                  >
+                    <Icon className="w-[18px] h-[18px]" />
+                  </div>
+                  <span
+                    className={`text-[10px] font-bold tracking-wider ${active || s.n === 1 ? "text-gray-900" : "text-gray-400"
+                      }`}
+                  >
+                    {s.label}
+                  </span>
                 </button>
-              </div>
-
-              <div>
-                <h2 className="font-bold text-foreground mb-3">Delivery Method</h2>
-                <div className="rounded-xl border border-border divide-y divide-border overflow-hidden">
-                  {DELIVERY_METHODS.map((method) => {
-                    const selected = deliveryMethod === method.id;
-                    return (
-                      <button
-                        key={method.id}
-                        type="button"
-                        onClick={() => setDeliveryMethod(method.id)}
-                        className={`w-full flex items-center gap-3 px-4 py-3.5 text-left transition-colors ${selected ? "bg-primary/5" : "bg-background"
-                          }`}
-                      >
-                        <span
-                          className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${selected ? "border-primary" : "border-border"
-                            }`}
-                        >
-                          {selected && <span className="w-2.5 h-2.5 rounded-full bg-primary" />}
-                        </span>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-semibold text-sm text-foreground">{method.name}</p>
-                          <p className="text-xs text-muted-foreground">{method.eta}</p>
-                        </div>
-                        <span className={`text-sm font-semibold shrink-0 ${method.price === 0 ? "text-emerald-600" : ""}`}>
-                          {method.price === 0 ? "Free" : `₹${method.price.toFixed(2)}`}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            </>
-          )}
-
-          {/* STEP 3 — Payment */}
-          {step === 3 && (
-            <>
-              <div>
-                <h2 className="font-bold text-foreground mb-3">Payment Method</h2>
-                <div className="rounded-xl border border-border divide-y divide-border overflow-hidden">
-                  {PAYMENT_OPTIONS.map((opt) => {
-                    const selected = paymentMethod === opt.id;
-                    return (
-                      <button
-                        key={opt.id}
-                        type="button"
-                        onClick={() => setPaymentMethod(opt.id)}
-                        className={`w-full flex items-center gap-3 px-4 py-3.5 text-left ${selected ? "bg-primary/5" : ""
-                          }`}
-                      >
-                        <div
-                          className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${selected ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
-                            }`}
-                        >
-                          {opt.icon === "card" ? (
-                            <CreditCard className="w-5 h-5" />
-                          ) : (
-                            <Wallet className="w-5 h-5" />
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-semibold text-sm">{opt.name}</p>
-                          <p className="text-xs text-muted-foreground">{opt.desc}</p>
-                        </div>
-                        <span
-                          className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${selected ? "border-primary" : "border-border"
-                            }`}
-                        >
-                          {selected && <span className="w-2.5 h-2.5 rounded-full bg-primary" />}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {paymentMethod === "card" && (
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <h2 className="font-bold text-foreground">Saved Cards</h2>
-                    <button type="button" className="text-sm text-primary font-medium">
-                      Add New
-                    </button>
-                  </div>
-                  <div className="space-y-2.5">
-                    {SAVED_CARDS.map((card) => {
-                      const selected = selectedCard === card.id;
-                      return (
-                        <button
-                          key={card.id}
-                          type="button"
-                          onClick={() => setSelectedCard(card.id)}
-                          className={`w-full flex items-center gap-3 rounded-xl border-2 px-4 py-3.5 text-left ${selected ? "border-primary bg-primary/5" : "border-border"
-                            }`}
-                        >
-                          <div className="w-10 h-7 rounded bg-muted flex items-center justify-center text-[10px] font-bold text-muted-foreground shrink-0">
-                            {card.brand === "Visa" ? "VISA" : "MC"}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="font-semibold text-sm">•••• {card.last4}</p>
-                            <p className="text-xs text-muted-foreground">Expires {card.expiry}</p>
-                          </div>
-                          {selected && <Check className="w-5 h-5 text-primary" />}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-
-              {paymentMethod === "partial-cod" && (
-                <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm">
-                  <p className="mb-1">
-                    Pay <span className="font-bold">${advanceAmount.toFixed(2)}</span> now (20%).
-                  </p>
-                  <p className="text-muted-foreground">
-                    Remaining <span className="font-semibold text-foreground">${codAmount.toFixed(2)}</span> due on
-                    delivery.
-                  </p>
-                </div>
-              )}
-            </>
-          )}
-
-          {/* STEP 4 — Review */}
-          {step === 4 && (
-            <>
-              <div className="rounded-xl border border-border p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <h2 className="font-bold text-foreground text-sm">Shipping Address</h2>
-                  <button type="button" onClick={() => setStep(2)} className="text-sm text-primary font-medium flex items-center gap-1">
-                    <Pencil className="w-3 h-3" /> Edit
-                  </button>
-                </div>
-                <p className="font-semibold text-sm mb-0.5">{address.label}</p>
-                {address.lines.map((line) => (
-                  <p key={line} className="text-xs text-muted-foreground">
-                    {line}
-                  </p>
-                ))}
-                <p className="text-xs text-muted-foreground mt-1">{delivery?.name} · {shipping === 0 ? "Free" : `₹${shipping.toFixed(2)}`}</p>
-              </div>
-
-              <div className="rounded-xl border border-border p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <h2 className="font-bold text-foreground text-sm">Payment Method</h2>
-                  <button type="button" onClick={() => setStep(3)} className="text-sm text-primary font-medium flex items-center gap-1">
-                    <Pencil className="w-3 h-3" /> Edit
-                  </button>
-                </div>
-                <p className="text-sm font-semibold">{payment.name}</p>
-                {paymentMethod === "card" && (
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    {SAVED_CARDS.find((c) => c.id === selectedCard)?.brand} ••••{" "}
-                    {SAVED_CARDS.find((c) => c.id === selectedCard)?.last4}
-                  </p>
-                )}
-              </div>
-
-              <div className="rounded-xl border border-border p-4">
-                <div className="flex items-center justify-between mb-3">
-                  <h2 className="font-bold text-foreground text-sm">Order Items</h2>
-                  <button type="button" onClick={() => setStep(1)} className="text-sm text-primary font-medium flex items-center gap-1">
-                    <Pencil className="w-3 h-3" /> Edit
-                  </button>
-                </div>
-                <div className="space-y-3 mb-4">
-                  {items.map((item) => (
-                    <div key={item.cartItemId} className="flex gap-3">
-                      <div className="relative w-12 h-12 rounded-lg bg-muted overflow-hidden shrink-0">
-                        <Image src={item.image} alt={item.name} fill className="object-cover" sizes="48px" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium line-clamp-1">{item.name}</p>
-                        <p className="text-xs text-muted-foreground">Qty: {item.quantity}</p>
-                      </div>
-                      <p className="text-sm font-semibold shrink-0">${(item.price * item.quantity).toFixed(2)}</p>
-                    </div>
-                  ))}
-                </div>
-                <TotalsBlock highlightTotal />
-              </div>
-
-              <p className="text-center text-xs text-muted-foreground">
-                By placing your order you agree to our{" "}
-                <Link href="/terms" className="underline">
-                  Terms
-                </Link>{" "}
-                &{" "}
-                <Link href="/privacy" className="underline">
-                  Privacy Policy
-                </Link>
-              </p>
-            </>
-          )}
-        </div>
-
-        {/* CTA */}
-        <div className="mt-6 px-5 pb-8">
-          <Button
-            onClick={goNext}
-            disabled={isSubmitting}
-            className="w-full h-12 rounded-xl font-bold text-sm bg-primary hover:opacity-90 text-primary-foreground border-0"
-          >
-            {isSubmitting ? (
-              "Processing..."
-            ) : step === 4 ? (
-              <span className="inline-flex items-center gap-2">
-                <Lock className="w-4 h-4" />
-                Place Order · ₹
-                {paymentMethod === "partial-cod"
-                  ? advanceAmount.toFixed(2)
-                  : paymentMethod === "cod"
-                    ? "0.00"
-                    : total.toFixed(2)}
-              </span>
-            ) : (
-              stepTitles[step]
-            )}
-          </Button>
-        </div>
-      </div>
-
-      {/* ── DESKTOP: same structure, wider layout ── */}
-      <div className="hidden lg:block bg-muted/30 min-h-screen py-10">
-        <div className="container mx-auto px-6 max-w-3xl">
-          <div className="flex items-center mb-6">
-            <button onClick={goBack} className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground">
-              <ArrowLeft className="w-4 h-4 mr-2" /> Back
-            </button>
-            <h1 className="flex-1 text-center text-2xl font-bold">Checkout</h1>
-            <Shield className="w-5 h-5 text-primary" />
+              );
+            })}
           </div>
+        </div>
 
-          <div className="bg-background rounded-2xl border border-border shadow-sm overflow-hidden">
-            <Stepper />
-            <div className="px-8 pb-8 space-y-6">
-              {step === 1 && (
-                <>
-                  <div className="flex items-start gap-2.5 rounded-xl bg-primary/10 border border-primary/20 px-4 py-3">
-                    <Lock className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                    <p className="text-sm">
-                      <span className="font-bold">Secure Checkout:</span> Your data is protected with 256-bit encryption.
-                    </p>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <h2 className="font-bold text-lg">Shopping Summary</h2>
-                    <Link href="/cart" className="text-sm text-primary font-medium">
-                      Edit
-                    </Link>
-                  </div>
-                  <div className="rounded-xl border border-border divide-y">
-                    {items.map((item) => (
-                      <div key={item.cartItemId} className="flex gap-4 p-4">
-                        <div className="relative w-16 h-16 rounded-lg bg-muted overflow-hidden shrink-0">
-                          <Image src={item.image} alt={item.name} fill className="object-cover" sizes="64px" />
-                        </div>
-                        <div className="flex-1">
-                          <p className="font-semibold">{item.name}</p>
-                          <p className="text-sm text-muted-foreground">
-                            {[item.selectedColor, item.selectedSize].filter(Boolean).join(" • ") || item.brand}
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-semibold">${(item.price * item.quantity).toFixed(2)}</p>
-                          <p className="text-sm text-muted-foreground">Qty: {item.quantity}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="rounded-xl border border-border p-5">
-                    <TotalsBlock highlightTotal />
-                  </div>
-                </>
-              )}
-
-              {step === 2 && (
-                <>
-                  <h2 className="font-bold text-lg">Shipping Address</h2>
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-16">
+          {/* ── Left: Main Content based on Step ────────────────────────────── */}
+          <div className="flex-1">
+            {step === 2 && (
+              <div className="space-y-8">
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900 mb-4">Shipping Address</h2>
                   <div className="grid gap-3">
-                    {SAVED_ADDRESSES.map((addr) => {
+                    {addresses.map((addr) => {
                       const selected = selectedAddress === addr.id;
                       return (
                         <button
                           key={addr.id}
                           type="button"
                           onClick={() => setSelectedAddress(addr.id)}
-                          className={`w-full text-left rounded-xl border-2 p-5 ${selected ? "border-primary bg-primary/5" : "border-border"
-                            }`}
+                          className={`w-full text-left rounded-xl border-2 p-5 ${selected ? "border-primary bg-primary/5" : "border-gray-200 bg-white"}`}
                         >
                           <div className="flex gap-4">
-                            <div
-                              className={`w-11 h-11 rounded-xl flex items-center justify-center ${selected ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
-                                }`}
-                            >
+                            <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${selected ? "bg-primary/15 text-primary" : "bg-gray-100 text-gray-500"}`}>
                               {addr.icon === "home" ? <Home className="w-5 h-5" /> : <Building2 className="w-5 h-5" />}
                             </div>
                             <div className="flex-1">
                               <div className="flex justify-between mb-1">
-                                <span className="font-bold">{addr.label}</span>
-                                {selected ? <Check className="w-5 h-5 text-primary" /> : <span className="w-5 h-5 rounded-full border-2 border-border" />}
+                                <span className="font-bold text-gray-900">{addr.label || "Address"}</span>
+                                {selected ? <Check className="w-5 h-5 text-primary" /> : <span className="w-5 h-5 rounded-full border-2 border-gray-200" />}
                               </div>
-                              {addr.lines.map((line) => (
-                                <p key={line} className="text-sm text-muted-foreground">
-                                  {line}
-                                </p>
-                              ))}
+                              {addr.name && <p className="text-sm text-gray-700 font-medium mb-1">{addr.name}</p>}
+                              <p className="text-sm text-gray-500">{addr.addressLine}</p>
+                              <p className="text-sm text-gray-500">{addr.city}, {addr.state} {addr.pinCode}</p>
+                              <p className="text-sm text-gray-500 mt-1">{addr.phone}</p>
                             </div>
                           </div>
                         </button>
                       );
                     })}
                   </div>
-                  <button type="button" className="flex items-center gap-1.5 text-sm font-medium text-primary">
+                  <button type="button" onClick={() => router.push("/account#address")} className="mt-3 flex items-center gap-1.5 text-sm font-medium text-primary">
                     <Plus className="w-4 h-4" /> Add New Address
                   </button>
+                </div>
 
-                  <h2 className="font-bold text-lg pt-2">Delivery Method</h2>
-                  <div className="rounded-xl border border-border divide-y">
-                    {DELIVERY_METHODS.map((method) => {
-                      const selected = deliveryMethod === method.id;
-                      return (
-                        <button
-                          key={method.id}
-                          type="button"
-                          onClick={() => setDeliveryMethod(method.id)}
-                          className={`w-full flex items-center gap-3 px-5 py-4 text-left ${selected ? "bg-primary/5" : ""}`}
-                        >
-                          <span className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selected ? "border-primary" : "border-border"}`}>
-                            {selected && <span className="w-2.5 h-2.5 rounded-full bg-primary" />}
-                          </span>
-                          <div className="flex-1">
-                            <p className="font-semibold">{method.name}</p>
-                            <p className="text-sm text-muted-foreground">{method.eta}</p>
-                          </div>
-                          <span className={`font-semibold ${method.price === 0 ? "text-emerald-600" : ""}`}>
-                            {method.price === 0 ? "Free" : `₹${method.price.toFixed(2)}`}
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </>
-              )}
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900 mb-4">Order Notes (Optional)</h2>
+                  <textarea
+                    value={orderNotes}
+                    onChange={(e) => setOrderNotes(e.target.value)}
+                    placeholder="Any special instructions for your delivery..."
+                    className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all resize-none"
+                    rows={3}
+                  ></textarea>
+                </div>
+              </div>
+            )}
 
-              {step === 3 && (
-                <>
-                  <h2 className="font-bold text-lg">Payment Method</h2>
-                  <div className="rounded-xl border border-border divide-y">
-                    {PAYMENT_OPTIONS.map((opt) => {
-                      const selected = paymentMethod === opt.id;
-                      return (
-                        <button
-                          key={opt.id}
-                          type="button"
-                          onClick={() => setPaymentMethod(opt.id)}
-                          className={`w-full flex items-center gap-4 px-5 py-4 text-left ${selected ? "bg-primary/5" : ""}`}
-                        >
-                          <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${selected ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"}`}>
-                            {opt.icon === "card" ? <CreditCard className="w-5 h-5" /> : <Wallet className="w-5 h-5" />}
-                          </div>
-                          <div className="flex-1">
-                            <p className="font-semibold">{opt.name}</p>
-                            <p className="text-sm text-muted-foreground">{opt.desc}</p>
-                          </div>
-                          <span className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selected ? "border-primary" : "border-border"}`}>
-                            {selected && <span className="w-2.5 h-2.5 rounded-full bg-primary" />}
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                  {paymentMethod === "card" && (
-                    <div>
-                      <div className="flex justify-between mb-3">
-                        <h3 className="font-bold">Saved Cards</h3>
-                        <button type="button" className="text-sm text-primary font-medium">
-                          Add New
-                        </button>
-                      </div>
-                      <div className="grid gap-2">
-                        {SAVED_CARDS.map((card) => {
-                          const selected = selectedCard === card.id;
-                          return (
-                            <button
-                              key={card.id}
-                              type="button"
-                              onClick={() => setSelectedCard(card.id)}
-                              className={`flex items-center gap-4 rounded-xl border-2 px-5 py-4 text-left ${selected ? "border-primary bg-primary/5" : "border-border"}`}
-                            >
-                              <div className="w-12 h-8 rounded bg-muted flex items-center justify-center text-[10px] font-bold text-muted-foreground">
-                                {card.brand === "Visa" ? "VISA" : "MC"}
-                              </div>
-                              <div className="flex-1">
-                                <p className="font-semibold">•••• {card.last4}</p>
-                                <p className="text-sm text-muted-foreground">Expires {card.expiry}</p>
-                              </div>
-                              {selected && <Check className="w-5 h-5 text-primary" />}
-                            </button>
-                          );
-                        })}
+            {step === 3 && (
+              <div className="space-y-4 pb-12 w-full">
+                {/* Selected Address Summary */}
+                <div className="rounded-xl border border-gray-200 bg-white p-4">
+                  <div className="flex justify-between items-start">
+                    <div className="flex gap-3">
+                      <MapPin className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                      <div>
+                        <p className="font-bold text-gray-900 text-sm mb-1">{addresses.find(a => a.id === selectedAddress)?.name || "User Name"}</p>
+                        <p className="text-gray-600 text-[13px]">{addresses.find(a => a.id === selectedAddress)?.addressLine}</p>
+                        <p className="text-gray-500 text-[13px]">{addresses.find(a => a.id === selectedAddress)?.city}, {addresses.find(a => a.id === selectedAddress)?.state}, {addresses.find(a => a.id === selectedAddress)?.pinCode}, India • {addresses.find(a => a.id === selectedAddress)?.phone}</p>
                       </div>
                     </div>
-                  )}
-                </>
-              )}
+                    <button onClick={() => setStep(2)} className="text-primary text-xs font-semibold hover:underline shrink-0">Change</button>
+                  </div>
+                </div>
 
-              {step === 4 && (
-                <>
-                  <div className="rounded-xl border border-border p-5">
-                    <div className="flex justify-between mb-2">
-                      <h2 className="font-bold">Shipping Address</h2>
-                      <button type="button" onClick={() => setStep(2)} className="text-sm text-primary font-medium">
-                        Edit
-                      </button>
-                    </div>
-                    <p className="font-semibold">{address.label}</p>
-                    {address.lines.map((line) => (
-                      <p key={line} className="text-sm text-muted-foreground">
-                        {line}
-                      </p>
+                {/* Order notes */}
+                {orderNotes && (
+                  <div className="rounded-xl border border-gray-200 bg-white p-4">
+                    <h3 className="font-bold text-gray-900 text-sm mb-2">Order notes</h3>
+                    <p className="text-gray-500 text-sm">{orderNotes}</p>
+                  </div>
+                )}
+
+                {/* Order items */}
+                <div className="rounded-xl border border-gray-200 bg-white">
+                  <div className="p-4 border-b border-gray-100">
+                    <h3 className="font-bold text-gray-900 text-sm">Order items</h3>
+                  </div>
+                  <div className="p-4 space-y-4">
+                    {items.map((item) => (
+                      <div key={item.id} className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-gray-100 rounded-lg relative overflow-hidden shrink-0 border border-gray-200">
+                          <Image src={item.image} alt={item.name} fill className="object-cover" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="font-medium text-gray-900 text-[13px]">{item.name}</p>
+                          <p className="text-xs text-gray-500">₹{item.price.toFixed(2).replace(/\.00$/, '')} × {item.quantity}</p>
+                        </div>
+                        <span className="font-bold text-sm text-gray-900">₹{(item.price * item.quantity).toFixed(2).replace(/\.00$/, '')}</span>
+                      </div>
                     ))}
                   </div>
-                  <div className="rounded-xl border border-border p-5">
-                    <div className="flex justify-between mb-2">
-                      <h2 className="font-bold">Payment Method</h2>
-                      <button type="button" onClick={() => setStep(3)} className="text-sm text-primary font-medium">
-                        Edit
-                      </button>
-                    </div>
-                    <p className="font-semibold">{payment.name}</p>
-                  </div>
-                  <div className="rounded-xl border border-border p-5">
-                    <div className="flex justify-between mb-4">
-                      <h2 className="font-bold">Order Items</h2>
-                      <button type="button" onClick={() => setStep(1)} className="text-sm text-primary font-medium">
-                        Edit
-                      </button>
-                    </div>
-                    <div className="space-y-3 mb-4">
-                      {items.map((item) => (
-                        <div key={item.cartItemId} className="flex gap-3">
-                          <div className="relative w-12 h-12 rounded-lg bg-muted overflow-hidden shrink-0">
-                            <Image src={item.image} alt={item.name} fill className="object-cover" sizes="48px" />
-                          </div>
-                          <div className="flex-1">
-                            <p className="font-medium text-sm">{item.name}</p>
-                            <p className="text-xs text-muted-foreground">Qty: {item.quantity}</p>
-                          </div>
-                          <p className="font-semibold text-sm">${(item.price * item.quantity).toFixed(2)}</p>
-                        </div>
-                      ))}
-                    </div>
-                    <TotalsBlock highlightTotal />
-                  </div>
-                </>
-              )}
+                </div>
 
+                {/* Payment method */}
+                <div className="rounded-xl border border-gray-200 bg-white">
+                  <div className="p-4 border-b border-gray-100 flex items-center gap-2">
+                    <CreditCard className="w-5 h-5 text-primary" />
+                    <h3 className="font-bold text-gray-900 text-sm">Payment method</h3>
+                  </div>
+                  <div className="p-4 pb-6">
+                    <div className="relative rounded-xl border border-primary p-4 bg-white shadow-sm mb-3 cursor-pointer">
+                      <div className="absolute -top-2.5 left-4 bg-[#009b4d] text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                        SAVE 10
+                      </div>
+
+                      <div className="flex items-start gap-4">
+                        <div className="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center shrink-0">
+                          <Smartphone className="w-5 h-5" />
+                        </div>
+                        <div className="flex-1 mt-0.5">
+                          <div className="flex justify-between items-center mb-1">
+                            <span className="font-bold text-gray-900 text-[15px]">Pay Online</span>
+                            <div className="w-4 h-4 rounded-full bg-primary"></div>
+                          </div>
+                          <p className="text-[13px] text-gray-500 mb-3">Pay with UPI, cards, or net banking. Secure and instant.</p>
+
+                          <div className="bg-green-50 border border-green-200/60 rounded-xl px-3 py-2 flex items-center gap-2">
+                            <BadgePercent className="w-4 h-4 text-[#009b4d]" />
+                            <span className="text-[12px] font-medium text-[#009b4d]">Extra ₹10 off — online payment only.</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <p className="text-[13px] text-gray-500 px-1 leading-relaxed">
+                      Cash on delivery isn't available for this pincode with the available couriers. Please pay online to continue.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* ── Right: Order Summary ──────────────────── */}
+          <div className="w-full lg:w-[380px] shrink-0 lg:sticky lg:top-24 lg:self-start">
+            <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+              <div className="p-5 border-b border-gray-100">
+                <h2 className="text-[17px] font-bold text-gray-900">Order Summary</h2>
+              </div>
+
+              <div className="p-5">
+                <div className="space-y-3 mb-6">
+                  {items.map((item) => (
+                    <div key={item.id} className="flex justify-between items-center text-[13px] text-gray-600">
+                      <span className="truncate pr-4">{item.name}</span>
+                      <span className="font-semibold whitespace-nowrap text-gray-900">×{item.quantity}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="border-t border-gray-100 pt-5 space-y-3 text-[14px]">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-500">Subtotal</span>
+                    <span className="font-semibold text-gray-900">₹{subtotal.toFixed(0)}</span>
+                  </div>
+
+                  {step === 3 && (
+                    <div className="flex justify-between items-center text-[#009b4d]">
+                      <span className="font-medium">Pay online discount</span>
+                      <span className="font-semibold">-₹10</span>
+                    </div>
+                  )}
+
+                  <div className="flex justify-between items-start">
+                    <span className="text-gray-500">Delivery</span>
+                    <div className="text-right">
+                      <span className={`font-semibold ${shipping === 0 ? "text-emerald-600" : "text-gray-900"}`}>
+                        {shipping === 0 ? "Free" : `₹${shipping.toFixed(2).replace(/\.00$/, '')}`}
+                      </span>
+                    </div>
+                  </div>
+                  {step === 3 && (
+                    <div className="flex items-center gap-1.5 justify-end text-[11px] text-gray-500 mt-0.5">
+                      <Truck className="w-3.5 h-3.5" />
+                      <span>Ekart Logistics Surface • Estimated Aug 13, 2026</span>
+                    </div>
+                  )}
+
+                  {tax > 0 && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-500">Tax (8%)</span>
+                      <span className="font-semibold text-gray-900">₹{tax.toFixed(2).replace(/\.00$/, '')}</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="border-t border-gray-100 mt-5 pt-5 flex justify-between items-center">
+                  <span className="text-[17px] font-bold text-gray-900">Total</span>
+                  <span className="text-[17px] font-bold text-gray-900">₹{total.toFixed(2).replace(/\.00$/, '')}</span>
+                </div>
+              </div>
+
+              {/* Footer */}
+              <div className="bg-gray-50 p-4 border-t border-gray-100 text-[11px] text-gray-500">
+                <div className="flex items-center gap-1.5 mb-1 text-gray-600">
+                  <ShieldCheck className="w-4 h-4 text-primary" />
+                  <span className="font-medium">Secure checkout • encrypted connection</span>
+                </div>
+                <p className="ml-5">Online payments powered by Razorpay.</p>
+              </div>
+            </div>
+
+            {/* Checkout buttons */}
+            <div className="space-y-3 mt-6">
               <Button
                 onClick={goNext}
                 disabled={isSubmitting}
-                className="w-full h-12 rounded-xl font-bold bg-primary hover:opacity-90 text-primary-foreground border-0"
+                className="w-full h-14 bg-primary hover:bg-primary/80 text-white font-bold text-[15px] rounded-xl transition-colors flex items-center justify-center shadow-sm border-none"
               >
-                {isSubmitting ? "Processing..." : step === 4 ? (
+                {isSubmitting ? (
+                  "Processing..."
+                ) : step === 3 ? (
                   <span className="inline-flex items-center gap-2">
                     <Lock className="w-4 h-4" /> Place Order
                   </span>
@@ -771,6 +386,19 @@ export default function CheckoutPage() {
                   stepTitles[step]
                 )}
               </Button>
+
+              {step !== 1 && (
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    if (step === 2) router.push("/cart");
+                    else setStep((s) => (s - 1) as Step);
+                  }}
+                  className="w-full h-12 text-gray-500 hover:text-gray-900 rounded-xl border-gray-200"
+                >
+                  {step === 2 ? "Back to Cart" : "Back to Shipping"}
+                </Button>
+              )}
             </div>
           </div>
         </div>
