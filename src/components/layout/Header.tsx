@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Search, ShoppingBag, Menu, Heart, User, Home } from "lucide-react";
+import { Search, ShoppingBag, Menu, Heart, User, Home, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/store/useCartStore";
 import { useUIStore } from "@/store/useUIStore";
@@ -54,19 +54,35 @@ export function Header() {
           </Link>
 
           {/* Search Bar */}
-          <div className="flex-1 flex justify-center px-4">
+          <div className="flex-1 flex justify-center px-2 sm:px-4">
             <div className="relative w-full max-w-xl">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground pointer-events-none" />
 
               <input
                 suppressHydrationWarning
                 type="text"
                 placeholder="Search..."
-                className="w-full h-11 pl-11 pr-4 rounded-full border border-border/80 bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm placeholder:text-muted-foreground/60 shadow-sm"
+                className="w-full h-10 sm:h-11 pl-10 sm:pl-11 pr-4 rounded-full border border-border/80 bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm placeholder:text-muted-foreground/60 shadow-sm"
               />
             </div>
           </div>
 
+          {/* Mobile Cart Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className={`sm:hidden relative shrink-0 rounded-full w-9 h-9 transition-all duration-300 ${isMounted && itemCount > 0 ? '' : pathname === '/cart' ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:text-primary hover:bg-muted/50'}`}
+            asChild
+          >
+            <Link href="/cart">
+              <ShoppingBag className="w-7 h-7" />
+              {isMounted && itemCount > 0 && (
+                <span className="absolute top-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-[#2563eb] text-[10px] font-bold text-white border border-background">
+                  {itemCount > 99 ? "99+" : itemCount}
+                </span>
+              )}
+            </Link>
+          </Button>
 
           {/* Right Actions - Hidden on mobile */}
           <div className="hidden sm:flex items-center gap-2 shrink-0">
@@ -74,7 +90,7 @@ export function Header() {
             <Button
               variant="ghost"
               size="icon"
-              className="relative text-muted-foreground hover:text-primary w-10 h-10"
+              className={`relative w-10 h-10 rounded-full transition-colors ${pathname === '/watchlist' ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:text-primary hover:bg-muted/50'}`}
               asChild
             >
               <Link href="/watchlist">
@@ -91,7 +107,7 @@ export function Header() {
             <Button
               variant="ghost"
               size="icon"
-              className="relative w-10 h-10 text-muted-foreground hover:text-primary transition-colors"
+              className={`relative w-10 h-10 transition-all duration-300 rounded-full ${isMounted && itemCount > 0 ? 'bg-primary/10 text-primary shadow-[0_0_15px_rgba(37,99,235,0.4)]' : pathname === '/cart' ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:text-primary hover:bg-muted/50'}`}
               asChild
             >
               <Link href="/cart">
@@ -108,7 +124,7 @@ export function Header() {
             <Button
               variant="ghost"
               size="icon"
-              className="w-10 h-10 text-muted-foreground hover:text-primary transition-colors"
+              className={`w-10 h-10 rounded-full transition-colors ${pathname === '/account' ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:text-primary hover:bg-muted/50'}`}
               asChild
             >
               <Link href="/account" aria-label="Profile">
@@ -139,20 +155,15 @@ export function Header() {
             )}
           </Link>
 
-          <Link href="/cart" className="relative flex items-center justify-center w-12 h-12 rounded-full transition-all">
-            <div className={`flex items-center justify-center w-11 h-11 rounded-full transition-colors ${pathname === '/cart' ? 'bg-primary text-white' : 'text-primary'}`}>
-              <ShoppingBag className="w-[22px] h-[22px]" />
+          <Link href="/account?tab=orders" className="relative flex items-center justify-center w-12 h-12 rounded-full transition-all">
+            <div className={`flex items-center justify-center w-11 h-11 rounded-full transition-colors ${pathname === '/account' && (typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('tab') === 'orders' || typeof window !== 'undefined' && !new URLSearchParams(window.location.search).has('tab')) ? 'bg-primary text-white' : 'text-primary'}`}>
+              <Package className="w-[22px] h-[22px]" />
             </div>
-            <span className="sr-only">Cart</span>
-            {isMounted && itemCount > 0 && (
-              <span className="absolute top-1 right-0 flex h-[18px] min-w-[18px] px-1 items-center justify-center rounded-full bg-white text-[9px] font-bold text-primary ">
-                {itemCount > 99 ? "99+" : itemCount}
-              </span>
-            )}
+            <span className="sr-only">Orders</span>
           </Link>
 
-          <Link href="/account" className="relative flex items-center justify-center w-12 h-12 rounded-full transition-all">
-            <div className={`flex items-center justify-center w-11 h-11 rounded-full transition-colors ${pathname === '/account' ? 'bg-primary text-white' : 'text-primary'}`}>
+          <Link href="/account?tab=details" className="relative flex items-center justify-center w-12 h-12 rounded-full transition-all">
+            <div className={`flex items-center justify-center w-11 h-11 rounded-full transition-colors ${pathname === '/account' && typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('tab') === 'details' ? 'bg-primary text-white' : 'text-primary'}`}>
               <User className="w-[22px] h-[22px]" />
             </div>
             <span className="sr-only">Profile</span>

@@ -82,8 +82,8 @@ export default function OrderSuccessPage() {
       </Card>
 
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
-        <Button asChild size="lg" className="h-12 px-8 rounded-lg">
-          <Link href="/track-order">Track Your Order</Link>
+        <Button asChild size="lg" className="h-12 px-8 rounded-lg bg-[#2563eb] hover:bg-blue-700 text-white font-bold">
+          <Link href={`/track-order?id=${id}`}>Track Your Order</Link>
         </Button>
         <Button asChild variant="outline" size="lg" className="h-12 px-8 rounded-lg">
           <Link href="/shop">Continue Shopping</Link>

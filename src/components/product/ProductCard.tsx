@@ -7,6 +7,7 @@ import { type Product } from "@/store/useCartStore";
 import { useCartStore } from "@/store/useCartStore";
 import { useWatchlistStore } from "@/store/useWatchlistStore";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface ProductCardProps {
   product: Product;
@@ -53,7 +54,10 @@ export function ProductCard({ product }: ProductCardProps) {
     const defaultColor = product.colors?.[0];
     const defaultSize = product.sizes?.[0];
     addItem(product, 1, defaultColor, defaultSize);
-    router.push("/cart");
+    toast.success("Added to cart", {
+      description: "Product added successfully.",
+    });
+    // router.push("/cart"); // Usually good to just show toast rather than redirecting immediately on a product card
   };
 
   const originalPrice = product.originalPrice;
@@ -128,6 +132,15 @@ export function ProductCard({ product }: ProductCardProps) {
           onClick={(e) => {
             e.preventDefault();
             toggleItem(product);
+            if (!inWatchlist) {
+              toast.success("Added to wishlist", {
+                description: "Product added successfully.",
+              });
+            } else {
+              toast.success("Removed from wishlist", {
+                description: "Product removed successfully.",
+              });
+            }
           }}
           style={{
             position: "absolute",

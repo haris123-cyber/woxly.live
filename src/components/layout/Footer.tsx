@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Mail, Phone, MessageCircle } from "lucide-react";
+import { IconBrandWhatsapp } from "@tabler/icons-react";
 import { usePathname } from "next/navigation";
 
 export function Footer() {
@@ -83,7 +84,7 @@ export function Footer() {
                 <li>
                   <a href="https://wa.me/917306347297" className="flex flex-col gap-1 hover:text-black transition-colors">
                     <div className="flex items-center gap-3">
-                      <MessageCircle className="w-[18px] h-[18px] text-[#25D366]" />
+                      <IconBrandWhatsapp className="w-[18px] h-[18px] text-[#25D366]" stroke={2} />
                       <span>WhatsApp</span>
                     </div>
                     <span className="ml-[30px]">+917306347297</span>

@@ -408,7 +408,7 @@ export default function Home() {
       {/* Features + Newsletter */}
       <section className="container mx-auto px-5 sm:px-6 mt-2 mb-5">
         {/* Service highlights */}
-        <div className="grid grid-cols-4 sm:border sm:border-zinc-200 rounded-xl overflow-hidden mb-0 sm:mb-16 ">
+        <div className="grid grid-cols-2 sm:grid-cols-4 border border-primary-100/80 sm:border-zinc-200 rounded-2xl sm:rounded-xl overflow-hidden mb-6 sm:mb-16 bg-white shadow-sm">
           {[
             { icon: IconTruck, title: "Free Delivery", desc: "On orders above ₹499" },
             { icon: IconRefresh, title: "Easy Returns", desc: "30-day hassle-free" },
@@ -417,14 +417,17 @@ export default function Home() {
           ].map((item, i) => (
             <div
               key={item.title}
-              className={`flex flex-col items-center text-center gap-2 p-3 sm:p-6 sm:flex-row sm:text-left sm:gap-4 ${i >= 1 ? "sm:border-l sm:border-zinc-200" : ""
-                }`}
+              className={`flex flex-row items-center gap-3 sm:gap-4 p-4 sm:p-6 
+                ${i % 2 === 0 ? "border-r border-zinc-100/80 sm:border-r-0" : ""}
+                ${i < 2 ? "border-b border-zinc-100/80 sm:border-b-0" : ""}
+                ${i >= 1 ? "sm:border-l sm:border-zinc-200" : ""}
+              `}
             >
-              <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-full bg-zinc-100 flex items-center justify-center shrink-0">
-                <item.icon className="w-5.5 h-5.5 sm:w-5 sm:h-5 text-zinc-700" strokeWidth={1.75} />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#f5f3ff] flex items-center justify-center shrink-0">
+                <item.icon className="w-5 h-5 sm:w-5 sm:h-5 text-primary" strokeWidth={1.5} />
               </div>
               <div className="min-w-0">
-                <p className="font-semibold text-[10px] sm:text-base text-foreground leading-tight">{item.title}</p>
+                <p className="font-bold text-[13px] sm:text-base text-zinc-900 leading-tight">{item.title}</p>
                 <p className="text-[9px] sm:text-sm text-muted-foreground mt-0.5 leading-snug hidden sm:block">{item.desc}</p>
               </div>
             </div>

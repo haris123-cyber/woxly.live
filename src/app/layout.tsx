@@ -6,6 +6,8 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { MobileMenu } from "@/components/layout/MobileMenu";
+import { Toaster } from "@/components/ui/sonner";
+import { WhatsAppWidget } from "@/components/layout/WhatsAppWidget";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -46,6 +48,8 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
+          <WhatsAppWidget />
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

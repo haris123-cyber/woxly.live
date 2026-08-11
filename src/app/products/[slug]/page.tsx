@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useParams, useRouter } from "next/navigation";
 import { PRODUCTS } from "@/lib/mock-data";
+import { toast } from "sonner";
 import { useCartStore } from "@/store/useCartStore";
 import { useWatchlistStore } from "@/store/useWatchlistStore";
 import { Button } from "@/components/ui/button";
@@ -32,6 +33,8 @@ import {
   Share2,
   ZoomIn,
   Package,
+  MapPin,
+  Zap,
 } from "lucide-react";
 
 const WhatsAppIcon = ({ className }: { className?: string }) => (
@@ -86,11 +89,40 @@ export default function ProductDetailPage() {
   const [selectedColor, setSelectedColor] = useState<string | undefined>(
     product?.colors?.[0] || "Brown"
   );
+  const [selectedSize, setSelectedSize] = useState<string | undefined>(
+    product?.sizes?.[0] || "8"
+  );
   const [imageIndex, setImageIndex] = useState(0);
   const [activeTab, setActiveTab] = useState<"description" | "reviews">("description");
   const [isWarrantyOpen, setIsWarrantyOpen] = useState(false);
   const [isDeliveryOpen, setIsDeliveryOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const [pincode, setPincode] = useState("");
+  const [checkedPincode, setCheckedPincode] = useState<string | null>(null);
+  const [pinLocation, setPinLocation] = useState<string>("");
+  const [isCheckingPin, setIsCheckingPin] = useState(false);
+
+  const handleCheckPincode = async () => {
+    if (pincode.length !== 6) {
+      toast.error("Please enter a valid 6-digit PIN");
+      return;
+    }
+    setIsCheckingPin(true);
+    try {
+      const res = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
+      const data = await res.json();
+      if (data && data[0] && data[0].Status === "Success") {
+        setPinLocation(data[0].PostOffice[0].District);
+      } else {
+        setPinLocation("Unknown Location");
+      }
+    } catch (e) {
+      setPinLocation("Unknown Location");
+    }
+    setCheckedPincode(pincode);
+    setIsCheckingPin(false);
+  };
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -105,7 +137,9 @@ export default function ProductDetailPage() {
       }
     } else {
       navigator.clipboard.writeText(window.location.href);
-      alert("Link copied to clipboard!");
+      toast.success("Link copied", {
+        description: "Product link copied to clipboard.",
+      });
     }
   };
 
@@ -133,8 +167,9 @@ export default function ProductDetailPage() {
     Blue: "#3b82f6",
     Red: "#ef4444",
   };
-  const colorLabels = product.colors || ["Brown", "Light Brown", "Black"];
+  const colorLabels = product?.colors || ["Brown", "Light Brown", "Black"];
   const colors = colorLabels.map((c) => colorMap[c] || "#8B5E3C");
+  const sizeLabels = product?.sizes || ["6", "8", "10", "14", "18", "20"];
   const gallery = [
     product.image,
     "/images/product_placeholder.png",
@@ -147,11 +182,22 @@ export default function ProductDetailPage() {
   const discountPercentage = originalPrice ? Math.round(((originalPrice - product.price) / originalPrice) * 100) : 0;
 
   const handleAddToCart = () => {
+    // If quantity was missing (though state defaults to 1)
+    if (!quantity || quantity < 1) {
+      toast.error("Please select a quantity");
+      return;
+    }
     addItem(product, quantity, selectedColor, product.sizes?.[0]);
-    router.push("/cart");
+    toast.success("Added to cart", {
+      description: "Product added successfully.",
+    });
   };
 
   const handleBuyNow = () => {
+    if (!quantity || quantity < 1) {
+      toast.error("Please select a quantity");
+      return;
+    }
     addItem(product, quantity, selectedColor, product.sizes?.[0]);
     router.push("/cart");
   };
@@ -402,6 +448,46 @@ export default function ProductDetailPage() {
             )}
           </div>
 
+          {/* Options: Color & Size */}
+          {product.category === 'Fashion' && (
+            <div className="flex flex-col gap-6 mb-6">
+              {/* Color */}
+              <div className="flex flex-col gap-2">
+                <span className="text-[13px] font-semibold text-gray-900">Color: <span className="font-bold">{selectedColor}</span></span>
+                <div className="flex flex-wrap gap-2">
+                  {colorLabels.map((colorName, i) => (
+                    <button
+                      key={colorName}
+                      onClick={() => setSelectedColor(colorName)}
+                      className={`relative w-10 h-7 rounded-md border-2 overflow-hidden ${selectedColor === colorName ? "border-gray-900" : "border-transparent"}`}
+                    >
+                      <div className="absolute inset-0 m-[2px] rounded-sm border border-gray-200" style={{ backgroundColor: colors[i] }} />
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Size */}
+              <div className="flex flex-col gap-2 border-b border-gray-100 pb-6">
+                <div className="flex items-center justify-between">
+                  <span className="text-[13px] font-semibold text-gray-900">Size: <span className="font-bold">{selectedSize}</span></span>
+                  <button className="text-[11px] font-medium text-gray-500 underline hover:text-gray-900">View Size Chart</button>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {sizeLabels.map((size) => (
+                    <button
+                      key={size}
+                      onClick={() => setSelectedSize(size)}
+                      className={`h-9 min-w-[3.25rem] px-3 rounded-md text-[13px] font-bold border transition-colors ${selectedSize === size ? "bg-gray-100 border-gray-900 text-gray-900" : "bg-white border-gray-200 text-gray-600 hover:border-gray-300"}`}
+                    >
+                      {size}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Action CTAs */}
           <div ref={inPageCTARef} className="flex flex-col gap-3 mt-4 mb-6">
             {product.isLimited && (
@@ -445,19 +531,81 @@ export default function ProductDetailPage() {
               </Button>
             </div>
 
-            <Button
+            <button
               onClick={handleBuyNow}
-              className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-sm uppercase tracking-wide border-0 shadow-sm"
+              className="relative w-full h-[64px] rounded-2xl bg-[#2563eb] text-white font-bold border-0 flex flex-col items-center justify-center transition-transform active:scale-[0.98]"
             >
-              Buy Now
-            </Button>
+              <div className="flex items-center gap-2">
 
-            <Button
+                <span className="text-[16px]">Buy Now</span>
+              </div>
+              <span className="text-[11px] font-medium text-white/80 mt-0.5">Get it faster</span>
+              <ChevronRight className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white" />
+            </button>
+
+            <button
               onClick={() => window.open("https://wa.me/1234567890", "_blank")}
-              className="w-full h-12 rounded-xl bg-[#25D366] hover:bg-[#128C7E] text-white font-bold text-sm uppercase tracking-wide border-0 shadow-sm"
+              className="relative w-full h-[64px] rounded-2xl bg-[#e8f5e9] text-[#166534] font-bold border-0 flex flex-col items-center justify-center transition-transform active:scale-[0.98]"
             >
-              <WhatsAppIcon className="w-5 h-5 mr-2" /> Enquire on WhatsApp
-            </Button>
+              <div className="flex items-center gap-2">
+                <WhatsAppIcon className="w-5 h-5 fill-[#22c55e]" />
+                <span className="text-[16px]">Enquire on WhatsApp</span>
+              </div>
+              <span className="text-[11px] font-medium text-[#166534]/80 mt-0.5">Chat with us for more details</span>
+              <ChevronRight className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#166534]" />
+            </button>
+          </div>
+
+          {/* Delivery Details Section */}
+          <div className="mb-6 rounded-sm border border-[#e5e7eb] shadow-sm bg-white overflow-hidden">
+            <div className="px-4 py-3 border-b border-[#f3f4f6]">
+              <h3 className="font-semibold text-[15px] text-gray-900">Delivery details</h3>
+            </div>
+
+            {!checkedPincode ? (
+              <div className="p-4">
+                <p className="text-[13px] text-gray-900 font-medium mb-2">Enter pincode</p>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    maxLength={6}
+                    placeholder="6-digit PIN"
+                    value={pincode}
+                    onChange={(e) => setPincode(e.target.value.replace(/\D/g, ''))}
+                    className="flex-1 h-[42px] px-3 border border-[#e5e7eb] rounded-lg text-[14px] focus:outline-none focus:border-[#a78bfa] focus:ring-1 focus:ring-[#a78bfa] transition-all"
+                  />
+                  <button
+                    onClick={handleCheckPincode}
+                    disabled={isCheckingPin || pincode.length !== 6}
+                    className="h-[42px] px-6 bg-primary hover:bg-primary/90 text-white rounded-lg text-[14px] font-bold transition-colors "
+                  >
+                    {isCheckingPin ? "..." : "Check"}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-col">
+                <div className="p-4 bg-[#faf5ff] flex items-start gap-3">
+                  <MapPin className="w-5 h-5 text-[#8b5cf6] shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-bold text-[14px] text-gray-900 leading-tight">{pinLocation}, {checkedPincode}</p>
+                    <button
+                      onClick={() => setCheckedPincode(null)}
+                      className="text-[13px] text-[#8b5cf6] hover:underline font-medium mt-1 flex items-center gap-1"
+                    >
+                      Change delivery location <ChevronRight className="w-3 h-3" />
+                    </button>
+                  </div>
+                </div>
+                <div className="p-4 border-t border-[#f3f4f6] flex items-start gap-3">
+                  <Truck className="w-5 h-5 text-gray-800 shrink-0 mt-0.5" />
+                  <div className="flex-1">
+                    <p className="font-bold text-[14px] text-gray-900 leading-tight">Delivery by Aug 14, 2026</p>
+                    <p className="text-[13px] text-gray-500 mt-1">₹53.36 delivery · Ekart Logistics Surface</p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Offers & Discounts */}
@@ -785,6 +933,46 @@ export default function ProductDetailPage() {
               )}
             </div>
 
+            {/* Options: Color & Size */}
+            {product.category === 'Fashion' && (
+              <div className="flex flex-col gap-6 mb-8">
+                {/* Color */}
+                <div className="flex flex-col gap-2">
+                  <span className="text-[14px] font-semibold text-gray-900">Color: <span className="font-bold">{selectedColor}</span></span>
+                  <div className="flex flex-wrap gap-2">
+                    {colorLabels.map((colorName, i) => (
+                      <button
+                        key={colorName}
+                        onClick={() => setSelectedColor(colorName)}
+                        className={`relative w-11 h-8 rounded-md border-2 overflow-hidden ${selectedColor === colorName ? "border-gray-900" : "border-transparent"}`}
+                      >
+                        <div className="absolute inset-0 m-[2px] rounded-sm border border-gray-200" style={{ backgroundColor: colors[i] }} />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Size */}
+                <div className="flex flex-col gap-2 border-b border-gray-100 pb-8">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[14px] font-semibold text-gray-900">Size: <span className="font-bold">{selectedSize}</span></span>
+                    <button className="text-[12px] font-medium text-gray-500 underline hover:text-gray-900">View Size Chart</button>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {sizeLabels.map((size) => (
+                      <button
+                        key={size}
+                        onClick={() => setSelectedSize(size)}
+                        className={`h-10 min-w-[3.5rem] px-3 rounded-md text-[14px] font-bold border transition-colors ${selectedSize === size ? "bg-gray-100 border-gray-900 text-gray-900" : "bg-white border-gray-200 text-gray-600 hover:border-gray-300"}`}
+                      >
+                        {size}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div className="flex flex-col gap-4 mb-10">
               <div className="flex items-center gap-3">
                 <div className="flex items-center border border-border bg-background h-12 min-w-[120px]">
@@ -828,19 +1016,81 @@ export default function ProductDetailPage() {
                 </Button>
               </div>
 
-              <Button
+              <button
                 onClick={handleBuyNow}
-                className="w-full h-14 bg-primary rounded-lg hover:bg-primary/90 text-white font-bold text-[15px] uppercase tracking-wide"
+                className="relative w-full h-[64px] rounded-2xl bg-[#2563eb] text-white font-bold border-0 flex flex-col items-center justify-center transition-transform active:scale-[0.98]"
               >
-                Buy Now
-              </Button>
+                <div className="flex items-center gap-2">
+                  <Zap className="w-4 h-4 fill-white" />
+                  <span className="text-[17px]">Buy Now</span>
+                </div>
+                <span className="text-[12px] font-medium text-white/80 mt-0.5">Get it faster</span>
+                <ChevronRight className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white" />
+              </button>
 
-              <Button
+              <button
                 onClick={() => window.open("https://wa.me/1234567890", "_blank")}
-                className="w-full h-14 rounded-lg bg-[#25D366] hover:bg-[#128C7E] text-white font-bold text-[15px] uppercase tracking-wide border-0 shadow-sm"
+                className="relative w-full h-[64px] rounded-2xl bg-[#e8f5e9] text-[#166534] font-bold border-0 flex flex-col items-center justify-center transition-transform active:scale-[0.98]"
               >
-                <WhatsAppIcon className="w-5 h-5 mr-2" /> Enquire on WhatsApp
-              </Button>
+                <div className="flex items-center gap-2">
+                  <WhatsAppIcon className="w-5 h-5 fill-[#22c55e]" />
+                  <span className="text-[17px]">Enquire on WhatsApp</span>
+                </div>
+                <span className="text-[12px] font-medium text-[#166534]/80 mt-0.5">Chat with us for more details</span>
+                <ChevronRight className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#166534]" />
+              </button>
+            </div>
+
+            {/* Delivery Details Section (Desktop) */}
+            <div className="mb-6 rounded-xl border border-[#e5e7eb] shadow-sm bg-white overflow-hidden">
+              <div className="px-4 py-3 border-b border-[#f3f4f6]">
+                <h3 className="font-semibold text-[15px] text-gray-900">Delivery details</h3>
+              </div>
+
+              {!checkedPincode ? (
+                <div className="p-4">
+                  <p className="text-[13px] text-gray-900 font-medium mb-2">Enter pincode</p>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      maxLength={6}
+                      placeholder="6-digit PIN"
+                      value={pincode}
+                      onChange={(e) => setPincode(e.target.value.replace(/\D/g, ''))}
+                      className="flex-1 h-[42px] px-3 border border-[#e5e7eb] rounded-lg text-[14px] focus:outline-none focus:border-[#a78bfa] focus:ring-1 focus:ring-[#a78bfa] transition-all"
+                    />
+                    <button
+                      onClick={handleCheckPincode}
+                      disabled={isCheckingPin || pincode.length !== 6}
+                      className="h-[42px] px-6 bg-primary hover:bg-primary/90 text-white rounded-lg text-[14px] font-bold transition-colors "
+                    >
+                      {isCheckingPin ? "..." : "Check"}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col">
+                  <div className="p-4 bg-[#faf5ff] flex items-start gap-3">
+                    <MapPin className="w-5 h-5 text-[#8b5cf6] shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-bold text-[14px] text-gray-900 leading-tight">{pinLocation}, {checkedPincode}</p>
+                      <button
+                        onClick={() => setCheckedPincode(null)}
+                        className="text-[13px] text-[#8b5cf6] hover:underline font-medium mt-1 flex items-center gap-1"
+                      >
+                        Change delivery location <ChevronRight className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </div>
+                  <div className="p-4 border-t border-[#f3f4f6] flex items-start gap-3">
+                    <Truck className="w-5 h-5 text-gray-800 shrink-0 mt-0.5" />
+                    <div className="flex-1">
+                      <p className="font-bold text-[14px] text-gray-900 leading-tight">Delivery by Aug 14, 2026</p>
+                      <p className="text-[13px] text-gray-500 mt-1">₹53.36 delivery · Ekart Logistics Surface</p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Offers & Discounts Desktop */}
@@ -1040,6 +1290,53 @@ export default function ProductDetailPage() {
             ))}
           </div>
         </section>
+      </div>
+
+      {/* ── MANUFACTURER BANNERS ── */}
+      <div className=" py-10 lg:py-12 border-t  border-gray-200">
+        <div className="container mx-auto px-5 lg:px-6 max-w-7xl">
+          <h2 className="text-[20px] lg:text-[24px] font-bold text-gray-900 mb-6">
+            From the manufacturer
+          </h2>
+          <div className="flex flex-col gap-6">
+            {/* Banner 1 */}
+            <div className="w-full aspect-[16/9] lg:aspect-[21/9] relative bg-[#f4f4f5]  overflow-hidden shadow-sm cursor-pointer group">
+              <Image
+                src="/images/product_placeholder.png"
+                alt="Manufacturer Banner 1"
+                fill
+                className="object-cover group-hover:scale-[1.02] transition-transform duration-700"
+              />
+              <div className="absolute inset-0 flex items-center justify-center bg-black/5 group-hover:bg-transparent transition-colors">
+                <span className="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-lg text-sm font-bold text-gray-600 tracking-widest uppercase">Banner 1</span>
+              </div>
+            </div>
+            {/* Banner 2 */}
+            <div className="w-full aspect-[16/9] lg:aspect-[21/9] relative bg-[#f4f4f5]  overflow-hidden shadow-sm cursor-pointer group">
+              <Image
+                src="/images/product_placeholder.png"
+                alt="Manufacturer Banner 2"
+                fill
+                className="object-cover group-hover:scale-[1.02] transition-transform duration-700"
+              />
+              <div className="absolute inset-0 flex items-center justify-center bg-black/5 group-hover:bg-transparent transition-colors">
+                <span className="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-lg text-sm font-bold text-gray-600 tracking-widest uppercase">Banner 2</span>
+              </div>
+            </div>
+            {/* Banner 3 */}
+            <div className="w-full aspect-[16/9] lg:aspect-[21/9] relative bg-[#f4f4f5]  overflow-hidden shadow-sm cursor-pointer group">
+              <Image
+                src="/images/product_placeholder.png"
+                alt="Manufacturer Banner 3"
+                fill
+                className="object-cover group-hover:scale-[1.02] transition-transform duration-700"
+              />
+              <div className="absolute inset-0 flex items-center justify-center bg-black/5 group-hover:bg-transparent transition-colors">
+                <span className="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-lg text-sm font-bold text-gray-600 tracking-widest uppercase">Banner 3</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Fullscreen Image Lightbox */}

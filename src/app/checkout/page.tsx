@@ -25,22 +25,25 @@ import {
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useAddressStore } from "@/store/useAddressStore";
+import { useRewardStore } from "@/store/useRewardStore";
+import { toast } from "sonner";
 
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, getCartTotal, clearCart, couponApplied } = useCartStore();
   const { addresses } = useAddressStore();
 
-  const [fullName, setFullName] = useState(addresses[0]?.name || "");
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState(addresses[0]?.phone || "");
-  const [addressLine, setAddressLine] = useState(addresses[0]?.addressLine || "");
-  const [city, setCity] = useState(addresses[0]?.city || "");
-  const [stateValue, setStateValue] = useState(addresses[0]?.state || "");
-  const [pincode, setPincode] = useState(addresses[0]?.pinCode || "");
+  const [phone, setPhone] = useState("");
+  const [addressLine, setAddressLine] = useState("");
+  const [city, setCity] = useState("");
+  const [stateValue, setStateValue] = useState("");
+  const [pincode, setPincode] = useState("");
   const [orderNotes, setOrderNotes] = useState("");
   const [showSavedAddresses, setShowSavedAddresses] = useState(false);
   const [showSummary, setShowSummary] = useState(false);
+  const [error, setError] = useState("");
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -85,12 +88,22 @@ export default function CheckoutPage() {
   const tax = (subtotal - discount) * 0.08;
   const total = subtotal - discount - onlineDiscount + shipping + tax;
 
-  const placeOrder = () => {
+  const placeOrder = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    setError("");
     setIsSubmitting(true);
     setTimeout(() => {
       setIsSubmitting(false);
       clearCart();
+
+      // Earn 1 Woxly Coin for every ₹10 spent
+      const earnedCoins = Math.floor(total / 10);
+      useRewardStore.getState().addCoins(earnedCoins);
+
       const orderId = `WOXLY-${Math.floor(100000 + Math.random() * 900000)}`;
+      toast.success("Order placed successfully", {
+        description: `Your order ${orderId} has been confirmed.`,
+      });
       router.push(`/order-success/${orderId}`);
     }, 1200);
   };
@@ -99,7 +112,7 @@ export default function CheckoutPage() {
   if (items.length === 0 && !isSubmitting) {
     return (
       <div className="min-h-[80vh] flex flex-col items-center justify-center text-center py-16 px-4 bg-[#f9fafb]">
-        <div className="w-24 h-24 rounded-full bg-[#f4eefc] flex items-center justify-center mb-6">
+        <div className="w-24 h-24 rounded-sm bg-[#f4eefc] flex items-center justify-center mb-6">
           <ShoppingBag className="w-11 h-11 text-primary" stroke={1.5} />
         </div>
         <h1 className="text-3xl font-bold text-gray-900 mb-3">Your cart is empty</h1>
@@ -116,10 +129,24 @@ export default function CheckoutPage() {
   return (
     <div className="bg-[#f9fafb] min-h-screen py-6 lg:py-10">
       <div className="container mx-auto px-4 max-w-6xl">
-        <div className="flex flex-col lg:flex-row gap-8">
+        <form id="checkout-form" onSubmit={placeOrder} className="flex flex-col lg:flex-row gap-8">
 
           {/* ── Left Column: Details & Payment ── */}
           <div className="flex-1 space-y-8">
+
+            <AnimatePresence>
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="bg-red-50 text-red-600 px-4 py-3 rounded-[12px] text-[14px] font-bold border border-red-200 flex items-start gap-2.5 shadow-sm"
+                >
+                  <HelpCircle className="w-[18px] h-[18px] text-red-500 mt-0.5 shrink-0" stroke={2} />
+                  <span>{error}</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Personal Details Section */}
             <div>
@@ -130,6 +157,7 @@ export default function CheckoutPage() {
                 </div>
                 {addresses.length > 0 && (
                   <button
+                    type="button"
                     onClick={() => setShowSavedAddresses(!showSavedAddresses)}
                     className="text-primary text-[12px] font-bold hover:underline bg-primary/10 px-3 py-1.5  transition-colors"
                   >
@@ -150,13 +178,40 @@ export default function CheckoutPage() {
                       {addresses.map(addr => (
                         <button
                           key={addr.id}
+                          type="button"
                           onClick={() => {
                             setFullName(addr.name || "");
-                            setPhone(addr.phone || "");
+
+                            // Sanitize phone to exactly 10 digits to pass validation (for legacy dummy data)
+                            const sanitizedPhone = (addr.phone || "").replace(/\D/g, '').slice(-10);
+                            setPhone(sanitizedPhone.padEnd(10, '0'));
+
                             setAddressLine(addr.addressLine || "");
-                            setCity(addr.city || "");
-                            setStateValue(addr.state || "");
-                            setPincode(addr.pinCode || "");
+
+                            const pcode = (addr.pinCode || "")
+                              .replace(/\D/g, "")
+                              .slice(0, 6);
+
+                            setPincode(pcode);
+
+                            // Let the pincode API determine City + State
+                            if (pcode.length === 6) {
+                              fetch(`https://api.postalpincode.in/pincode/${pcode}`)
+                                .then(res => res.json())
+                                .then(data => {
+                                  if (data?.[0]?.Status === "Success") {
+                                    const postOffice = data[0].PostOffice[0];
+
+                                    setCity(postOffice.District || "");
+                                    setStateValue(postOffice.State || "");
+                                  }
+                                })
+                                .catch(err => console.error("Pincode lookup failed:", err));
+                            } else {
+                              setCity("");
+                              setStateValue("");
+                            }
+
                             setShowSavedAddresses(false);
                           }}
                           className="flex-shrink-0 px-4 py-3 rounded-[6px] border border-gray-200 text-left hover:border-primary hover:bg-primary/5 transition-all w-[240px]"
@@ -173,13 +228,14 @@ export default function CheckoutPage() {
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-[13px] font-bold text-gray-900 mb-1.5 px-2">Full Name</label>
+                  <label className="block  text-[13px] font-bold text-gray-900 mb-1.5 px-2">Full Name</label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                       <User className="w-[22px] h-[22px] text-gray-400" stroke={1.5} />
                     </div>
                     <input
                       type="text"
+                      required
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
                       className="w-full h-[56px] bg-white border border-gray-200 rounded-[6px] pl-12 pr-4 text-[15px] font-medium text-gray-900 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary placeholder:text-gray-400 transition-all shadow-sm"
@@ -196,6 +252,7 @@ export default function CheckoutPage() {
                     </div>
                     <input
                       type="email"
+                      required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="w-full h-[56px] bg-white border border-gray-200 rounded-[6px] pl-12 pr-4 text-[15px] font-medium text-gray-900 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary placeholder:text-gray-400 transition-all shadow-sm"
@@ -213,6 +270,9 @@ export default function CheckoutPage() {
                     </div>
                     <input
                       type="tel"
+                      required
+                      pattern="[0-9]{10}"
+                      title="Please enter a valid 10-digit mobile number"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       className="flex-1 bg-transparent border-none outline-none px-4 text-[15px] font-medium text-gray-900 placeholder:text-gray-400"
@@ -231,7 +291,8 @@ export default function CheckoutPage() {
                       <MapPin className="w-[22px] h-[22px] text-gray-400" stroke={1.5} />
                     </div>
                     <input
-                      type="text"
+                      type="address"
+                      required
                       value={addressLine}
                       onChange={(e) => setAddressLine(e.target.value)}
                       className="w-full h-[56px] bg-white border border-gray-200 rounded-[6px] pl-12 pr-4 text-[15px] font-medium text-gray-900 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary placeholder:text-gray-400 transition-all shadow-sm"
@@ -249,8 +310,10 @@ export default function CheckoutPage() {
                       </div>
                       <input
                         type="text"
+                        required
                         value={city}
-                        onChange={(e) => setCity(e.target.value)}
+                        readOnly
+                        autoComplete="off"
                         className="w-full h-[56px] bg-white border border-gray-200 rounded-[6px] pl-12 pr-4 text-[15px] font-medium text-gray-900 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary placeholder:text-gray-400 transition-all shadow-sm"
                         placeholder="Enter your city/town"
                       />
@@ -260,8 +323,10 @@ export default function CheckoutPage() {
                     <label className="block text-[13px] font-bold text-gray-900 mb-1.5 px-2">State</label>
                     <input
                       type="text"
+                      required
                       value={stateValue}
-                      onChange={(e) => setStateValue(e.target.value)}
+                      readOnly
+                      autoComplete="off"
                       className="w-full h-[56px] bg-white border border-gray-200 rounded-[6px] px-4 text-[15px] font-medium text-gray-900 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary placeholder:text-gray-400 transition-all shadow-sm"
                       placeholder="Enter your state"
                     />
@@ -272,8 +337,16 @@ export default function CheckoutPage() {
                   <label className="block text-[13px] font-bold text-gray-900 mb-1.5 px-2">Pincode</label>
                   <input
                     type="text"
+                    inputMode="numeric"
+                    maxLength={6}
+                    required
+                    pattern="[0-9]{6}"
+                    title="Please enter a valid 6-digit postal code"
                     value={pincode}
-                    onChange={(e) => setPincode(e.target.value)}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, "").slice(0, 6);
+                      setPincode(value);
+                    }}
                     className="w-full h-[56px] bg-white border border-gray-200 rounded-[6px] px-4 text-[15px] font-medium text-gray-900 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary placeholder:text-gray-400 transition-all shadow-sm"
                     placeholder="Enter 6-digit postal code"
                   />
@@ -354,6 +427,7 @@ export default function CheckoutPage() {
 
                 {/* Order Summary Toggle */}
                 <button
+                  type="button"
                   onClick={() => setShowSummary(!showSummary)}
                   className="w-full py-3 mb-2 flex items-center justify-between text-[13px] font-bold text-primary hover:text-primary/80 transition-colors border-y border-gray-100"
                 >
@@ -419,7 +493,7 @@ export default function CheckoutPage() {
                     </div>
                   </div>
                   {!couponApplied ? (
-                    <button onClick={() => router.push('/cart')} className="h-9 px-4  border border-gray-200 text-gray-700 text-xs font-semibold hover:bg-gray-50 transition-colors shrink-0">
+                    <button type="button" onClick={() => router.push('/cart')} className="h-9 px-4  border border-gray-200 text-gray-700 text-xs font-semibold hover:bg-gray-50 transition-colors shrink-0">
                       Coupon Available
                     </button>
                   ) : (
@@ -434,7 +508,8 @@ export default function CheckoutPage() {
               <div className="pb-8 lg:pb-0">
                 <Button
                   ref={checkoutBtnRef}
-                  onClick={placeOrder}
+                  type="submit"
+                  form="checkout-form"
                   disabled={isSubmitting}
                   className="w-full h-[56px] bg-primary hover:bg-primary/90 text-white font-bold text-[16px] rounded-[20px] transition-all flex items-center justify-center shadow-md border-none"
                 >
@@ -454,7 +529,7 @@ export default function CheckoutPage() {
               </div>
             </div>
           </div>
-        </div>
+        </form>
       </div>
 
       {/* Mobile Sticky Checkout Bar */}
@@ -476,7 +551,8 @@ export default function CheckoutPage() {
               </span>
             </div>
             <Button
-              onClick={placeOrder}
+              type="submit"
+              form="checkout-form"
               disabled={isSubmitting}
               className="h-[48px] rounded-[16px] bg-primary hover:bg-primary/90 text-white font-bold text-[15px] px-8 shadow-sm border-0"
             >
