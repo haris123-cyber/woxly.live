@@ -10,6 +10,7 @@ import { useCartStore } from "@/store/useCartStore";
 import { useWatchlistStore } from "@/store/useWatchlistStore";
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/product/ProductCard";
+import { IconTruckReturn, IconShieldCheck, IconTruckDelivery } from "@tabler/icons-react";
 import {
   Star,
   Truck,
@@ -28,6 +29,9 @@ import {
   BadgeCheck,
   CheckCircle2,
   Flame,
+  Share2,
+  ZoomIn,
+  Package,
 } from "lucide-react";
 
 const WhatsAppIcon = ({ className }: { className?: string }) => (
@@ -86,6 +90,24 @@ export default function ProductDetailPage() {
   const [activeTab, setActiveTab] = useState<"description" | "reviews">("description");
   const [isWarrantyOpen, setIsWarrantyOpen] = useState(false);
   const [isDeliveryOpen, setIsDeliveryOpen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: product?.name,
+          text: product?.description,
+          url: window.location.href,
+        });
+      } catch (error) {
+        console.error('Error sharing:', error);
+      }
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      alert("Link copied to clipboard!");
+    }
+  };
 
   if (!product) {
     return (
@@ -113,7 +135,14 @@ export default function ProductDetailPage() {
   };
   const colorLabels = product.colors || ["Brown", "Light Brown", "Black"];
   const colors = colorLabels.map((c) => colorMap[c] || "#8B5E3C");
-  const gallery = [product.image, product.image, product.image];
+  const gallery = [
+    product.image,
+    "/images/product_placeholder.png",
+    "/images/product_placeholder.png",
+    "/images/product_placeholder.png",
+    "/images/product_placeholder.png",
+    "/images/product_placeholder.png",
+  ];
   const originalPrice = product.originalPrice;
   const discountPercentage = originalPrice ? Math.round(((originalPrice - product.price) / originalPrice) * 100) : 0;
 
@@ -173,19 +202,19 @@ export default function ProductDetailPage() {
       {/* Rating Overview */}
       <div className="flex flex-row items-center gap-4 sm:gap-10 py-6 border-y border-gray-100 mb-6">
         <div className="flex flex-col items-center w-24 sm:w-32 shrink-0">
-          <span className="text-4xl font-bold text-gray-900 mb-1">4.8</span>
+          <span className="text-4xl font-bold text-gray-900 mb-1">{product.rating || "0"}</span>
           <div className="flex items-center gap-0.5 sm:gap-1 mb-1">
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
-                className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${i < 4
+                className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${i < Math.floor(product.rating || 0)
                   ? "fill-[#f89820] text-[#f89820]"
-                  : "text-[#f89820]"
+                  : "fill-gray-200 text-gray-200"
                   }`}
               />
             ))}
           </div>
-          <span className="text-xs sm:text-[13px] text-gray-400">{reviews.length} reviews</span>
+          <span className="text-xs sm:text-[13px] text-gray-400">{product.reviews || 0} reviews</span>
         </div>
 
         {/* Vertical Divider */}
@@ -272,72 +301,105 @@ export default function ProductDetailPage() {
   return (
     <div className="bg-background min-h-screen overflow-x-hidden">
       {/* ── MOBILE LAYOUT ── */}
-      <div className="lg:hidden pb-6">
-        {/* Header */}
+      <div className="lg:hidden pb-6 bg-[#f8f9fa]">
+        {/* Main Image Section */}
+        <div className="relative w-full aspect-[4/5]">
+          <Image
+            src={gallery[imageIndex]}
+            alt={product.name}
+            fill
+            className="object-cover"
+            priority
+            sizes="100vw"
+          />
 
+          {/* Right Floating Actions */}
+          <div className="absolute top-6 right-4 flex flex-col gap-3">
+            <button
+              onClick={handleShare}
+              className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm"
+            >
+              <Share2 className="w-4 h-4 text-gray-700" />
+            </button>
+            <button
+              onClick={() => toggleItem(product)}
+              className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm"
+            >
+              <Heart className={`w-4 h-4 ${inWatchlist ? "fill-red-500 text-red-500" : "text-gray-700"}`} />
+            </button>
+            <button
+              onClick={() => setIsFullscreen(true)}
+              className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm"
+            >
+              <ZoomIn className="w-4 h-4 text-gray-700" />
+            </button>
+          </div>
+        </div>
 
-        <div className="px-5 pt-4">
-          {/* Title first (structure like reference) */}
-          <h2 className="text-2xl font-bold text-foreground leading-tight mb-1">
-            {product.name}
-          </h2>
-          <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-            {product.description || "Premium quality product crafted for modern living."}
-          </p>
+        {/* Product Info Card (White Background) */}
+        <div className="bg-white rounded-t-3xl px-5 pt-6 pb-4 shadow-[0_-4px_20px_rgba(0,0,0,0.02)]">
+          {/* Thumbnails */}
+          <div className="flex gap-3 mb-6 overflow-x-auto hide-scrollbar pb-1">
+            {gallery.slice(0, 5).map((img, i) => {
+              const isLast = i === 4;
+              const hasMore = gallery.length > 5;
 
-          {/* Horizontal image carousel */}
-          <div className="relative mb-4 -mx-5">
-            <div className="flex gap-3 overflow-x-auto hide-scrollbar snap-x snap-mandatory px-5 pb-1">
-              {gallery.map((img, i) => (
-                <div
+              return (
+                <button
                   key={i}
-                  className="relative w-[78%] shrink-0 aspect-square rounded-2xl overflow-hidden bg-muted snap-center"
+                  onClick={() => setImageIndex(i)}
+                  className={`relative w-14 h-14 rounded-xl overflow-hidden bg-white shrink-0 ${imageIndex === i ? "border-2 border-blue-600" : "border border-gray-200"} shadow-sm`}
                 >
                   <Image
                     src={img}
-                    alt={`${product.name} ${i + 1}`}
+                    alt={`Thumbnail ${i + 1}`}
                     fill
-                    className="object-contain p-6"
-                    priority={i === 0}
-                    sizes="78vw"
+                    className="object-cover"
                   />
-                </div>
-              ))}
-            </div>
-            <button
-              onClick={() => toggleItem(product)}
-              className="absolute top-3 right-8 w-10 h-10 bg-background rounded-full flex items-center justify-center shadow-md z-10"
-              aria-label="Wishlist"
-            >
-              <Heart
-                className={`w-5 h-5 ${inWatchlist ? "fill-red-500 text-red-500" : "text-muted-foreground"}`}
-              />
-            </button>
+                  {isLast && hasMore && (
+                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-white font-medium text-sm">
+                      +{gallery.length - 4}
+                    </div>
+                  )}
+                </button>
+              )
+            })}
           </div>
 
+          {/* Title */}
+          <h1 className="text-[22px] font-extrabold text-gray-900 leading-tight mb-2">
+            {product.name}
+          </h1>
 
-
-          {/* Price + stock row */}
-          <div className="flex items-center justify-between mb-5">
-            <div className="flex items-baseline gap-2 flex-wrap">
-              <span className="text-2xl font-bold text-primary">₹{product.price.toFixed(2).replace(/\.00$/, '')}</span>
-              {originalPrice && (
-                <span className="text-sm text-muted-foreground line-through">
-                  ₹{originalPrice.toFixed(2).replace(/\.00$/, '')}
-                </span>
-              )}
-              {discountPercentage > 0 && (
-                <span
-                  className="bg-[#00a859] text-white text-[10px] font-bold pl-2 pr-3 py-0.5 ml-1 whitespace-nowrap"
-                  style={{ clipPath: "polygon(0 0, calc(100% - 6px) 0, 100% 100%, 0 100%)" }}
-                >
-                  {discountPercentage}% OFF
-                </span>
-              )}
-            </div>
-            <span className="text-sm font-medium text-foreground">
-              {product.inStock ? "In stock" : "Out of stock"}
+          {/* Rating */}
+          <div className="flex items-center gap-1.5 mb-3">
+            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+            <span className="text-sm font-bold text-gray-900">{product.rating || "0"}</span>
+            <span className="text-sm text-blue-600 font-medium ml-1">
+              ({product.reviews || 0} reviews)
             </span>
+          </div>
+
+          {/* Description */}
+          <p className="text-sm text-gray-600 leading-relaxed mb-4">
+            {product.description || "Healthy and nutritious oats to kickstart your day with energy."}
+          </p>
+
+          {/* Price */}
+          <div className="flex items-end gap-3 mb-5">
+            <span className="text-[28px] font-extrabold text-gray-900 leading-none">
+              ₹{product.price.toFixed(0)}
+            </span>
+            {originalPrice && (
+              <span className="text-base text-gray-400 line-through font-medium mb-1">
+                ₹{originalPrice.toFixed(0)}
+              </span>
+            )}
+            {discountPercentage > 0 && (
+              <span className="bg-[#e6f4ea] text-[#00a859] text-xs font-bold px-2 py-1 rounded mb-1">
+                {discountPercentage}% OFF
+              </span>
+            )}
           </div>
 
           {/* Action CTAs */}
@@ -404,7 +466,7 @@ export default function ProductDetailPage() {
               Offers & Discounts
             </h3>
 
-            <div className="flex items-stretch w-full h-[62px] sm:h-[68px]">
+            <div className="flex items-stretch w-full h-[62px] sm:h-[68px] mt-2 ">
 
               {/* LEFT TICKET TAB */}
               <div className="relative w-[58px] sm:w-[68px] shrink-0 bg-[#dc2626] rounded-l-lg flex flex-col items-center justify-center overflow-hidden">
@@ -431,7 +493,7 @@ export default function ProductDetailPage() {
 
 
               {/* CENTER SECTION */}
-              <div className="relative flex-1 bg-[#dc2626] flex items-center px-3 sm:px-5">
+              <div className="relative flex-1 bg-[#dc2626] flex items-center px-3 sm:px-5 py-2">
 
                 <div className="flex items-center gap-2 sm:gap-3">
 
@@ -440,13 +502,16 @@ export default function ProductDetailPage() {
                     strokeWidth={2.5}
                   />
 
-                  <div className="flex flex-col">
-                    <span className="text-white font-bold text-[10px] sm:text-[11px] leading-none mb-1">
+                  <div className="flex flex-col ml-2">
+                    <span className="text-white font-light italic text-[10px] sm:text-[11px] leading-none mb-1 ">
                       Online payment offer
                     </span>
 
-                    <span className="text-white font-extrabold text-[20px] sm:text-[24px] leading-none">
+                    <span className="text-white font-bold text-[20px] sm:text-[24px] leading-none mb-1">
                       10% OFF
+                    </span>
+                    <span className="text-white font-light italic text-[10px] sm:text-[11px] leading-none mb-1">
+                      On all products
                     </span>
                   </div>
 
@@ -478,19 +543,41 @@ export default function ProductDetailPage() {
 
             </div>
 
-            <div className="grid grid-cols-2 gap-4 pb-6 mb-2 mt-2">
-              <div className="flex flex-col items-center justify-center text-center gap-2">
-                <Truck className="w-6 h-6 text-[#1e1b4b]" />
-                <span className="text-[11px] font-bold text-[#1e1b4b]">No Return</span>
+            <div className="grid grid-cols-3 border border-gray-100 rounded-sm py-3 divide-x divide-gray-100 mb-6 mt-4">
+              <div className="flex items-center justify-center gap-2 px-1">
+                <div className="w-8 h-8 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
+                  <IconTruckDelivery stroke={1.5} className="w-4 h-4 text-[#1e1b4b]" />
+                </div>
+                <div className="flex flex-col text-left">
+                  <span className="text-[10px] sm:text-[11px] font-bold text-[#1e1b4b] leading-tight">Free Delivery</span>
+                  <span className="text-[9px] sm:text-[10px] text-gray-500 leading-tight">On all orders</span>
+                </div>
               </div>
-              <div className="flex flex-col items-center justify-center text-center gap-2">
-                <ShieldCheck className="w-6 h-6 text-[#1e1b4b]" />
-                <span className="text-[11px] font-bold text-[#1e1b4b]">High Quality material</span>
+
+              <div className="flex items-center justify-center gap-2 px-1">
+                <div className="w-8 h-8 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
+                  <IconTruckReturn stroke={1.5} className="w-4 h-4 text-[#1e1b4b]" />
+                </div>
+                <div className="flex flex-col text-left">
+                  <span className="text-[10px] sm:text-[11px] font-bold text-[#1e1b4b] leading-tight">No Return</span>
+                  <span className="text-[9px] sm:text-[10px] text-gray-500 leading-tight">Check policy</span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-center gap-2 px-1">
+                <div className="w-8 h-8 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
+                  <IconShieldCheck stroke={1.5} className="w-4 h-4 text-[#1e1b4b]" />
+                </div>
+                <div className="flex flex-col text-left">
+                  <span className="text-[10px] sm:text-[11px] font-bold text-[#1e1b4b] leading-tight">High Quality</span>
+                  <span className="text-[9px] sm:text-[10px] text-gray-500 leading-tight">Premium material</span>
+                </div>
               </div>
             </div>
 
+
             <div >
-              <div className="flex flex-col ">
+              <div className="flex flex-col border-t border-gray-100">
                 <button
                   onClick={() => setIsWarrantyOpen(!isWarrantyOpen)}
                   className="flex items-center justify-between py-4 w-full hover:opacity-80 transition-opacity"
@@ -511,7 +598,7 @@ export default function ProductDetailPage() {
                   </div>
                 )}
               </div>
-              <div className="flex flex-col">
+              <div className="flex flex-col  border-t border-gray-100 border-b">
                 <button
                   onClick={() => setIsDeliveryOpen(!isDeliveryOpen)}
                   className="flex items-center justify-between py-4 w-full hover:opacity-80 transition-opacity"
@@ -556,7 +643,7 @@ export default function ProductDetailPage() {
                   : "text-muted-foreground"
                   }`}
               >
-                REVIEWS ({reviews.length})
+                REVIEWS ({product.reviews || 0})
               </button>
             </div>
 
@@ -590,24 +677,44 @@ export default function ProductDetailPage() {
           )}
         </div>
 
-        {/* Sticky bottom CTAs — side by side */}
+        {/* Sticky bottom CTAs — floating card */}
         <AnimatePresence>
           {showStickyCTAs && (
             <motion.div
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "100%" }}
-              transition={{ duration: 0.2 }}
-              className="fixed bottom-[calc(3.5rem+env(safe-area-inset-bottom))] lg:hidden left-0 right-0 z-40  bg-transparent border-none px-4 py-3 flex gap-3 "
+              initial={{ y: "120%", opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: "120%", opacity: 0 }}
+              transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+              className="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] lg:hidden left-4 right-4 z-50 bg-white rounded-[16px] shadow-[0_4px_24px_rgba(0,0,0,0.12)] px-4 py-3 flex items-center justify-between border border-gray-100"
             >
+              <div className="flex flex-col">
+                <div className="flex items-center gap-2">
+                  <span className="text-[22px] font-extrabold text-gray-900 leading-none">
+                    ₹{(product.price * quantity).toFixed(0)}
+                  </span>
+                  {discountPercentage > 0 && (
+                    <span className="bg-gray-100 text-gray-500 text-[10px] font-bold px-1.5 py-0.5 rounded">
+                      {discountPercentage}% OFF
+                    </span>
+                  )}
+                </div>
+                {originalPrice && (
+                  <div className="flex items-center gap-2 mt-1.5">
+                    <span className="text-[13px] text-gray-400 line-through font-medium leading-none">
+                      ₹{(originalPrice * quantity).toFixed(0)}
+                    </span>
+                    <span className="text-[12px] text-[#00a859] font-bold leading-none">
+                      You save ₹{((originalPrice - product.price) * quantity).toFixed(0)}
+                    </span>
+                  </div>
+                )}
+              </div>
               <Button
                 onClick={handleAddToCart}
-                variant="outline"
-                className="flex-2 sm:w-[70%] h-12 rounded-xl bg-background border-[1px] border-gray-600 text-primary font-bold text-sm uppercase tracking-wide"
+                className="h-11 rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold text-[14px] px-6 shadow-sm border-0"
               >
                 Add to Cart
               </Button>
-
             </motion.div>
           )}
         </AnimatePresence>
@@ -625,7 +732,7 @@ export default function ProductDetailPage() {
                   className={`relative w-full aspect-square rounded-lg overflow-hidden bg-muted shrink-0 ${imageIndex === i ? "border border-foreground opacity-100" : "opacity-60"
                     }`}
                 >
-                  <Image src={img} alt="" fill className="object-cover p-2" sizes="80px" />
+                  <Image src={img} alt="" fill className="object-cover" sizes="80px" />
                 </button>
               ))}
             </div>
@@ -634,7 +741,7 @@ export default function ProductDetailPage() {
                 src={gallery[imageIndex]}
                 alt={product.name}
                 fill
-                className="object-contain p-12"
+                className="object-cover"
                 priority
                 sizes="50vw"
               />
@@ -645,7 +752,7 @@ export default function ProductDetailPage() {
             <h1 className="text-3xl font-bold tracking-tight text-foreground mb-2">{product.name}</h1>
             <div className="flex items-center gap-3 mb-4">
               <span className="text-sm font-medium text-muted-foreground underline">
-                {product.rating} ({product.reviews})
+                {product.rating || "0"} ({product.reviews || 0} reviews)
               </span>
               <div className="flex gap-0.5">
                 {[...Array(5)].map((_, i) => (
@@ -742,44 +849,94 @@ export default function ProductDetailPage() {
                 Offers & Discounts
               </h3>
 
-              <div className="flex w-full mb-5 drop-shadow-sm h-[80px]">
-                {/* Left Section */}
-                <div className="relative w-12 bg-[#dc2626] rounded-l-lg flex flex-col items-center justify-center shrink-0 overflow-hidden border-y border-l border-[#dc2626]">
-                  {/* Left Cutout */}
-                  <div className="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-white rounded-full"></div>
+              <div className="flex items-stretch w-full h-[62px] sm:h-[68px] mt-2 mb-5">
 
-                  <span className="text-white font-bold text-lg leading-none mb-1 ml-1">%</span>
-                  <span className="text-white text-[8px] font-bold tracking-widest ml-1" style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>DISCOUNT</span>
+                {/* LEFT TICKET TAB */}
+                <div className="relative w-[58px] sm:w-[68px] shrink-0 bg-[#dc2626] rounded-l-lg flex flex-col items-center justify-center overflow-hidden">
+                  {/* Left cutout */}
+                  <div className="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-white rounded-full" />
+                  <span
+                    className="text-white text-[8px] font-bold tracking-widest"
+                    style={{
+                      writingMode: "vertical-rl",
+                      transform: "rotate(180deg)",
+                    }}
+                  >
+                    DISCOUNT %
+                  </span>
                 </div>
 
-                {/* Dashed Separator */}
-                <div className="w-0 border-l-[3px] border-dashed border-[#dc2626] bg-white relative z-10"></div>
+                {/* DASHED SEPARATOR */}
+                <div className="relative w-0 border-l-[2px] border-dashed border-white bg-[#dc2626] z-10" />
 
-                {/* Right Section */}
-                <div className="relative flex-1 bg-white border-y border-r border-[#dc2626] rounded-r-lg flex items-center px-4 overflow-hidden">
-                  {/* Right Cutout */}
-                  <div className="absolute -right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-white border border-[#dc2626] rounded-full z-10"></div>
-
-                  <div className="flex items-center gap-3 w-full">
-                    <div className="shrink-0 flex items-center justify-center">
-                      <BadgePercent className="w-9 h-9 text-[#dc2626]" strokeWidth={2.5} />
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="text-[#dc2626] font-bold text-[11px] sm:text-[12px] leading-none mb-1">DISCOUNT COUPON</span>
-                      <span className="text-[#dc2626] font-extrabold text-[22px] sm:text-[24px] leading-none">10% OFF</span>
+                {/* CENTER SECTION */}
+                <div className="relative flex-1 bg-[#dc2626] flex items-center px-3 sm:px-5 py-2">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <BadgePercent
+                      className="w-8 h-8 sm:w-9 sm:h-9 text-white shrink-0"
+                      strokeWidth={2.5}
+                    />
+                    <div className="flex flex-col ml-2">
+                      <span className="text-white font-light italic text-[10px] sm:text-[11px] leading-none mb-1 ">
+                        Online payment offer
+                      </span>
+                      <span className="text-white font-bold text-[20px] sm:text-[24px] leading-none mb-1">
+                        10% OFF
+                      </span>
+                      <span className="text-white font-light italic text-[10px] sm:text-[11px] leading-none mb-1">
+                        On all products
+                      </span>
                     </div>
                   </div>
                 </div>
+
+                {/* DASHED SEPARATOR */}
+                <div className="relative w-0 border-l-[2px] border-dashed border-white bg-[#dc2626] z-10" />
+
+                {/* RIGHT TICKET TAB */}
+                <div className="relative w-[58px] sm:w-[68px] shrink-0 bg-[#dc2626] rounded-r-lg flex items-center justify-center overflow-hidden">
+                  {/* Right cutout */}
+                  <div className="absolute -right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-white rounded-full" />
+                  <span
+                    className="text-white text-[8px] font-bold tracking-widest"
+                    style={{
+                      writingMode: "vertical-rl",
+                    }}
+                  >
+                    SAVE
+                  </span>
+                </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 pb-6 mb-2">
-                <div className="flex flex-col items-center justify-center text-center gap-2">
-                  <Truck className="w-6 h-6 text-[#1e1b4b]" />
-                  <span className="text-[11px] font-bold text-[#1e1b4b]">No Return</span>
+              <div className="grid grid-cols-3 border border-gray-100 rounded-sm py-3 divide-x divide-gray-100 mb-6 mt-4">
+                <div className="flex items-center justify-center gap-2 px-1">
+                  <div className="w-8 h-8 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
+                    <IconTruckDelivery stroke={1.5} className="w-4 h-4 text-[#1e1b4b]" />
+                  </div>
+                  <div className="flex flex-col text-left">
+                    <span className="text-[10px] sm:text-[11px] font-bold text-[#1e1b4b] leading-tight">Free Delivery</span>
+                    <span className="text-[9px] sm:text-[10px] text-gray-500 leading-tight">On all orders</span>
+                  </div>
                 </div>
-                <div className="flex flex-col items-center justify-center text-center gap-2">
-                  <ShieldCheck className="w-6 h-6 text-[#1e1b4b]" />
-                  <span className="text-[11px] font-bold text-[#1e1b4b]">High Quality material</span>
+
+                <div className="flex items-center justify-center gap-2 px-1">
+                  <div className="w-8 h-8 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
+                    <IconTruckReturn stroke={1.5} className="w-4 h-4 text-[#1e1b4b]" />
+                  </div>
+                  <div className="flex flex-col text-left">
+                    <span className="text-[10px] sm:text-[11px] font-bold text-[#1e1b4b] leading-tight">No Return</span>
+                    <span className="text-[9px] sm:text-[10px] text-gray-500 leading-tight">Check policy</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-center gap-2 px-1">
+                  <div className="w-8 h-8 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
+                    <IconShieldCheck stroke={1.5} className="w-4 h-4 text-[#1e1b4b]" />
+                  </div>
+                  <div className="flex flex-col text-left">
+                    <span className="text-[10px] sm:text-[11px] font-bold text-[#1e1b4b] leading-tight">High Quality</span>
+                    <span className="text-[9px] sm:text-[10px] text-gray-500 leading-tight">Premium material</span>
+                  </div>
                 </div>
               </div>
 
@@ -884,6 +1041,49 @@ export default function ProductDetailPage() {
           </div>
         </section>
       </div>
+
+      {/* Fullscreen Image Lightbox */}
+      <AnimatePresence>
+        {isFullscreen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center"
+          >
+            <button
+              onClick={() => setIsFullscreen(false)}
+              className="absolute top-6 right-6 w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-colors"
+            >
+              <Plus className="w-6 h-6 rotate-45" />
+            </button>
+
+            <div className="relative w-full max-w-4xl aspect-square sm:aspect-video mx-4">
+              <Image
+                src={gallery[imageIndex]}
+                alt={product.name}
+                fill
+                className="object-contain"
+                sizes="100vw"
+                priority
+              />
+            </div>
+
+            {/* Gallery Navigation in Lightbox */}
+            <div className="absolute bottom-8 left-0 right-0 flex justify-center gap-2 overflow-x-auto hide-scrollbar px-4">
+              {gallery.map((img, i) => (
+                <button
+                  key={i}
+                  onClick={() => setImageIndex(i)}
+                  className={`relative w-16 h-16 rounded-xl overflow-hidden shrink-0 ${imageIndex === i ? "border-2 border-white opacity-100" : "opacity-50 hover:opacity-80"} transition-opacity`}
+                >
+                  <Image src={img} alt="" fill className="object-cover bg-white" />
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

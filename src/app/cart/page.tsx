@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useCartStore } from "@/store/useCartStore";
 import {
@@ -10,6 +11,7 @@ import {
   ShoppingBag,
   Trash2,
 } from "lucide-react";
+import { IconTruckDelivery } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/product/ProductCard";
@@ -17,10 +19,9 @@ import { PRODUCTS } from "@/lib/mock-data";
 
 export default function CartPage() {
   const router = useRouter();
-  const { items, removeItem, updateQuantity, getCartTotal } = useCartStore();
+  const { items, removeItem, updateQuantity, getCartTotal, couponApplied, setCouponApplied } = useCartStore();
 
   const [coupon, setCoupon] = useState("");
-  const [couponApplied, setCouponApplied] = useState(false);
 
   const subtotal = getCartTotal();
   const discount = couponApplied ? subtotal * 0.1 : 0;
@@ -30,6 +31,24 @@ export default function CartPage() {
   const FREE_SHIPPING_THRESHOLD = 1500;
   const amountNeeded = FREE_SHIPPING_THRESHOLD - subtotal;
   const progressPercent = Math.min((subtotal / FREE_SHIPPING_THRESHOLD) * 100, 100);
+
+  const checkoutBtnRef = useRef<HTMLButtonElement>(null);
+  const [showStickyCTA, setShowStickyCTA] = useState(true);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setShowStickyCTA(!entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+
+    if (checkoutBtnRef.current) {
+      observer.observe(checkoutBtnRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [items.length]);
 
   // ── Empty state ──────────────────────────────
   if (items.length === 0) {
@@ -42,7 +61,7 @@ export default function CartPage() {
         <p className="text-gray-500 text-base mb-8 max-w-sm">
           Looks like you haven&apos;t added anything yet. Browse our latest products!
         </p>
-        <Button asChild size="lg" className="rounded-xl px-8 font-bold bg-primary hover:bg-primary/80">
+        <Button asChild size="lg" className="rounded-sm px-8 font-bold bg-primary hover:bg-primary/80">
           <Link href="/shop">Start Shopping</Link>
         </Button>
       </div>
@@ -50,7 +69,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="bg-[#f9fafb] min-h-screen py-6 lg:py-10">
+    <div className="bg-[#f9fafb] min-h-screen py-6 pb-[140px] lg:pb-10 lg:py-10">
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-16">
 
@@ -59,17 +78,33 @@ export default function CartPage() {
             <h1 className="text-3xl font-bold text-gray-900 mb-6">My Cart</h1>
 
             {/* Free Shipping Progress Box */}
-            <div className="bg-[#f0fdf4] border border-[#dcfce7] rounded-2xl p-4 mb-6">
-              <p className="text-[#166534] font-medium text-sm mb-2">
-                {amountNeeded > 0
-                  ? `Add ₹${amountNeeded.toLocaleString()} more · Add more for free shipping`
-                  : "Congratulations! You get free shipping!"}
-              </p>
-              <div className="h-2 w-full bg-[#dcfce7] rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-[#16a34a] rounded-full transition-all duration-500 ease-out"
-                  style={{ width: `${progressPercent}%` }}
-                ></div>
+            <div className="bg-[#f8faf9] border border-[#e8f0eb] rounded-[16px] p-3 sm:p-4 mb-6 flex items-center gap-3 sm:gap-4 shadow-sm">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#166534] flex items-center justify-center shrink-0">
+                <IconTruckDelivery className="w-5 h-5 sm:w-6 sm:h-6 text-white" stroke={1.5} />
+              </div>
+              <div className="flex-1 flex flex-col gap-1.5 sm:gap-2">
+                <div className="flex justify-between items-center gap-2 text-[11px] sm:text-[13px]">
+                  {amountNeeded > 0 ? (
+                    <span className="text-gray-900 font-semibold">
+                      Add ₹{amountNeeded.toLocaleString()} more to unlock <strong className="text-[#166534] font-extrabold">FREE shipping!</strong>
+                    </span>
+                  ) : (
+                    <span className="text-gray-900 font-semibold">
+                      Congratulations! You get <strong className="text-[#166534] font-extrabold">FREE shipping!</strong>
+                    </span>
+                  )}
+                  {amountNeeded > 0 && (
+                    <span className="text-gray-700 font-semibold whitespace-nowrap">
+                      ₹{amountNeeded.toLocaleString()} to go
+                    </span>
+                  )}
+                </div>
+                <div className="h-1.5 sm:h-2 w-full bg-[#dcfce7] rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-[#166534] rounded-full transition-all duration-500 ease-out"
+                    style={{ width: `${progressPercent}%` }}
+                  ></div>
+                </div>
               </div>
             </div>
 
@@ -122,15 +157,15 @@ export default function CartPage() {
             </div>
 
             {/* Suggested Products */}
-            <div className="mt-12">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-gray-900">Add more to earn Reward Coins</h2>
+            <div className="mt-8 sm:mt-12 mb-4">
+              <div className="flex items-center justify-between mb-4 sm:mb-6">
+                <h2 className="text-lg sm:text-xl font-bold text-gray-900">Add more to earn Reward Coins</h2>
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                {PRODUCTS.slice(0, 2).map((prod) => (
-
-                  <ProductCard product={prod} />
-
+              <div className="flex sm:grid sm:grid-cols-4 gap-3 sm:gap-4 ml-0 overflow-x-auto hide-scrollbar pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pb-0 snap-x snap-mandatory transform origin-top-left">
+                {PRODUCTS.slice(0, 4).map((prod) => (
+                  <div key={prod.id} className="w-[160px] sm:w-auto  shrink-0 snap-start">
+                    <ProductCard product={prod} />
+                  </div>
                 ))}
               </div>
             </div>
@@ -187,6 +222,7 @@ export default function CartPage() {
 
               {/* Checkout button */}
               <Button
+                ref={checkoutBtnRef}
                 onClick={() => router.push("/checkout")}
                 className="w-full h-14 bg-primary hover:bg-primary/80 text-white font-bold text-[15px] rounded-xl transition-colors flex items-center justify-center shadow-sm"
               >
@@ -196,6 +232,54 @@ export default function CartPage() {
           </div>
         </div>
       </div>
+
+      {/* Mobile Sticky Checkout Bar */}
+      <AnimatePresence>
+        {showStickyCTA && (
+          <motion.div
+            initial={{ y: "120%", opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: "120%", opacity: 0 }}
+            transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+            className="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] lg:hidden left-4 right-4 z-50 bg-white rounded-[16px] shadow-[0_4px_24px_rgba(0,0,0,0.12)] px-4 py-3 flex items-center justify-between border border-gray-100"
+          >
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2">
+                <span className="text-[22px] font-extrabold text-gray-900 leading-none">
+                  ₹{total.toLocaleString()}
+                </span>
+                {discount > 0 && (
+                  <span className="bg-gray-100 text-gray-500 text-[10px] font-bold px-1.5 py-0.5 rounded">
+                    10% OFF
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center gap-2 mt-1.5">
+                {discount > 0 ? (
+                  <>
+                    <span className="text-[13px] text-gray-400 line-through font-medium leading-none">
+                      ₹{subtotal.toLocaleString()}
+                    </span>
+                    <span className="text-[12px] text-[#00a859] font-bold leading-none">
+                      You save ₹{discount.toLocaleString()}
+                    </span>
+                  </>
+                ) : (
+                  <span className="text-[13px] text-gray-500 font-medium leading-none">
+                    Estimated Total
+                  </span>
+                )}
+              </div>
+            </div>
+            <Button
+              onClick={() => router.push("/checkout")}
+              className="h-11 rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold text-[14px] px-6 shadow-sm border-0"
+            >
+              Checkout
+            </Button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div >
   );
 }

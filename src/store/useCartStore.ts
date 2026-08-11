@@ -39,12 +39,16 @@ interface CartState {
   clearCart: () => void;
   getCartTotal: () => number;
   getItemCount: () => number;
+  couponApplied: boolean;
+  setCouponApplied: (applied: boolean) => void;
 }
 
 export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
       items: [],
+      couponApplied: false,
+      setCouponApplied: (applied) => set({ couponApplied: applied }),
       addItem: (product, quantity = 1, color, size) => {
         set((state) => {
           // Check if item with same options already exists

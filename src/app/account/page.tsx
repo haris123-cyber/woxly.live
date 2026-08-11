@@ -5,16 +5,17 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   LayoutDashboard, Package, User, MapPin, Star, MessageSquare, LogOut,
-  CreditCard, ShoppingBag, TrendingUp, Gift, RefreshCcw, ChevronDown, ChevronUp
+  CreditCard, ShoppingBag, TrendingUp, Gift, RefreshCcw, ChevronDown, ChevronUp,
+  Camera, Crown, ChevronRight, ArrowLeft, ShieldCheck
 } from "lucide-react";
 import { useAddressStore, Address } from "@/store/useAddressStore";
 
 const navItems = [
-  { label: "Order History", icon: Package, id: "orders" },
-  { label: "Returns", icon: RefreshCcw, id: "returns" },
-  { label: "Account Details", icon: User, id: "details" },
-  { label: "Address", icon: MapPin, id: "address" },
-  { label: "Reward Coins", icon: Gift, id: "rewards" },
+  { label: "Order History", icon: Package, id: "orders", desc: "View and track all your orders", iconColor: "text-primary", iconBg: "bg-primary/10" },
+  { label: "Returns", icon: RefreshCcw, id: "returns", desc: "View your return requests and status", iconColor: "text-green-600", iconBg: "bg-green-50" },
+  { label: "Account Details", icon: User, id: "details", desc: "Manage your personal information", iconColor: "text-purple-600", iconBg: "bg-purple-50" },
+  { label: "Addresses", icon: MapPin, id: "address", desc: "Manage your saved addresses", iconColor: "text-orange-500", iconBg: "bg-orange-50" },
+  { label: "Reward Coins", icon: Gift, id: "rewards", desc: "View your rewards and offers", iconColor: "text-yellow-600", iconBg: "bg-yellow-50" },
 ];
 
 const mockOrders = [
@@ -500,6 +501,7 @@ function RewardPanel() {
 // ─── Main Page ────────────────────────────────────────────
 export default function AccountPage() {
   const [activeNav, setActiveNav] = useState("orders");
+  const [showMobileMenu, setShowMobileMenu] = useState(true);
   const [orders, setOrders] = useState<OrderItem[]>(initialOrders);
 
   const cancelOrder = (id: string) => {
@@ -554,55 +556,107 @@ export default function AccountPage() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f8fafc", paddingBottom: "3rem" }}>
-      <div className="max-w-[1100px] mx-auto pt-8 px-5 flex flex-col gap-6">
+    <div className="min-h-screen bg-[#f8fafc] pb-24 lg:pb-12">
+      <div className="max-w-[1100px] mx-auto pt-4 lg:pt-8 px-4 flex flex-col lg:flex-row gap-6 lg:gap-10">
 
-        {/* ── Top Navigation Header ── */}
-        <div className=" border border-gray-100  overflow-hidden flex flex-col lg:flex-row items-center justify-between p-4 lg:px-6 gap-4">
-          {/* Avatar Profile */}
-          <div className="flex items-center gap-3 w-full lg:w-auto shrink-0 justify-left lg:justify-start">
-            <div className="w-12 h-12 rounded-full bg-gray-200 overflow-hidden relative border-2 border-white shadow-sm shrink-0">
-              <Image src="/images/product_placeholder.png" alt="Avatar" fill className="object-cover" />
-            </div>
+        {/* ── Navigation / Menu (Visible on Desktop always, Visible on Mobile if showMobileMenu is true) ── */}
+        <div className={`w-full lg:w-[340px] shrink-0 ${!showMobileMenu ? 'hidden lg:block' : 'block'}`}>
+
+          {/* Header Mobile Style */}
+          <div className="flex items-center justify-between mb-6 lg:mb-8">
             <div>
-              <p className="text-[11px] text-gray-400 m-0 leading-tight">Hello,</p>
-              <p className="font-bold text-gray-900 text-[15px] m-0 leading-tight">Jenny Wilson</p>
+              <p className="text-[13px] text-gray-500 mb-0.5">Hello,</p>
+              <h1 className="font-bold text-gray-900 text-[22px] leading-tight mb-1">Jenny Wilson</h1>
+              <p className="text-[13px] text-gray-600">Welcome back! </p>
+            </div>
+            <div className="relative">
+              <div className="w-16 h-16 rounded-full bg-white border border-gray-200 overflow-hidden shadow-sm">
+                <Image src="/images/product_placeholder.png" alt="Jenny Wilson" fill className="object-cover p-2" />
+              </div>
+              <div className="absolute bottom-0 right-0 w-6 h-6 bg-white rounded-full border border-gray-200 shadow-sm flex items-center justify-center">
+                <Camera className="w-3.5 h-3.5 text-gray-600" />
+              </div>
             </div>
           </div>
 
-          {/* Nav Links */}
-          <nav className="grid grid-cols-2 lg:flex lg:flex-nowrap items-center justify-center gap-2 lg:gap-1.5 w-full lg:w-auto">
-            {navItems.map((item) => {
+          {/* Member Card */}
+          <button onClick={() => { setActiveNav('rewards'); setShowMobileMenu(false); }} className="w-full bg-primary/5 border border-primary/10 rounded-[16px] p-4 flex items-center justify-between mb-8 transition-all hover:bg-primary/10 text-left">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <Crown className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <p className="font-bold text-gray-900 text-[15px]">Woxly Member</p>
+                <p className="text-[12px] text-gray-500">You have 120 Reward Coins</p>
+              </div>
+            </div>
+            <span className="text-[12px] font-bold text-primary flex items-center">
+              View Rewards <ChevronRight className="w-3 h-3 ml-1" />
+            </span>
+          </button>
+
+          <h2 className="font-bold text-gray-900 text-[17px] mb-4">My Account</h2>
+
+          <div className="bg-white border border-gray-100 rounded-[16px] shadow-sm overflow-hidden mb-6">
+            {navItems.map((item, index) => {
               const Icon = item.icon;
-              const isActive = activeNav === item.id;
               return (
                 <button
                   key={item.id}
-                  onClick={() => setActiveNav(item.id)}
-                  className={`flex items-center justify-center lg:justify-start gap-1.5 px-2 lg:px-4 py-2 border border-gray-300 rounded-sm transition-all whitespace-nowrap ${isActive
-                    ? "bg-[#e0f2fe] text-[#2563eb] font-bold"
-                    : "text-gray-500 hover:bg-gray-50 font-medium"
-                    }`}
+                  onClick={() => { setActiveNav(item.id); setShowMobileMenu(false); }}
+                  className={`w-full flex items-center justify-between p-4 text-left transition-colors ${index !== navItems.length - 1 ? 'border-b border-gray-50' : ''} ${activeNav === item.id ? 'bg-gray-50' : 'hover:bg-gray-50'}`}
                 >
-                  <Icon className="w-4 h-4 shrink-0" />
-                  <span className="text-[12px] lg:text-[13px]">{item.label}</span>
+                  <div className="flex items-center gap-4">
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${item.iconBg}`}>
+                      <Icon className={`w-5 h-5 ${item.iconColor}`} />
+                    </div>
+                    <div>
+                      <p className="font-bold text-gray-900 text-[14px]">{item.label}</p>
+                      <p className="text-[11px] text-gray-500">{item.desc}</p>
+                    </div>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-gray-300" />
                 </button>
               );
             })}
-            <div className="w-[1px] h-6 bg-gray-200 mx-1 hidden lg:block"></div>
-            <Link
-              href="/"
-              className="flex items-center  border border-gray-300 rounded-sm justify-center lg:justify-start gap-1.5 px-2 lg:px-4 py-2 text-red-500 hover:bg-red-50  transition-all font-medium whitespace-nowrap"
-            >
-              <LogOut className="w-4 h-4 shrink-0" />
-              <span className="text-[12px] lg:text-[13px]">Logout</span>
+
+            {/* Logout */}
+            <Link href="/" className="w-full flex items-center justify-between p-4 text-left transition-colors hover:bg-red-50 border-t border-gray-50">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center">
+                  <LogOut className="w-5 h-5 text-red-500" />
+                </div>
+                <div>
+                  <p className="font-bold text-red-600 text-[14px]">Logout</p>
+                  <p className="text-[11px] text-red-400">Sign out from your account</p>
+                </div>
+              </div>
+              <ChevronRight className="w-5 h-5 text-red-300" />
             </Link>
-          </nav>
+          </div>
+
+          {/* Secure Shopping */}
+          <div className="bg-[#f4eefc] rounded-[16px] p-4 flex items-center gap-4">
+            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
+              <ShieldCheck className="w-5 h-5 text-primary" />
+            </div>
+            <div>
+              <p className="font-bold text-gray-900 text-[13px]">Secure Shopping</p>
+              <p className="text-[11px] text-gray-500">Your data is 100% safe and secure with us.</p>
+            </div>
+          </div>
         </div>
 
-        {/* ── Main Content panel ── */}
-        <div className="bg-white  border border-gray-200 shadow-sm overflow-hidden p-6">
-          {panelMap[activeNav]}
+        {/* ── Main Content panel (Visible on Desktop always, Visible on Mobile if showMobileMenu is false) ── */}
+        <div className={`flex-1 ${showMobileMenu ? 'hidden lg:block' : 'block'}`}>
+          <div className="lg:hidden mb-4">
+            <button onClick={() => setShowMobileMenu(true)} className="flex items-center gap-2 text-sm font-semibold text-gray-600 hover:text-primary transition-colors">
+              <ArrowLeft className="w-4 h-4" /> Back to Menu
+            </button>
+          </div>
+          <div className="bg-white border border-gray-100 rounded-[16px] shadow-sm overflow-hidden p-6 min-h-[600px]">
+            {panelMap[activeNav]}
+          </div>
         </div>
       </div>
     </div>
