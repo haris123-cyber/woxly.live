@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { Search, ShoppingBag, Menu, Heart, User, Home, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/store/useCartStore";
@@ -135,41 +135,61 @@ export function Header() {
         </div>
 
         {/* Mobile Bottom Navigation Bar */}
-        <div className="sm:hidden fixed bottom-2 left-2 right-2 z-50 flex items-center justify-between px-4 h-[66px] bg-white rounded-[33px] shadow-[0_8px_30px_rgba(0,0,0,0.25)]">
-          <Link href="/" className="relative flex items-center justify-center w-12 h-12 rounded-full transition-all">
-            <div className={`flex items-center justify-center w-11 h-11 rounded-full transition-colors ${pathname === '/' ? 'bg-primary text-white' : 'text-primary'}`}>
-              <Home className="w-[22px] h-[22px]" />
-            </div>
-            <span className="sr-only">Home</span>
-          </Link>
-
-          <Link href="/watchlist" className="relative flex items-center justify-center w-12 h-12 rounded-full transition-all">
-            <div className={`flex items-center justify-center w-11 h-11 rounded-full transition-colors ${pathname === '/watchlist' ? 'bg-primary text-white' : 'text-primary'}`}>
-              <Heart className="w-[22px] h-[22px]" />
-            </div>
-            <span className="sr-only">Wishlist</span>
-            {isMounted && watchlistCount > 0 && (
-              <span className="absolute top-1 right-0 flex h-[18px] min-w-[18px] px-1 items-center justify-center rounded-full bg-white text-[9px] font-bold text-black border-1 border-[#003135]">
-                {watchlistCount > 9 ? "9+" : watchlistCount}
-              </span>
-            )}
-          </Link>
-
-          <Link href="/account?tab=orders" className="relative flex items-center justify-center w-12 h-12 rounded-full transition-all">
-            <div className={`flex items-center justify-center w-11 h-11 rounded-full transition-colors ${pathname === '/account' && (typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('tab') === 'orders' || typeof window !== 'undefined' && !new URLSearchParams(window.location.search).has('tab')) ? 'bg-primary text-white' : 'text-primary'}`}>
-              <Package className="w-[22px] h-[22px]" />
-            </div>
-            <span className="sr-only">Orders</span>
-          </Link>
-
-          <Link href="/account?tab=details" className="relative flex items-center justify-center w-12 h-12 rounded-full transition-all">
-            <div className={`flex items-center justify-center w-11 h-11 rounded-full transition-colors ${pathname === '/account' && typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('tab') === 'details' ? 'bg-primary text-white' : 'text-primary'}`}>
-              <User className="w-[22px] h-[22px]" />
-            </div>
-            <span className="sr-only">Profile</span>
-          </Link>
-        </div>
+        <Suspense fallback={
+          <div className="sm:hidden fixed bottom-2 left-2 right-2 z-50 flex items-center justify-between px-4 h-[66px] bg-white rounded-[33px] shadow-[0_8px_30px_rgba(0,0,0,0.25)]" />
+        }>
+          <MobileBottomNav />
+        </Suspense>
       </header>
     </>
+  );
+}
+
+function MobileBottomNav() {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get('tab');
+  const watchlistCount = useWatchlistStore((state) => state.getWatchlistCount());
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  return (
+    <div className="sm:hidden fixed bottom-[1] left-2 right-2 z-50 flex items-center justify-between px-4 h-[62px] pb-0 bg-white rounded-3xl shadow-[0_-8px_30px_rgba(0,0,0,0.08)]">
+      <Link href="/" className="relative flex items-center justify-center w-12 h-12 rounded-full transition-all">
+        <div className={`flex items-center justify-center w-11 h-11 rounded-full transition-colors ${pathname === '/' ? 'bg-primary text-white' : 'text-primary'}`}>
+          <Home className="w-[22px] h-[22px]" />
+        </div>
+        <span className="sr-only">Home</span>
+      </Link>
+
+      <Link href="/watchlist" className="relative flex items-center justify-center w-12 h-12 rounded-full transition-all">
+        <div className={`flex items-center justify-center w-11 h-11 rounded-full transition-colors ${pathname === '/watchlist' ? 'bg-primary text-white' : 'text-primary'}`}>
+          <Heart className="w-[22px] h-[22px]" />
+        </div>
+        <span className="sr-only">Wishlist</span>
+        {isMounted && watchlistCount > 0 && (
+          <span className="absolute top-1 right-0 flex h-[18px] min-w-[18px] px-1 items-center justify-center rounded-full bg-white text-[9px] font-bold text-black border-1 border-[#003135]">
+            {watchlistCount > 9 ? "9+" : watchlistCount}
+          </span>
+        )}
+      </Link>
+
+      <Link href="/account?tab=orders" className="relative flex items-center justify-center w-12 h-12 rounded-full transition-all">
+        <div className={`flex items-center justify-center w-11 h-11 rounded-full transition-colors ${pathname === '/account' && tabParam === 'orders' ? 'bg-primary text-white' : 'text-primary'}`}>
+          <Package className="w-[22px] h-[22px]" />
+        </div>
+        <span className="sr-only">Orders</span>
+      </Link>
+
+      <Link href="/account" className="relative flex items-center justify-center w-12 h-12 rounded-full transition-all">
+        <div className={`flex items-center justify-center w-11 h-11 rounded-full transition-colors ${pathname === '/account' && (!tabParam || tabParam === 'details') ? 'bg-primary text-white' : 'text-primary'}`}>
+          <User className="w-[22px] h-[22px]" />
+        </div>
+        <span className="sr-only">Account</span>
+      </Link>
+    </div>
   );
 }

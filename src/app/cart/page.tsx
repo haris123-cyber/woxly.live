@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useCartStore } from "@/store/useCartStore";
 import {
@@ -33,22 +32,8 @@ export default function CartPage() {
   const progressPercent = Math.min((subtotal / FREE_SHIPPING_THRESHOLD) * 100, 100);
 
   const checkoutBtnRef = useRef<HTMLButtonElement>(null);
-  const [showStickyCTA, setShowStickyCTA] = useState(true);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setShowStickyCTA(!entry.isIntersecting);
-      },
-      { threshold: 0.1 }
-    );
 
-    if (checkoutBtnRef.current) {
-      observer.observe(checkoutBtnRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, [items.length]);
 
   // ── Empty state ──────────────────────────────
   if (items.length === 0) {
@@ -69,7 +54,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="bg-[#f9fafb] min-h-screen py-6 pb-[140px] lg:pb-10 lg:py-10">
+    <div className="bg-[#f9fafb] min-h-screen py-6 pb-8 lg:pb-10 lg:py-10">
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-16">
 
@@ -156,19 +141,6 @@ export default function CartPage() {
               ))}
             </div>
 
-            {/* Suggested Products */}
-            <div className="mt-8 sm:mt-12 mb-4">
-              <div className="flex items-center justify-between mb-4 sm:mb-6">
-                <h2 className="text-lg sm:text-xl font-bold text-gray-900">Add more to earn Reward Coins</h2>
-              </div>
-              <div className="flex sm:grid sm:grid-cols-4 gap-3 sm:gap-4 ml-0 overflow-x-auto hide-scrollbar pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pb-0 snap-x snap-mandatory transform origin-top-left">
-                {PRODUCTS.slice(0, 4).map((prod) => (
-                  <div key={prod.id} className="w-[160px] sm:w-auto  shrink-0 snap-start">
-                    <ProductCard product={prod} />
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
 
           {/* ── Right: Order Summary ──────────────────── */}
@@ -231,55 +203,23 @@ export default function CartPage() {
             </div>
           </div>
         </div>
+
+        {/* Suggested Products */}
+        <div className="mt-8 sm:mt-12 mb-0 sm:mb-0">
+          <div className="flex items-center justify-between mb-4 sm:mb-6">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900">Add more to earn Reward Coins</h2>
+          </div>
+          <div className="flex sm:grid sm:grid-cols-4 gap-3 sm:gap-4 ml-0 overflow-x-auto hide-scrollbar pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pb-0 snap-x snap-mandatory transform origin-top-left">
+            {PRODUCTS.slice(0, 4).map((prod) => (
+              <div key={prod.id} className="w-[160px] sm:w-auto shrink-0 snap-start">
+                <ProductCard product={prod} />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
-      {/* Mobile Sticky Checkout Bar */}
-      <AnimatePresence>
-        {showStickyCTA && (
-          <motion.div
-            initial={{ y: "120%", opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: "120%", opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-            className="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] lg:hidden left-4 right-4 z-50 bg-white rounded-[16px] shadow-[0_4px_24px_rgba(0,0,0,0.12)] px-4 py-3 flex items-center justify-between border border-gray-100"
-          >
-            <div className="flex flex-col">
-              <div className="flex items-center gap-2">
-                <span className="text-[22px] font-extrabold text-gray-900 leading-none">
-                  ₹{total.toLocaleString()}
-                </span>
-                {discount > 0 && (
-                  <span className="bg-gray-100 text-gray-500 text-[10px] font-bold px-1.5 py-0.5 rounded">
-                    10% OFF
-                  </span>
-                )}
-              </div>
-              <div className="flex items-center gap-2 mt-1.5">
-                {discount > 0 ? (
-                  <>
-                    <span className="text-[13px] text-gray-400 line-through font-medium leading-none">
-                      ₹{subtotal.toLocaleString()}
-                    </span>
-                    <span className="text-[12px] text-[#00a859] font-bold leading-none">
-                      You save ₹{discount.toLocaleString()}
-                    </span>
-                  </>
-                ) : (
-                  <span className="text-[13px] text-gray-500 font-medium leading-none">
-                    Estimated Total
-                  </span>
-                )}
-              </div>
-            </div>
-            <Button
-              onClick={() => router.push("/checkout")}
-              className="h-11 rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold text-[14px] px-6 shadow-sm border-0"
-            >
-              Checkout
-            </Button>
-          </motion.div>
-        )}
-      </AnimatePresence>
+
     </div >
   );
 }

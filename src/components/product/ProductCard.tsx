@@ -13,30 +13,34 @@ interface ProductCardProps {
   product: Product;
 }
 
-function OfferLabel({ discountPercentage }: { discountPercentage: number }) {
-  const labelText = discountPercentage > 0 ? `${discountPercentage} OFF` : "OFFER";
+function OfferLabel({ discountPercentage, originalPrice, price }: { discountPercentage: number, originalPrice?: number, price: number }) {
+  if (discountPercentage <= 0) return null;
+  const saveAmount = originalPrice ? Math.round(originalPrice - price) : 0;
 
   return (
-    <div className="absolute bottom-0 left-1/2 z-10 w-[62%] sm:w-[58%] -translate-x-1/2 pointer-events-none transition-opacity duration-300 md:group-hover:opacity-0">
-      <div className="relative w-full">
-        <svg
-          viewBox="0 0 140 24"
-          preserveAspectRatio="none"
-          className="block w-full h-[30px] sm:h-[44px]"
-          aria-hidden
-        >
-          <path
-            d="M14 2 Q14 0 17 0 H123 Q126 0 126 2 L140 24 H0 Z"
-            fill="#e3000f"
-          />
-        </svg>
-        <div className="absolute inset-0 flex items-center justify-center gap-1 text-white">
-          <span className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-white/20 flex items-center justify-center shrink-0">
-            <Percent className="w-2 h-2 sm:w-2.5 sm:h-2.5" strokeWidth={3} />
-          </span>
-          <span className="text-[10px] sm:text-[13px] font-extrabold uppercase tracking-wider leading-none">
-            OFFER
-          </span>
+    <div className="absolute bottom-0 left-0 right-0 z-10 overflow-hidden rounded-b-[16px] shadow-[0_-2px_10px_rgba(0,0,0,0.1)] transition-opacity duration-300 md:group-hover:opacity-0 pointer-events-none">
+      <div className="flex w-full h-[40px] sm:h-[48px] bg-[#ffcc00] relative">
+        {/* Slanted red background using clip-path */}
+        <div className="absolute inset-0 right-[40px] sm:right-[50px] bg-gradient-to-r from-[#e3000f] to-[#ff5100]" style={{ clipPath: "polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%)" }} />
+
+        {/* Content wrapper */}
+        <div className="relative flex w-full h-full">
+          {/* Left Side Content */}
+          <div className="flex-1 flex items-center pl-1.5 sm:pl-3 pr-1 min-w-0">
+            <svg className="w-4 h-4 sm:w-6 sm:h-6 text-yellow-300 shrink-0 mr-1 sm:mr-1.5 drop-shadow-sm" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+            </svg>
+            <div className="flex flex-col text-white pt-0.5 overflow-hidden">
+              <span className="text-[6px] sm:text-[8px] font-bold uppercase leading-none tracking-wider text-white/90 mb-0.5 whitespace-nowrap truncate">Limited Offer</span>
+              <span className="text-[12px] sm:text-[18px] font-extrabold italic leading-none tracking-tight whitespace-nowrap truncate">{discountPercentage}% OFF</span>
+            </div>
+          </div>
+
+          {/* Right Side Content */}
+          <div className="w-[40px] sm:w-[50px] flex flex-col items-center justify-center shrink-0 pr-0.5 sm:pr-1">
+            <span className="text-[7px] sm:text-[9px] font-bold text-[#b33a00] leading-none mb-0.5">Save</span>
+            <span className="text-[10px] sm:text-[13px] font-extrabold text-[#b33a00] leading-none truncate w-full text-center">₹{saveAmount}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -98,35 +102,25 @@ export function ProductCard({ product }: ProductCardProps) {
         />
 
         {/* Left Edge Badges (Ribbons) */}
-        <div className="absolute top-2 sm:top-4 left-0 z-10 flex flex-col gap-1.5 sm:gap-2 items-start pointer-events-none">
-
+        <div className="absolute top-3 sm:top-4 left-0 z-10 flex flex-col gap-2 items-start pointer-events-none">
           {isHotSale && (
-            <div
-              className="bg-blue-600 text-white text-[8px] sm:text-[10px] font-bold pl-2 pr-4 sm:pl-3 sm:pr-5 py-1 sm:py-1.5 shadow-md uppercase tracking-wider whitespace-nowrap"
-
-            >
-              HOT SALE
+            <div className="bg-gradient-to-r from-[#d91d1d] to-[#f46820] text-white text-[9px] sm:text-[10px] font-extrabold pl-3 pr-4 py-1 sm:py-1.5 shadow-sm uppercase tracking-wide whitespace-nowrap  rounded-tl-lg rounded-br-lg">
+              HOT SELLER
             </div>
           )}
           {isNewArrived && (
-            <div
-              className="bg-blue-600 text-white text-[8px] sm:text-[10px] font-bold pl-2 pr-4 sm:pl-3 sm:pr-5 py-1 sm:py-1.5 shadow-md uppercase tracking-wider whitespace-nowrap"
-
-            >
-              NEW ARRIVED
+            <div className="bg-[#024430] text-white text-[9px] sm:text-[10px] font-extrabold pl-3 pr-4 py-1 sm:py-1.5 shadow-sm uppercase tracking-wide whitespace-nowrap   rounded-tl-lg rounded-br-lg">
+              BESTSELLER
             </div>
           )}
           {isLimited && (
-            <div
-              className="bg-green-600 text-white text-[8px] sm:text-[10px] font-bold pl-2 pr-4 sm:pl-3 sm:pr-5 py-1 sm:py-1.5 shadow-md uppercase tracking-wider whitespace-nowrap"
-
-            >
+            <div className="bg-green-600 text-white text-[9px] sm:text-[10px] font-extrabold pl-3 pr-4 py-1 sm:py-1.5 shadow-sm uppercase tracking-wide whitespace-nowrap   rounded-tl-lg rounded-br-lg">
               LIMITED
             </div>
           )}
         </div>
         {/* Offer tab */}
-        {hasOffer && <OfferLabel discountPercentage={discountPercentage} />}
+        {hasOffer && <OfferLabel discountPercentage={discountPercentage} originalPrice={originalPrice} price={product.price} />}
 
         <button
           onClick={(e) => {
@@ -246,7 +240,7 @@ export function ProductCard({ product }: ProductCardProps) {
             </div>
             <span className="text-[11px] text-gray-500 font-medium">({product.reviews || 0})</span>
           </div>
-          
+
           <button
             onClick={handleAddToCart}
             disabled={!product.inStock}

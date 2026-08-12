@@ -1,4 +1,5 @@
 import { Mail, MessageCircle, Phone, MapPin, Clock, ChevronDown } from "lucide-react";
+import { IconBrandWhatsapp } from "@tabler/icons-react";
 
 export default function ContactPage() {
   return (
@@ -13,13 +14,14 @@ export default function ContactPage() {
           <div className="flex flex-col gap-3">
             {/* Email */}
             <div className="flex items-start gap-4 p-4 bg-[#f9fafb] rounded-md">
-              <Mail className="w-5 h-5 text-[#31106e] shrink-0 mt-0.5" />
+              <Mail className="w-5 h-5 text-primary shrink-0 mt-0.5" />
               <div className="text-[15px] text-gray-600">info@woxly.in</div>
             </div>
 
             {/* WhatsApp */}
             <div className="flex items-start gap-4 p-4 bg-[#f9fafb] rounded-md">
-              <MessageCircle className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
+              <IconBrandWhatsapp className="w-[25px] h-[25px] text-[#25D366]" stroke={2} />
+
               <div className="flex flex-col">
                 <span className="font-semibold text-gray-800 mb-0.5">WhatsApp</span>
                 <span className="text-[15px] text-gray-500">+917306347297</span>
@@ -28,7 +30,7 @@ export default function ContactPage() {
 
             {/* Phone */}
             <div className="flex items-start gap-4 p-4 bg-[#f9fafb] rounded-md">
-              <Phone className="w-5 h-5 text-[#31106e] shrink-0 mt-0.5" />
+              <Phone className="w-5 h-5 text-primary shrink-0 mt-0.5" />
               <div className="flex flex-col">
                 <span className="font-semibold text-gray-800 mb-0.5">Phone</span>
                 <span className="text-[15px] text-gray-500">+917012802594</span>
@@ -37,7 +39,7 @@ export default function ContactPage() {
 
             {/* Address */}
             <div className="flex items-start gap-4 p-4 bg-[#f9fafb] rounded-md">
-              <MapPin className="w-5 h-5 text-[#31106e] shrink-0 mt-0.5" />
+              <MapPin className="w-5 h-5 text-primary shrink-0 mt-0.5" />
               <div className="flex flex-col">
                 <span className="font-semibold text-gray-800 mb-0.5">Address</span>
                 <span className="text-[14px] text-gray-500 leading-relaxed">
@@ -51,7 +53,7 @@ export default function ContactPage() {
 
             {/* Opening hours */}
             <div className="flex items-start gap-4 p-4 bg-[#f9fafb] rounded-md">
-              <Clock className="w-5 h-5 text-[#31106e] shrink-0 mt-0.5" />
+              <Clock className="w-5 h-5 text-primary shrink-0 mt-0.5" />
               <div className="flex flex-col">
                 <span className="font-semibold text-gray-800 mb-0.5">Opening hours</span>
                 <span className="text-[15px] text-gray-500">Mon-Sun, 9:00 AM - 9:00 PM</span>

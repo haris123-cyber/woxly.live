@@ -3,8 +3,8 @@
 import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Truck, MapPin, Search, Clock, 
+import {
+  Truck, MapPin, Search, Clock,
   ArrowLeft, MessageCircle, ChevronRight, Check, HeadphonesIcon, Home, Calendar
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -43,7 +43,7 @@ const getMockTracking = (orderId: string) => ({
 function TrackOrderInner() {
   const searchParams = useSearchParams();
   const initialOrderId = searchParams.get("id") || "";
-  
+
   const [orderId, setOrderId] = useState(initialOrderId);
   const [isTracking, setIsTracking] = useState(!!initialOrderId);
   const [loading, setLoading] = useState(false);
@@ -52,7 +52,7 @@ function TrackOrderInner() {
   const handleTrack = (e?: React.FormEvent) => {
     e?.preventDefault();
     if (!orderId.trim()) return;
-    
+
     setLoading(true);
     setTimeout(() => {
       setTrackingData(getMockTracking(orderId.toUpperCase()));
@@ -85,8 +85,8 @@ function TrackOrderInner() {
                   className="w-full h-12 pl-12 pr-4 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#16a34a]/20 focus:border-[#16a34a] transition-all font-medium text-gray-900"
                 />
               </div>
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 className="h-12 w-full rounded-xl bg-[#16a34a] hover:bg-[#15803d] text-white font-bold tracking-wide shadow-sm"
                 disabled={loading}
               >
@@ -117,16 +117,16 @@ function TrackOrderInner() {
                 </h1>
                 <p className="text-gray-500 text-[14px] mt-2">Track your order in real-time</p>
               </div>
-              
+
               {/* Graphic Placeholder (matching the truck/map style) */}
               <div className="w-48 h-24 relative opacity-90 hidden sm:block">
                 <div className="absolute inset-0 bg-[#dcfce7] rounded-xl overflow-hidden">
-                   {/* Map lines */}
-                   <div className="absolute top-1/4 left-0 right-0 h-px bg-[#bbf7d0]" />
-                   <div className="absolute top-2/4 left-0 right-0 h-px bg-[#bbf7d0]" />
-                   <div className="absolute top-3/4 left-0 right-0 h-px bg-[#bbf7d0]" />
-                   <div className="absolute top-0 bottom-0 left-1/3 w-px bg-[#bbf7d0]" />
-                   <div className="absolute top-0 bottom-0 left-2/3 w-px bg-[#bbf7d0]" />
+                  {/* Map lines */}
+                  <div className="absolute top-1/4 left-0 right-0 h-px bg-[#bbf7d0]" />
+                  <div className="absolute top-2/4 left-0 right-0 h-px bg-[#bbf7d0]" />
+                  <div className="absolute top-3/4 left-0 right-0 h-px bg-[#bbf7d0]" />
+                  <div className="absolute top-0 bottom-0 left-1/3 w-px bg-[#bbf7d0]" />
+                  <div className="absolute top-0 bottom-0 left-2/3 w-px bg-[#bbf7d0]" />
                 </div>
                 {/* Route path */}
                 <div className="absolute top-1/2 left-8 right-16 h-0 border-t-2 border-dashed border-[#16a34a] -translate-y-1/2 opacity-30" />
@@ -138,7 +138,7 @@ function TrackOrderInner() {
             <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
               {/* LEFT COLUMN */}
               <div className="flex-1 space-y-6">
-                
+
                 {/* Order ID & Delivery Strip */}
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 lg:p-6 flex flex-wrap gap-5 items-center justify-between">
                   <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
@@ -168,7 +168,7 @@ function TrackOrderInner() {
                   <h3 className="text-xl font-extrabold text-gray-900 mb-8">Order Tracking</h3>
                   <div className="relative">
                     {/* Continuous Vertical Line */}
-                    <div className="absolute left-[15px] top-2 bottom-8 w-[2px] bg-gray-200"></div>
+                    <div className="absolute left-[23px] top-2 bottom-8 w-[2px] bg-gray-200"></div>
                     
                     <div className="space-y-0 relative z-10">
                       {trackingData.steps.map((step: any, index: number) => {
@@ -178,23 +178,22 @@ function TrackOrderInner() {
 
                         return (
                           <div key={index} className="relative">
-                             {/* Highlight row background for current step */}
-                             {isCurrent && (
-                               <div className="absolute -inset-x-4 inset-y-0 bg-[#f0fdf4] rounded-xl -z-10" />
-                             )}
-                             
-                             <div className="flex gap-5 py-4 px-2">
+                            {/* Highlight row background for current step */}
+                            {isCurrent && (
+                              <div className="absolute -inset-x-4 inset-y-0 bg-[#f0fdf4] rounded-xl -z-10" />
+                            )}
+
+                            <div className="flex gap-5 py-4 px-2">
                               {/* Active Line Overlap Fill */}
                               {isCompleted && index < trackingData.steps.length - 1 && (
-                                <div className="absolute left-[14px] top-8 w-[4px] h-[calc(100%-8px)] bg-[#16a34a] -z-10" />
+                                <div className="absolute left-[22px] top-8 w-[4px] h-[calc(100%-8px)] bg-[#16a34a] -z-10" />
                               )}
 
                               {/* Circle */}
-                              <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors mt-0.5 ${
-                                isCurrent ? 'bg-[#16a34a] text-white shadow-md shadow-green-600/20 ring-4 ring-[#f0fdf4]' : 
-                                isCompleted ? 'bg-[#16a34a] text-white' : 
-                                'bg-white border-2 border-gray-300 text-transparent'
-                              }`}>
+                              <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors mt-0.5 ${isCurrent ? 'bg-[#16a34a] text-white shadow-md shadow-green-600/20 ring-4 ring-[#f0fdf4]' :
+                                isCompleted ? 'bg-[#16a34a] text-white' :
+                                  'bg-white border-2 border-gray-300 text-transparent'
+                                }`}>
                                 {Icon && <Icon className={`w-4 h-4 ${isCurrent ? 'animate-pulse' : ''}`} strokeWidth={3} />}
                               </div>
 
@@ -236,19 +235,19 @@ function TrackOrderInner() {
 
               {/* RIGHT COLUMN */}
               <div className="w-full lg:w-[380px] shrink-0 space-y-6">
-                
+
                 {/* Order Summary */}
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                   <div className="flex items-center justify-between mb-6">
                     <h3 className="text-lg font-extrabold text-gray-900">Order Summary</h3>
                   </div>
-                  
+
                   <div className="space-y-5">
                     {trackingData.items.map((item: any, index: number) => (
                       <div key={index} className="flex items-center justify-between gap-4">
                         <div className="flex items-center gap-3">
                           <div className="w-14 h-14 bg-[#f8f9fa] rounded-xl p-2 shrink-0 relative border border-gray-100">
-                             <Image src={item.image} alt={item.title} fill className="object-contain p-1.5" />
+                            <Image src={item.image} alt={item.title} fill className="object-contain p-1.5" />
                           </div>
                           <div>
                             <p className="font-bold text-gray-900 text-[14px] leading-tight mb-1">{item.title}</p>
@@ -283,7 +282,7 @@ function TrackOrderInner() {
                   </div>
                   <h4 className="font-bold text-gray-900 text-[16px] mb-2">Need Help?</h4>
                   <p className="text-[13px] text-gray-600 mb-6">Our support team is here to help you.</p>
-                  
+
                   <button className="w-full py-2.5 bg-white border border-[#16a34a] text-[#15803d] rounded-xl text-sm font-bold hover:bg-[#f0fdf4] transition-colors flex items-center justify-center gap-2 shadow-sm">
                     <MessageCircle className="w-4 h-4" />
                     Contact Support

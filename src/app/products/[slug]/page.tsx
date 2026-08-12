@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import useEmblaCarousel from "embla-carousel-react";
 import { useParams, useRouter } from "next/navigation";
 import { PRODUCTS } from "@/lib/mock-data";
 import { toast } from "sonner";
@@ -97,6 +98,38 @@ export default function ProductDetailPage() {
   const [isWarrantyOpen, setIsWarrantyOpen] = useState(false);
   const [isDeliveryOpen, setIsDeliveryOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const [emblaRefMobile, emblaApiMobile] = useEmblaCarousel({ loop: true });
+  const [emblaRefDesktop, emblaApiDesktop] = useEmblaCarousel({ loop: true });
+
+  const onSelectMobile = useCallback(() => {
+    if (!emblaApiMobile) return;
+    setImageIndex(emblaApiMobile.selectedScrollSnap());
+  }, [emblaApiMobile]);
+
+  const onSelectDesktop = useCallback(() => {
+    if (!emblaApiDesktop) return;
+    setImageIndex(emblaApiDesktop.selectedScrollSnap());
+  }, [emblaApiDesktop]);
+
+  useEffect(() => {
+    if (!emblaApiMobile) return;
+    emblaApiMobile.on("select", onSelectMobile);
+  }, [emblaApiMobile, onSelectMobile]);
+
+  useEffect(() => {
+    if (!emblaApiDesktop) return;
+    emblaApiDesktop.on("select", onSelectDesktop);
+  }, [emblaApiDesktop, onSelectDesktop]);
+
+  useEffect(() => {
+    if (emblaApiMobile && emblaApiMobile.selectedScrollSnap() !== imageIndex) {
+      emblaApiMobile.scrollTo(imageIndex);
+    }
+    if (emblaApiDesktop && emblaApiDesktop.selectedScrollSnap() !== imageIndex) {
+      emblaApiDesktop.scrollTo(imageIndex);
+    }
+  }, [imageIndex, emblaApiMobile, emblaApiDesktop]);
 
   const [pincode, setPincode] = useState("");
   const [checkedPincode, setCheckedPincode] = useState<string | null>(null);
@@ -213,7 +246,8 @@ export default function ProductDetailPage() {
       rating: 5,
       title: "Best and Fresh",
       text: "Very fresh Atlantic salmon, no fishy smell at all. The cut was generous and cooked beautifully. Highly recommend.",
-      verified: false
+      verified: false,
+      images: ["/images/product_placeholder.png"]
     },
     {
       name: "Sunitha KV",
@@ -229,7 +263,8 @@ export default function ProductDetailPage() {
       rating: 4,
       title: "Good quality fish",
       text: "Nice thick fillet, good colour. Cooked it the same day and it was delicious. Delivery was quick too.",
-      verified: false
+      verified: false,
+      images: ["/images/product_placeholder.png", "/images/product_placeholder.png"]
     },
     {
       name: "Priya Nair",
@@ -329,9 +364,18 @@ export default function ProductDetailPage() {
                 <h4 className="text-[13px] font-bold text-gray-900 mb-1.5">{review.title}</h4>
               )}
               {review.text && (
-                <p className="text-[13px] text-gray-600 leading-relaxed">
+                <p className="text-[13px] text-gray-600 leading-relaxed mb-3">
                   {review.text}
                 </p>
+              )}
+              {review.images && review.images.length > 0 && (
+                <div className="flex gap-2 overflow-x-auto hide-scrollbar mt-2">
+                  {review.images.map((img, i) => (
+                    <div key={i} className="relative w-16 h-16 rounded-md overflow-hidden shrink-0 border border-gray-200">
+                      <Image src={img} alt={`Review image ${i + 1}`} fill className="object-cover" />
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
           </div>
@@ -344,20 +388,138 @@ export default function ProductDetailPage() {
     </div>
   );
 
+  const renderDeliveryDetails = () => (
+    <div className="mb-6 rounded-sm border border-[#e5e7eb] shadow-sm bg-white overflow-hidden">
+      <div className="px-4 py-2 border-b border-[#f3f4f6]">
+        <h3 className="font-semibold text-[15px] text-gray-900">Delivery details</h3>
+        <p className="text-[10px] text-gray-700 font-small">Enter pincode to check delivery availability</p>
+      </div>
+
+      {!checkedPincode ? (
+        <div className="p-4">
+          <p className="text-[13px] text-gray-900 font-medium mb-1">Enter pincode</p>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              maxLength={6}
+              placeholder="6-digit PIN"
+              value={pincode}
+              onChange={(e) => setPincode(e.target.value.replace(/\D/g, ''))}
+              className="flex-1 h-[42px] px-3 border border-[#e5e7eb] rounded-lg text-[14px] focus:outline-none focus:border-[#a78bfa] focus:ring-1 focus:ring-[#a78bfa] transition-all"
+            />
+            <button
+              onClick={handleCheckPincode}
+              disabled={isCheckingPin || pincode.length !== 6}
+              className="h-[42px] px-6 bg-primary hover:bg-primary/90 text-white rounded-lg text-[14px] font-bold transition-colors "
+            >
+              {isCheckingPin ? "..." : "Check"}
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-col">
+          <div className="p-4 bg-[#faf5ff] flex items-start gap-3">
+            <MapPin className="w-5 h-5 text-[#8b5cf6] shrink-0 mt-0.5" />
+            <div>
+              <p className="font-bold text-[14px] text-gray-900 leading-tight">{pinLocation}, {checkedPincode}</p>
+              <button
+                onClick={() => setCheckedPincode(null)}
+                className="text-[13px] text-[#8b5cf6] hover:underline font-medium mt-1 flex items-center gap-1"
+              >
+                Change delivery location <ChevronRight className="w-3 h-3" />
+              </button>
+            </div>
+          </div>
+          <div className="p-4 border-t border-[#f3f4f6] flex items-start gap-3">
+            <Truck className="w-5 h-5 text-gray-800 shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="font-bold text-[14px] text-gray-900 leading-tight">Delivery by Aug 14, 2026</p>
+              <p className="text-[13px] text-gray-500 mt-1">₹53.36 delivery · Ekart Logistics Surface</p>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
+  const renderOfferTickets = () => {
+    const tickets = [
+      { id: 1, title: "Online payment offer", discount: "10% OFF", subtitle: "On all products", color: "bg-[#dc2626]" },
+      { id: 2, title: "First order offer", discount: "15% OFF", subtitle: "For new users", color: "bg-[#2563eb]" },
+      { id: 3, title: "Special weekend sale", discount: "20% OFF", subtitle: "On select items", color: "bg-[#16a34a]" },
+    ];
+
+    return (
+      <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-4 pl-5 ml-1 mr-1 sm:mx-0 sm:px-0 mt-2 mb-2 after:content-[''] after:w-1 sm:after:w-0 after:shrink-0">
+        {tickets.map((ticket) => (
+          <div key={ticket.id} className="flex items-stretch w-[300px] sm:w-[320px] shrink-0 h-[62px] sm:h-[68px] snap-start">
+            {/* LEFT TICKET TAB */}
+            <div className={`relative w-[48px] sm:w-[56px] shrink-0 ${ticket.color} rounded-l-lg flex flex-col items-center justify-center overflow-hidden`}>
+              <div className="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-white rounded-full" />
+              <span className="text-white text-[7px] font-bold tracking-widest mt-1" style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}>
+                DISCOUNT %
+              </span>
+            </div>
+
+            {/* DASHED SEPARATOR */}
+            <div className={`relative w-0 border-l-[2px] border-dashed border-white ${ticket.color} z-10`} />
+
+            {/* CENTER SECTION */}
+            <div className={`relative flex-1 ${ticket.color} flex items-center px-3 sm:px-5 py-2 overflow-hidden`}>
+              <div className="flex items-center gap-2 sm:gap-3 w-full">
+                <BadgePercent className="w-8 h-8 sm:w-9 sm:h-9 text-white shrink-0" strokeWidth={2.5} />
+                <div className="flex flex-col ml-1 sm:ml-2 min-w-0">
+                  <span className="text-white font-light italic text-[10px] sm:text-[11px] leading-none mb-1 truncate">
+                    {ticket.title}
+                  </span>
+                  <span className="text-white font-bold text-[18px] sm:text-[22px] leading-none mb-1 whitespace-nowrap">
+                    {ticket.discount}
+                  </span>
+                  <span className="text-white font-light italic text-[10px] sm:text-[11px] leading-none mb-1 truncate">
+                    {ticket.subtitle}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* DASHED SEPARATOR */}
+            <div className={`relative w-0 border-l-[2px] border-dashed border-white ${ticket.color} z-10`} />
+
+            {/* RIGHT TICKET TAB */}
+            <div className={`relative w-[48px] sm:w-[56px] shrink-0 ${ticket.color} rounded-r-lg flex items-center justify-center overflow-hidden`}>
+              <div className="absolute -right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-white rounded-full" />
+              <span className="text-white text-[8px] font-bold tracking-widest" style={{ writingMode: "vertical-rl" }}>
+                SAVE
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+
   return (
-    <div className="bg-background min-h-screen overflow-x-hidden">
+    <div className=" min-h-screen overflow-x-hidden">
       {/* ── MOBILE LAYOUT ── */}
-      <div className="lg:hidden pb-6 bg-[#f8f9fa]">
+      <div className="lg:hidden pb-6 ">
         {/* Main Image Section */}
-        <div className="relative w-full aspect-[4/5]">
-          <Image
-            src={gallery[imageIndex]}
-            alt={product.name}
-            fill
-            className="object-cover"
-            priority
-            sizes="100vw"
-          />
+        <div className="relative w-full aspect-[4/5] overflow-hidden" ref={emblaRefMobile}>
+          <div className="flex h-full w-full cursor-grab active:cursor-grabbing">
+            {gallery.map((img, idx) => (
+              <div key={idx} className="relative flex-[0_0_100%] min-w-0 h-full">
+                <Image
+                  src={img}
+                  alt={`${product.name} ${idx + 1}`}
+                  fill
+                  className="object-cover pointer-events-none"
+                  priority={idx === 0}
+                  sizes="100vw"
+                  draggable={false}
+                />
+              </div>
+            ))}
+          </div>
 
           {/* Right Floating Actions */}
           <div className="absolute top-6 right-4 flex flex-col gap-3">
@@ -394,7 +556,7 @@ export default function ProductDetailPage() {
                 <button
                   key={i}
                   onClick={() => setImageIndex(i)}
-                  className={`relative w-14 h-14 rounded-xl overflow-hidden bg-white shrink-0 ${imageIndex === i ? "border-2 border-blue-600" : "border border-gray-200"} shadow-sm`}
+                  className={`relative w-14 h-14 rounded-xl overflow-hidden bg-white shrink-0 ${imageIndex === i ? "border-2 border-primary" : "border border-gray-200"} shadow-sm`}
                 >
                   <Image
                     src={img}
@@ -427,9 +589,15 @@ export default function ProductDetailPage() {
           </div>
 
           {/* Description */}
-          <p className="text-sm text-gray-600 leading-relaxed mb-4">
-            {product.description || "Healthy and nutritious oats to kickstart your day with energy."}
-          </p>
+          <div className="flex items-start justify-between gap-4 mb-4">
+            <p className="text-sm text-gray-600 leading-relaxed">
+              {product.description || "Healthy and nutritious oats to kickstart your day with energy."}
+            </p>
+            <div className="flex items-center gap-1.5 shrink-0 px-2 py-0.5 mt-0.5">
+
+              <span className="text-xs font-bold text-blue-600">In Stock</span>
+            </div>
+          </div>
 
           {/* Price */}
           <div className="flex items-end gap-3 mb-5">
@@ -441,11 +609,16 @@ export default function ProductDetailPage() {
                 ₹{originalPrice.toFixed(0)}
               </span>
             )}
+            {/* Green Discount Tag */}
             {discountPercentage > 0 && (
-              <span className="bg-[#e6f4ea] text-[#00a859] text-xs font-bold px-2 py-1 rounded mb-1">
+              <span
+                className="bg-[#00a859] text-white text-[12px] font-bold pl-3.5 pr-4.5 py-1 whitespace-nowrap"
+                style={{ clipPath: "polygon(0 0, calc(100% - 6px) 0, 100% 100%, 0 100%)" }}
+              >
                 {discountPercentage}% OFF
               </span>
             )}
+
           </div>
 
           {/* Options: Color & Size */}
@@ -498,7 +671,7 @@ export default function ProductDetailPage() {
               </div>
             )}
             <div className="flex items-center gap-3 h-12">
-              <div className="flex items-center border border-border rounded-xl bg-background h-full shrink-0 px-1">
+              <div className="flex items-center border-1 border-black rounded-xl bg-background h-full shrink-0 px-1">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
                   className="w-10 h-full flex items-center justify-center text-muted-foreground"
@@ -525,7 +698,7 @@ export default function ProductDetailPage() {
               <Button
                 onClick={handleAddToCart}
                 variant="outline"
-                className="flex-1 h-full rounded-xl border border-border text-foreground font-bold text-[13px] sm:text-sm bg-background hover:bg-muted"
+                className="flex-1 h-full rounded-xl border-2 border-black text-foreground font-bold text-[13px] sm:text-sm bg-background hover:bg-muted"
               >
                 <ShoppingBag className="w-4 h-4 mr-1.5" /> Add to cart — ₹{(product.price * quantity).toFixed(2).replace(/\.00$/, '')}
               </Button>
@@ -533,7 +706,7 @@ export default function ProductDetailPage() {
 
             <button
               onClick={handleBuyNow}
-              className="relative w-full h-[64px] rounded-2xl bg-[#2563eb] text-white font-bold border-0 flex flex-col items-center justify-center transition-transform active:scale-[0.98]"
+              className="relative w-full h-[64px] rounded-xl bg-gradient-to-r from-[#2563EB] to-[#1D4ED8] text-white font-bold border-0 flex flex-col items-center justify-center transition-all active:scale-[0.98] hover:shadow-lg"
             >
               <div className="flex items-center gap-2">
 
@@ -545,7 +718,7 @@ export default function ProductDetailPage() {
 
             <button
               onClick={() => window.open("https://wa.me/1234567890", "_blank")}
-              className="relative w-full h-[64px] rounded-2xl bg-[#e8f5e9] text-[#166534] font-bold border-0 flex flex-col items-center justify-center transition-transform active:scale-[0.98]"
+              className="relative w-full h-[64px] rounded-xl bg-[#e8f5e9] text-[#166534] font-bold border-0 flex flex-col items-center justify-center transition-transform active:scale-[0.98]"
             >
               <div className="flex items-center gap-2">
                 <WhatsAppIcon className="w-5 h-5 fill-[#22c55e]" />
@@ -557,56 +730,7 @@ export default function ProductDetailPage() {
           </div>
 
           {/* Delivery Details Section */}
-          <div className="mb-6 rounded-sm border border-[#e5e7eb] shadow-sm bg-white overflow-hidden">
-            <div className="px-4 py-3 border-b border-[#f3f4f6]">
-              <h3 className="font-semibold text-[15px] text-gray-900">Delivery details</h3>
-            </div>
-
-            {!checkedPincode ? (
-              <div className="p-4">
-                <p className="text-[13px] text-gray-900 font-medium mb-2">Enter pincode</p>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    maxLength={6}
-                    placeholder="6-digit PIN"
-                    value={pincode}
-                    onChange={(e) => setPincode(e.target.value.replace(/\D/g, ''))}
-                    className="flex-1 h-[42px] px-3 border border-[#e5e7eb] rounded-lg text-[14px] focus:outline-none focus:border-[#a78bfa] focus:ring-1 focus:ring-[#a78bfa] transition-all"
-                  />
-                  <button
-                    onClick={handleCheckPincode}
-                    disabled={isCheckingPin || pincode.length !== 6}
-                    className="h-[42px] px-6 bg-primary hover:bg-primary/90 text-white rounded-lg text-[14px] font-bold transition-colors "
-                  >
-                    {isCheckingPin ? "..." : "Check"}
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="flex flex-col">
-                <div className="p-4 bg-[#faf5ff] flex items-start gap-3">
-                  <MapPin className="w-5 h-5 text-[#8b5cf6] shrink-0 mt-0.5" />
-                  <div>
-                    <p className="font-bold text-[14px] text-gray-900 leading-tight">{pinLocation}, {checkedPincode}</p>
-                    <button
-                      onClick={() => setCheckedPincode(null)}
-                      className="text-[13px] text-[#8b5cf6] hover:underline font-medium mt-1 flex items-center gap-1"
-                    >
-                      Change delivery location <ChevronRight className="w-3 h-3" />
-                    </button>
-                  </div>
-                </div>
-                <div className="p-4 border-t border-[#f3f4f6] flex items-start gap-3">
-                  <Truck className="w-5 h-5 text-gray-800 shrink-0 mt-0.5" />
-                  <div className="flex-1">
-                    <p className="font-bold text-[14px] text-gray-900 leading-tight">Delivery by Aug 14, 2026</p>
-                    <p className="text-[13px] text-gray-500 mt-1">₹53.36 delivery · Ekart Logistics Surface</p>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
+          {renderDeliveryDetails()}
 
           {/* Offers & Discounts */}
           <div className="mb-6 mt-6">
@@ -614,82 +738,7 @@ export default function ProductDetailPage() {
               Offers & Discounts
             </h3>
 
-            <div className="flex items-stretch w-full h-[62px] sm:h-[68px] mt-2 ">
-
-              {/* LEFT TICKET TAB */}
-              <div className="relative w-[58px] sm:w-[68px] shrink-0 bg-[#dc2626] rounded-l-lg flex flex-col items-center justify-center overflow-hidden">
-
-                {/* Left cutout */}
-                <div className="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-white rounded-full" />
-
-
-
-                <span
-                  className="text-white text-[7px] font-bold tracking-widest mt-1"
-                  style={{
-                    writingMode: "vertical-rl",
-                    transform: "rotate(180deg)",
-                  }}
-                >
-                  DISCOUNT %
-                </span>
-              </div>
-
-
-              {/* DASHED SEPARATOR */}
-              <div className="relative w-0 border-l-[2px] border-dashed border-white bg-[#dc2626] z-10" />
-
-
-              {/* CENTER SECTION */}
-              <div className="relative flex-1 bg-[#dc2626] flex items-center px-3 sm:px-5 py-2">
-
-                <div className="flex items-center gap-2 sm:gap-3">
-
-                  <BadgePercent
-                    className="w-8 h-8 sm:w-9 sm:h-9 text-white shrink-0"
-                    strokeWidth={2.5}
-                  />
-
-                  <div className="flex flex-col ml-2">
-                    <span className="text-white font-light italic text-[10px] sm:text-[11px] leading-none mb-1 ">
-                      Online payment offer
-                    </span>
-
-                    <span className="text-white font-bold text-[20px] sm:text-[24px] leading-none mb-1">
-                      10% OFF
-                    </span>
-                    <span className="text-white font-light italic text-[10px] sm:text-[11px] leading-none mb-1">
-                      On all products
-                    </span>
-                  </div>
-
-                </div>
-
-              </div>
-
-
-              {/* DASHED SEPARATOR */}
-              <div className="relative w-0 border-l-[2px] border-dashed border-white bg-[#dc2626] z-10" />
-
-
-              {/* RIGHT TICKET TAB */}
-              <div className="relative w-[58px] sm:w-[68px] shrink-0 bg-[#dc2626] rounded-r-lg flex items-center justify-center overflow-hidden">
-
-                {/* Right cutout */}
-                <div className="absolute -right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-white rounded-full" />
-
-                <span
-                  className="text-white text-[8px] font-bold tracking-widest"
-                  style={{
-                    writingMode: "vertical-rl",
-                  }}
-                >
-                  SAVE
-                </span>
-
-              </div>
-
-            </div>
+            {renderOfferTickets()}
 
             <div className="grid grid-cols-3 border border-gray-100 rounded-sm py-3 divide-x divide-gray-100 mb-6 mt-4">
               <div className="flex items-center justify-center gap-2 px-1">
@@ -833,7 +882,7 @@ export default function ProductDetailPage() {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: "120%", opacity: 0 }}
               transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-              className="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] lg:hidden left-4 right-4 z-50 bg-white rounded-[16px] shadow-[0_4px_24px_rgba(0,0,0,0.12)] px-4 py-3 flex items-center justify-between border border-gray-100"
+              className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom))] lg:hidden left-4 right-4 z-50 bg-white rounded-[16px] shadow-[0_4px_24px_rgba(0,0,0,0.12)] px-4 py-3 flex items-center justify-between border border-gray-100"
             >
               <div className="flex flex-col">
                 <div className="flex items-center gap-2">
@@ -877,22 +926,29 @@ export default function ProductDetailPage() {
                 <button
                   key={i}
                   onClick={() => setImageIndex(i)}
-                  className={`relative w-full aspect-square rounded-lg overflow-hidden bg-muted shrink-0 ${imageIndex === i ? "border border-foreground opacity-100" : "opacity-60"
+                  className={`relative w-full aspect-square rounded-lg overflow-hidden bg-[#f4f4f9] shrink-0 ${imageIndex === i ? "border-2 border-primary opacity-100" : "opacity-60"
                     }`}
                 >
                   <Image src={img} alt="" fill className="object-cover" sizes="80px" />
                 </button>
               ))}
             </div>
-            <div className="relative flex-1 min-w-0 bg-muted rounded-xl overflow-hidden">
-              <Image
-                src={gallery[imageIndex]}
-                alt={product.name}
-                fill
-                className="object-cover"
-                priority
-                sizes="50vw"
-              />
+            <div className="relative flex-1 min-w-0 bg-[#f4f4f9] rounded-xl overflow-hidden" ref={emblaRefDesktop}>
+              <div className="flex h-full w-full cursor-grab active:cursor-grabbing">
+                {gallery.map((img, idx) => (
+                  <div key={idx} className="relative flex-[0_0_100%] min-w-0 h-full">
+                    <Image
+                      src={img}
+                      alt={`${product.name} ${idx + 1}`}
+                      fill
+                      className="object-cover pointer-events-none"
+                      priority={idx === 0}
+                      sizes="50vw"
+                      draggable={false}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -912,6 +968,17 @@ export default function ProductDetailPage() {
                       }`}
                   />
                 ))}
+              </div>
+            </div>
+
+            {/* Description */}
+            <div className="flex items-start justify-between gap-4 mb-6">
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {product.description || "Healthy and nutritious oats to kickstart your day with energy."}
+              </p>
+              <div className="flex items-center gap-1.5 shrink-0 px-2 py-0.5 mt-0.5">
+                <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                <span className="text-xs font-bold text-primary">In Stock</span>
               </div>
             </div>
 
@@ -974,8 +1041,15 @@ export default function ProductDetailPage() {
             )}
 
             <div className="flex flex-col gap-4 mb-10">
+              {product.isLimited && (
+                <div className="flex items-center">
+                  <span className="inline-flex items-center gap-1.5 text-[13px] font-bold text-[#ef4444] bg-[#fee2e2] px-3 py-1.5 rounded-md border border-[#fca5a5] shadow-sm animate-pulse">
+                    <Flame className="w-4 h-4" /> Hurry, only 9 left in stock!
+                  </span>
+                </div>
+              )}
               <div className="flex items-center gap-3">
-                <div className="flex items-center border border-border bg-background h-12 min-w-[120px]">
+                <div className="flex items-center rounded-sm  border-1 border-black bg-background h-12 min-w-[120px]">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
                     className="w-10 h-full flex items-center justify-center text-muted-foreground hover:bg-muted"
@@ -1002,7 +1076,7 @@ export default function ProductDetailPage() {
                 <Button
                   onClick={handleAddToCart}
                   variant="outline"
-                  className="flex-1 h-12 font-medium text-[15px] border-border text-foreground hover:bg-muted"
+                  className="flex-1 h-12 font-medium text-[15px] border-2 border-black text-foreground hover:bg-muted"
                 >
                   <ShoppingBag className="w-4 h-4 mr-2" /> Add to cart — ₹{product.price.toFixed(2).replace(/\.00$/, '')}
                 </Button>
@@ -1018,10 +1092,10 @@ export default function ProductDetailPage() {
 
               <button
                 onClick={handleBuyNow}
-                className="relative w-full h-[64px] rounded-2xl bg-[#2563eb] text-white font-bold border-0 flex flex-col items-center justify-center transition-transform active:scale-[0.98]"
+                className="relative w-full h-[64px] rounded-2xl bg-gradient-to-r from-[#2563eb] to-[#4f46e5] text-white font-bold border-0 flex flex-col items-center justify-center transition-all active:scale-[0.98] hover:shadow-lg"
               >
                 <div className="flex items-center gap-2">
-                  <Zap className="w-4 h-4 fill-white" />
+
                   <span className="text-[17px]">Buy Now</span>
                 </div>
                 <span className="text-[12px] font-medium text-white/80 mt-0.5">Get it faster</span>
@@ -1042,56 +1116,7 @@ export default function ProductDetailPage() {
             </div>
 
             {/* Delivery Details Section (Desktop) */}
-            <div className="mb-6 rounded-xl border border-[#e5e7eb] shadow-sm bg-white overflow-hidden">
-              <div className="px-4 py-3 border-b border-[#f3f4f6]">
-                <h3 className="font-semibold text-[15px] text-gray-900">Delivery details</h3>
-              </div>
-
-              {!checkedPincode ? (
-                <div className="p-4">
-                  <p className="text-[13px] text-gray-900 font-medium mb-2">Enter pincode</p>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      maxLength={6}
-                      placeholder="6-digit PIN"
-                      value={pincode}
-                      onChange={(e) => setPincode(e.target.value.replace(/\D/g, ''))}
-                      className="flex-1 h-[42px] px-3 border border-[#e5e7eb] rounded-lg text-[14px] focus:outline-none focus:border-[#a78bfa] focus:ring-1 focus:ring-[#a78bfa] transition-all"
-                    />
-                    <button
-                      onClick={handleCheckPincode}
-                      disabled={isCheckingPin || pincode.length !== 6}
-                      className="h-[42px] px-6 bg-primary hover:bg-primary/90 text-white rounded-lg text-[14px] font-bold transition-colors "
-                    >
-                      {isCheckingPin ? "..." : "Check"}
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex flex-col">
-                  <div className="p-4 bg-[#faf5ff] flex items-start gap-3">
-                    <MapPin className="w-5 h-5 text-[#8b5cf6] shrink-0 mt-0.5" />
-                    <div>
-                      <p className="font-bold text-[14px] text-gray-900 leading-tight">{pinLocation}, {checkedPincode}</p>
-                      <button
-                        onClick={() => setCheckedPincode(null)}
-                        className="text-[13px] text-[#8b5cf6] hover:underline font-medium mt-1 flex items-center gap-1"
-                      >
-                        Change delivery location <ChevronRight className="w-3 h-3" />
-                      </button>
-                    </div>
-                  </div>
-                  <div className="p-4 border-t border-[#f3f4f6] flex items-start gap-3">
-                    <Truck className="w-5 h-5 text-gray-800 shrink-0 mt-0.5" />
-                    <div className="flex-1">
-                      <p className="font-bold text-[14px] text-gray-900 leading-tight">Delivery by Aug 14, 2026</p>
-                      <p className="text-[13px] text-gray-500 mt-1">₹53.36 delivery · Ekart Logistics Surface</p>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
+            {renderDeliveryDetails()}
 
             {/* Offers & Discounts Desktop */}
             <div className="mb-6 mt-6">
@@ -1099,66 +1124,9 @@ export default function ProductDetailPage() {
                 Offers & Discounts
               </h3>
 
-              <div className="flex items-stretch w-full h-[62px] sm:h-[68px] mt-2 mb-5">
+              {renderOfferTickets()}
 
-                {/* LEFT TICKET TAB */}
-                <div className="relative w-[58px] sm:w-[68px] shrink-0 bg-[#dc2626] rounded-l-lg flex flex-col items-center justify-center overflow-hidden">
-                  {/* Left cutout */}
-                  <div className="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-white rounded-full" />
-                  <span
-                    className="text-white text-[8px] font-bold tracking-widest"
-                    style={{
-                      writingMode: "vertical-rl",
-                      transform: "rotate(180deg)",
-                    }}
-                  >
-                    DISCOUNT %
-                  </span>
-                </div>
-
-                {/* DASHED SEPARATOR */}
-                <div className="relative w-0 border-l-[2px] border-dashed border-white bg-[#dc2626] z-10" />
-
-                {/* CENTER SECTION */}
-                <div className="relative flex-1 bg-[#dc2626] flex items-center px-3 sm:px-5 py-2">
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <BadgePercent
-                      className="w-8 h-8 sm:w-9 sm:h-9 text-white shrink-0"
-                      strokeWidth={2.5}
-                    />
-                    <div className="flex flex-col ml-2">
-                      <span className="text-white font-light italic text-[10px] sm:text-[11px] leading-none mb-1 ">
-                        Online payment offer
-                      </span>
-                      <span className="text-white font-bold text-[20px] sm:text-[24px] leading-none mb-1">
-                        10% OFF
-                      </span>
-                      <span className="text-white font-light italic text-[10px] sm:text-[11px] leading-none mb-1">
-                        On all products
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* DASHED SEPARATOR */}
-                <div className="relative w-0 border-l-[2px] border-dashed border-white bg-[#dc2626] z-10" />
-
-                {/* RIGHT TICKET TAB */}
-                <div className="relative w-[58px] sm:w-[68px] shrink-0 bg-[#dc2626] rounded-r-lg flex items-center justify-center overflow-hidden">
-                  {/* Right cutout */}
-                  <div className="absolute -right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-white rounded-full" />
-                  <span
-                    className="text-white text-[8px] font-bold tracking-widest"
-                    style={{
-                      writingMode: "vertical-rl",
-                    }}
-                  >
-                    SAVE
-                  </span>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-3 border border-gray-100 rounded-sm py-3 divide-x divide-gray-100 mb-6 mt-4">
+              <div className="grid grid-cols-3 border border-gray-100 rounded-sm py-3 divide-x divide-gray-100 mb-6 mt-4 ">
                 <div className="flex items-center justify-center gap-2 px-1">
                   <div className="w-8 h-8 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
                     <IconTruckDelivery stroke={1.5} className="w-4 h-4 text-[#1e1b4b]" />

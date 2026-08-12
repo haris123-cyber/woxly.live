@@ -279,10 +279,12 @@ function OrdersPanel({ orders, onCancel, onReturn }: { orders: OrderItem[], onCa
             <p className="text-[12px] text-gray-600 font-medium">For any order related issues,<br className="hidden sm:block" /> our support team is here to help.</p>
           </div>
         </div>
-        <button className="border border-[#16a34a] text-[#16a34a] hover:bg-[#16a34a] hover:text-white px-4 py-2.5 rounded-xl font-bold text-[13px] flex items-center justify-center gap-1.5 transition-colors shrink-0 w-full sm:w-auto">
-          Contact Support
-          <ChevronRight className="w-4 h-4" strokeWidth={2.5} />
-        </button>
+        <Link href="/contact">
+          <button className="border border-[#16a34a] text-[#16a34a] hover:bg-[#16a34a] hover:text-white px-4 py-2.5 rounded-xl font-bold text-[13px] flex items-center justify-center gap-1.5 transition-colors shrink-0 w-full sm:w-auto">
+            Contact Support
+            <ChevronRight className="w-4 h-4" strokeWidth={2.5} />
+          </button>
+        </Link>
       </div>
     </div>
   );
@@ -790,7 +792,7 @@ function AccountPageInner() {
   const searchParams = useSearchParams();
   const tabParam = searchParams.get('tab');
   const isValidTab = tabParam && ['orders', 'returns', 'details', 'address', 'rewards'].includes(tabParam);
-  
+
   const [activeNav, setActiveNav] = useState(isValidTab ? tabParam : "orders");
   const [showMobileMenu, setShowMobileMenu] = useState(!isValidTab);
   const [orders, setOrders] = useState<OrderItem[]>(initialOrders);
@@ -800,6 +802,8 @@ function AccountPageInner() {
     if (tabParam && ['orders', 'returns', 'details', 'address', 'rewards'].includes(tabParam)) {
       setActiveNav(tabParam);
       setShowMobileMenu(false);
+    } else {
+      setShowMobileMenu(true);
     }
   }, [tabParam]);
 
@@ -948,8 +952,14 @@ function AccountPageInner() {
 
         {/* ── Main Content panel (Visible on Desktop always, Visible on Mobile if showMobileMenu is false) ── */}
         <div className={`flex-1 ${showMobileMenu ? 'hidden lg:block' : 'block'}`}>
-
-          <div className="bg-white border border-gray-100 rounded-[16px] shadow-sm overflow-hidden p-6 min-h-[600px]">
+          <div className="bg-white border border-gray-100 rounded-[16px] shadow-sm overflow-hidden p-4 sm:p-6 min-h-[600px]">
+            {/* Back button for mobile */}
+            <button
+              onClick={() => setShowMobileMenu(true)}
+              className="lg:hidden flex items-center gap-2 text-gray-500 hover:text-primary mb-6 transition-colors font-medium text-[13px]"
+            >
+              <ArrowLeft className="w-4 h-4" /> Back to Account Menu
+            </button>
             {panelMap[activeNav]}
           </div>
         </div>

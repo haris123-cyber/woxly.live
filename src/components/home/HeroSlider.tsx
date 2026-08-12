@@ -114,7 +114,7 @@ export function HeroSlider() {
                 alt={promo.alt}
                 width={1280}
                 height={120}
-                className="w-full h-auto object-cover"
+                className="w-full h-[40px] sm:h-auto object-fill sm:object-cover"
                 priority={promo.id === 1}
               />
             </Link>
@@ -178,11 +178,8 @@ export function HeroSlider() {
               type="button"
               onClick={() => scrollTo(idx)}
               aria-label={`Go to slide ${idx + 1}`}
-              className="h-1.5 rounded-full transition-all duration-300 border-0 p-0 cursor-pointer"
-              style={{
-                width: idx === current ? "18px" : "6px",
-                background: idx === current ? "var(--primary, #3bc4f5)" : "rgba(255,255,255,0.5)",
-              }}
+              className={`h-1.5 rounded-full transition-all duration-300 border-0 p-0 cursor-pointer ${idx === current ? "w-10 sm:w-14 bg-primary" : "w-2 sm:w-2.5 bg-white/50"
+                }`}
             />
           ))}
         </div>
