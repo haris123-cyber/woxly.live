@@ -4,6 +4,8 @@ import { useState, useCallback, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
 
 const slides = [
   {
@@ -48,29 +50,33 @@ const AUTO_SCROLL_MS = 5000;
 const PROMO_AUTO_SCROLL_MS = 4000;
 
 export function HeroSlider() {
-  const [current, setCurrent] = useState(0);
   const [promoCurrent, setPromoCurrent] = useState(0);
-  const [paused, setPaused] = useState(false);
   const [promoPaused, setPromoPaused] = useState(false);
 
-  const next = useCallback(() => {
-    setCurrent((prev) => (prev + 1) % slides.length);
-  }, []);
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
+    Autoplay({ delay: AUTO_SCROLL_MS, stopOnInteraction: false, stopOnMouseEnter: true })
+  ]);
+  const [current, setCurrent] = useState(0);
 
-  const prev = useCallback(() => {
-    setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
-  }, []);
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setCurrent(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    onSelect();
+    emblaApi.on("select", onSelect);
+    emblaApi.on("reInit", onSelect);
+  }, [emblaApi, onSelect]);
+
+  const next = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
+  const prev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
+  const scrollTo = useCallback((index: number) => emblaApi && emblaApi.scrollTo(index), [emblaApi]);
 
   const nextPromo = useCallback(() => {
     setPromoCurrent((prev) => (prev + 1) % promoSlides.length);
   }, []);
-
-  useEffect(() => {
-    if (paused) return;
-
-    const id = setInterval(next, AUTO_SCROLL_MS);
-    return () => clearInterval(id);
-  }, [next, paused, current]);
 
   useEffect(() => {
     if (promoPaused) return;
@@ -115,45 +121,34 @@ export function HeroSlider() {
           ))}
         </div>
 
-      
+
       </div>
 
-      {/* ── MAIN SLIDER ── */}
       <div
         className="relative overflow-hidden bg-zinc-900 shadow-lg mt-0 sm:mt-0 rounded-none sm:rounded-[6px] group"
-        style={{ minHeight: "clamp(260px, 55vw, 460px)" }}
-        onMouseEnter={() => setPaused(true)}
-        onMouseLeave={() => setPaused(false)}
-        onTouchStart={() => setPaused(true)}
-        onTouchEnd={() => setPaused(false)}
+        style={{ height: "clamp(260px, 55vw, 460px)" }}
+        ref={emblaRef}
       >
         {/* Image track */}
-        <div
-          style={{
-            display: "flex",
-            width: `${slides.length * 100}%`,
-            height: "100%",
-            position: "absolute",
-            inset: 0,
-            transform: `translateX(-${(current / slides.length) * 100}%)`,
-            transition: "transform 0.5s cubic-bezier(0.77,0,0.175,1)",
-          }}
-        >
+        <div className="flex h-full w-full cursor-grab active:cursor-grabbing">
           {slides.map((slide) => (
-            <Link
-              key={slide.id}
-              href={slide.link}
-              style={{ width: `${100 / slides.length}%`, position: "relative", flexShrink: 0, display: "block" }}
-            >
-              <Image
-                src={slide.image}
-                fill
-                className="object-cover"
-                priority={slide.id === 1}
-                alt="Hero banner"
-                sizes="100vw"
-              />
-            </Link>
+            <div key={slide.id} className="relative flex-[0_0_100%] min-w-0 h-full">
+              <Link
+                href={slide.link}
+                className="block w-full h-full relative"
+                draggable={false}
+              >
+                <Image
+                  src={slide.image}
+                  fill
+                  className="object-cover"
+                  priority={slide.id === 1}
+                  alt="Hero banner"
+                  sizes="100vw"
+                  draggable={false}
+                />
+              </Link>
+            </div>
           ))}
         </div>
 
@@ -181,7 +176,7 @@ export function HeroSlider() {
             <button
               key={idx}
               type="button"
-              onClick={() => setCurrent(idx)}
+              onClick={() => scrollTo(idx)}
               aria-label={`Go to slide ${idx + 1}`}
               className="h-1.5 rounded-full transition-all duration-300 border-0 p-0 cursor-pointer"
               style={{
