@@ -11,6 +11,7 @@ import { toast } from "sonner";
 
 interface ProductCardProps {
   product: Product;
+  layout?: "grid" | "list";
 }
 
 function OfferLabel({ discountPercentage, originalPrice, price }: { discountPercentage: number, originalPrice?: number, price: number }) {
@@ -18,7 +19,7 @@ function OfferLabel({ discountPercentage, originalPrice, price }: { discountPerc
   const saveAmount = originalPrice ? Math.round(originalPrice - price) : 0;
 
   return (
-    <div className="absolute bottom-0 left-0 right-0 z-10 overflow-hidden rounded-b-[16px] shadow-[0_-2px_10px_rgba(0,0,0,0.1)] transition-opacity duration-300 md:group-hover:opacity-0 pointer-events-none">
+    <div className="absolute bottom-0 left-0 right-0 z-10 overflow-hidden shadow-[0_-2px_10px_rgba(0,0,0,0.1)] transition-opacity duration-300 md:group-hover:opacity-0 pointer-events-none">
       <div className="flex w-full h-[40px] sm:h-[48px] bg-[#ffcc00] relative">
         {/* Slanted red background using clip-path */}
         <div className="absolute inset-0 right-[40px] sm:right-[50px] bg-gradient-to-r from-[#e3000f] to-[#ff5100]" style={{ clipPath: "polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%)" }} />
@@ -47,7 +48,7 @@ function OfferLabel({ discountPercentage, originalPrice, price }: { discountPerc
   );
 }
 
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
   const addItem = useCartStore((state) => state.addItem);
   const router = useRouter();
   const { toggleItem, isInWatchlist } = useWatchlistStore();
@@ -78,11 +79,12 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Link
       href={`/products/${product.slug}`}
-      className="group block min-w-0"
+      className={`group ${layout === 'list' ? 'flex flex-row gap-3 sm:gap-4 bg-white rounded-2xl mb-4 border-0' : 'block min-w-0'}`}
       style={{ textDecoration: "none" }}
     >
       <div
-        style={{
+        className={`${layout === 'list' ? 'w-[150px] sm:w-[190px] shrink-0 aspect-square' : ''}`}
+        style={layout === 'grid' ? {
           position: "relative",
           width: "100%",
           paddingBottom: "130%",
@@ -90,6 +92,11 @@ export function ProductCard({ product }: ProductCardProps) {
           overflow: "hidden",
           background: "#f5f5f5",
           marginBottom: "12px",
+        } : {
+          position: "relative",
+          borderRadius: "12px",
+          overflow: "hidden",
+          background: "#f5f5f5",
         }}
       >
         <Image
@@ -199,7 +206,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
       </div>
 
-      <div>
+      <div className={layout === 'list' ? 'flex-1 min-w-0 flex flex-col justify-center py-2 pr-2 sm:pr-4' : ''}>
         <p style={{ fontSize: "0.7rem", color: "#9ca3af", fontWeight: 600, marginBottom: "2px", textTransform: "uppercase", letterSpacing: "0.04em" }}>
           {brand}
         </p>
@@ -238,18 +245,31 @@ export function ProductCard({ product }: ProductCardProps) {
                 <Star key={i} className={`w-3 h-3 ${i < Math.floor(product.rating || 0) ? "fill-current" : "text-gray-300 fill-gray-300"}`} />
               ))}
             </div>
-            <span className="text-[11px] text-gray-500 font-medium">({product.reviews || 0})</span>
+            <span className="text-[11px] text-gray-500 font-medium">{product.reviews ? `(${product.reviews})` : 'No reviews yet'}</span>
           </div>
 
+          {layout === 'grid' && (
+            <button
+              onClick={handleAddToCart}
+              disabled={!product.inStock}
+              className={`lg:hidden flex shrink-0 items-center justify-center w-8 h-8 rounded-full text-white shadow-sm transition-transform active:scale-95 ${product.inStock ? "bg-primary" : "bg-gray-400"}`}
+              aria-label={product.inStock ? "Add to cart" : "Out of stock"}
+            >
+              <ShoppingCart className="w-4 h-4" />
+            </button>
+          )}
+        </div>
+
+        {layout === 'list' && (
           <button
             onClick={handleAddToCart}
             disabled={!product.inStock}
-            className={`lg:hidden flex shrink-0 items-center justify-center w-8 h-8 rounded-full text-white shadow-sm transition-transform active:scale-95 ${product.inStock ? "bg-primary" : "bg-gray-400"}`}
-            aria-label={product.inStock ? "Add to cart" : "Out of stock"}
+            className={`mt-2 sm:mt-3 w-full py-2 sm:py-2 rounded-xl text-white font-bold text-[13px] sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 transition-opacity hover:opacity-90 ${product.inStock ? "bg-primary" : "bg-primary/80"}`}
           >
-            <ShoppingCart className="w-4 h-4" />
+            <ShoppingCart className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            <span className="truncate">{product.inStock ? "Add to cart" : "Out of stock"}</span>
           </button>
-        </div>
+        )}
       </div>
     </Link>
   );

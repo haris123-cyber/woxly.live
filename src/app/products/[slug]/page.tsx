@@ -38,6 +38,9 @@ import {
   MapPin,
   Zap,
   Paperclip,
+  Flag,
+  X,
+  User,
 } from "lucide-react";
 
 const WhatsAppIcon = ({ className }: { className?: string }) => (
@@ -100,7 +103,7 @@ export default function ProductDetailPage() {
   const [isWarrantyOpen, setIsWarrantyOpen] = useState(false);
   const [isDeliveryOpen, setIsDeliveryOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [fullscreenReviewImage, setFullscreenReviewImage] = useState<string | null>(null);
+  const [fullscreenReview, setFullscreenReview] = useState<{ review: any, index: number } | null>(null);
 
   const [emblaRefMobile, emblaApiMobile] = useEmblaCarousel({ loop: true });
   const [emblaRefDesktop, emblaApiDesktop] = useEmblaCarousel({ loop: true });
@@ -376,7 +379,7 @@ export default function ProductDetailPage() {
                   {review.images.map((img, i) => (
                     <button
                       key={i}
-                      onClick={() => setFullscreenReviewImage(img)}
+                      onClick={() => setFullscreenReview({ review, index: i })}
                       className="relative w-16 h-16 rounded-md overflow-hidden shrink-0 border border-gray-200 cursor-zoom-in hover:opacity-90 transition-opacity"
                     >
                       <Image src={img} alt={`Review image ${i + 1}`} fill className="object-cover" />
@@ -457,50 +460,54 @@ export default function ProductDetailPage() {
     ];
 
     return (
-      <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-4 pl-5 ml-1 mr-1 sm:mx-0 sm:px-0 mt-2 mb-2 after:content-[''] after:w-1 sm:after:w-0 after:shrink-0">
-        {tickets.map((ticket) => (
-          <div key={ticket.id} className="flex items-stretch w-[300px] sm:w-[320px] shrink-0 h-[62px] sm:h-[68px] snap-start">
-            {/* LEFT TICKET TAB */}
-            <div className={`relative w-[48px] sm:w-[56px] shrink-0 ${ticket.color} rounded-l-lg flex flex-col items-center justify-center overflow-hidden`}>
-              <div className="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-white rounded-full" />
-              <span className="text-white text-[7px] font-bold tracking-widest mt-1" style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}>
-                DISCOUNT %
-              </span>
-            </div>
+      <div className="relative ml-2 mr-1 -mx-4 sm:mx-0">
+        <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 pl-5 sm:pl-0 mt-2 mb-2 after:content-[''] after:w-6 sm:after:w-0 after:shrink-0 scrollbar-hide">
+          {tickets.map((ticket) => (
+            <div key={ticket.id} className="flex items-stretch w-[300px] sm:w-[320px] shrink-0 h-[62px] sm:h-[68px] snap-start">
+              {/* LEFT TICKET TAB */}
+              <div className={`relative w-[48px] sm:w-[56px] shrink-0 ${ticket.color} rounded-l-lg flex flex-col items-center justify-center overflow-hidden`}>
+                <div className="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-white rounded-full" />
+                <span className="text-white text-[7px] font-bold tracking-widest mt-1" style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}>
+                  DISCOUNT %
+                </span>
+              </div>
 
-            {/* DASHED SEPARATOR */}
-            <div className={`relative w-0 border-l-[2px] border-dashed border-white ${ticket.color} z-10`} />
+              {/* DASHED SEPARATOR */}
+              <div className={`relative w-0 border-l-[2px] border-dashed border-white ${ticket.color} z-10`} />
 
-            {/* CENTER SECTION */}
-            <div className={`relative flex-1 ${ticket.color} flex items-center px-3 sm:px-5 py-2 overflow-hidden`}>
-              <div className="flex items-center gap-2 sm:gap-3 w-full">
-                <BadgePercent className="w-8 h-8 sm:w-9 sm:h-9 text-white shrink-0" strokeWidth={2.5} />
-                <div className="flex flex-col ml-1 sm:ml-2 min-w-0">
-                  <span className="text-white font-light italic text-[10px] sm:text-[11px] leading-none mb-1 truncate">
-                    {ticket.title}
-                  </span>
-                  <span className="text-white font-bold text-[18px] sm:text-[22px] leading-none mb-1 whitespace-nowrap">
-                    {ticket.discount}
-                  </span>
-                  <span className="text-white font-light italic text-[10px] sm:text-[11px] leading-none mb-1 truncate">
-                    {ticket.subtitle}
-                  </span>
+              {/* CENTER SECTION */}
+              <div className={`relative flex-1 ${ticket.color} flex items-center px-3 sm:px-5 py-2 overflow-hidden`}>
+                <div className="flex items-center gap-2 sm:gap-3 w-full">
+                  <BadgePercent className="w-8 h-8 sm:w-9 sm:h-9 text-white shrink-0" strokeWidth={2.5} />
+                  <div className="flex flex-col ml-1 sm:ml-2 min-w-0">
+                    <span className="text-white font-light italic text-[10px] sm:text-[11px] leading-none mb-1 truncate">
+                      {ticket.title}
+                    </span>
+                    <span className="text-white font-bold text-[18px] sm:text-[22px] leading-none mb-1 whitespace-nowrap">
+                      {ticket.discount}
+                    </span>
+                    <span className="text-white font-light italic text-[10px] sm:text-[11px] leading-none mb-1 truncate">
+                      {ticket.subtitle}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* DASHED SEPARATOR */}
-            <div className={`relative w-0 border-l-[2px] border-dashed border-white ${ticket.color} z-10`} />
+              {/* DASHED SEPARATOR */}
+              <div className={`relative w-0 border-l-[2px] border-dashed border-white ${ticket.color} z-10`} />
 
-            {/* RIGHT TICKET TAB */}
-            <div className={`relative w-[48px] sm:w-[56px] shrink-0 ${ticket.color} rounded-r-lg flex items-center justify-center overflow-hidden`}>
-              <div className="absolute -right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-white rounded-full" />
-              <span className="text-white text-[8px] font-bold tracking-widest" style={{ writingMode: "vertical-rl" }}>
-                SAVE
-              </span>
+              {/* RIGHT TICKET TAB */}
+              <div className={`relative w-[48px] sm:w-[56px] shrink-0 ${ticket.color} rounded-r-lg flex items-center justify-center overflow-hidden`}>
+                <div className="absolute -right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-white rounded-full" />
+                <span className="text-white text-[8px] font-bold tracking-widest" style={{ writingMode: "vertical-rl" }}>
+                  SAVE
+                </span>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+        {/* Right Blur/Fade Effect */}
+        <div className="absolute top-0 right-0 bottom-0 w-6 sm:w-7 bg-gradient-to-l from-white to-transparent pointer-events-none z-20" />
       </div>
     );
   };
@@ -600,7 +607,8 @@ export default function ProductDetailPage() {
             <p className="text-sm text-black leading-relaxed">
               {product.description || "Healthy and nutritious oats to kickstart your day with energy."}
             </p>
-            <div className="flex items-center gap-1.5 shrink-0 px-2 py-0.5 mt-0.5">
+            <div className="flex items-center bg-primary/10 rounded-2xl gap-1.5 shrink-0 px-2 py-0.5 mt-0.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
 
               <span className="text-xs font-bold text-blue-600">In Stock</span>
             </div>
@@ -747,13 +755,7 @@ export default function ProductDetailPage() {
               <h3 className="text-[10px] text-muted-foreground uppercase tracking-[0.2em] font-semibold">
                 Offers & Discounts
               </h3>
-              <Link
-                href="#"
-                className="text-[9px] sm:text-xs font-bold uppercase tracking-[0.12em] text-black-600 hover:text-black-700 shrink-0 inline-flex items-center gap-1 text-muted-foreground"
-              >
-                See all
-                <ArrowRight className="w-3.5 h-3.5" strokeWidth={2} />
-              </Link>
+
             </div>
 
             {renderOfferTickets()}
@@ -994,7 +996,7 @@ export default function ProductDetailPage() {
               <p className="text-sm text-muted-foreground leading-relaxed">
                 {product.description || "Healthy and nutritious oats to kickstart your day with energy."}
               </p>
-              <div className="flex items-center gap-1.5 shrink-0 px-2 py-0.5 mt-0.5">
+              <div className="flex items-center bg-primary/10 rounded-2xl gap-1.5 shrink-0 px-2 py-0.5 mt-0.5">
                 <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
                 <span className="text-xs font-bold text-primary">In Stock</span>
               </div>
@@ -1142,13 +1144,7 @@ export default function ProductDetailPage() {
                 <h3 className="text-[10px] text-muted-foreground uppercase tracking-[0.2em] font-semibold">
                   Offers & Discounts
                 </h3>
-                <Link
-                  href="#"
-                  className="text-[10px] sm:text-md font-bold uppercase tracking-[0.12em] text-black-600 hover:text-black-700 shrink-0 inline-flex items-center gap-1 text-muted-foreground"
-                >
-                  See all
-                  <ArrowRight className="w-3.5 h-3.5" strokeWidth={2} />
-                </Link>
+
               </div>
 
 
@@ -1382,30 +1378,115 @@ export default function ProductDetailPage() {
 
       {/* Review Image Lightbox */}
       <AnimatePresence>
-        {fullscreenReviewImage && (
+        {fullscreenReview && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center"
-            onClick={() => setFullscreenReviewImage(null)}
+            className="fixed inset-0 z-[100] bg-black/90 sm:bg-black/80 flex items-center justify-center sm:p-8"
+            onClick={() => setFullscreenReview(null)}
           >
-            <button
-              onClick={() => setFullscreenReviewImage(null)}
-              className="absolute top-6 right-6 w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-colors"
+            {/* Modal Container */}
+            <div
+              className="relative w-full h-full sm:max-w-6xl sm:h-auto sm:aspect-[16/9] sm:max-h-[85vh] bg-white sm:rounded-lg overflow-hidden flex flex-col sm:flex-row shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
             >
-              <Plus className="w-6 h-6 rotate-45" />
-            </button>
+              {/* Close Button (Desktop & Mobile) */}
+              <button
+                onClick={() => setFullscreenReview(null)}
+                className="absolute top-4 right-4 z-50 text-gray-500 hover:text-gray-900 bg-white sm:bg-white/80 p-1.5 rounded-full shadow-sm sm:shadow-md transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
 
-            <div className="relative w-full max-w-4xl aspect-square sm:aspect-video mx-4" onClick={(e) => e.stopPropagation()}>
-              <Image
-                src={fullscreenReviewImage}
-                alt="Review image"
-                fill
-                className="object-contain"
-                sizes="100vw"
-                priority
-              />
+              {/* Left Column: Image Viewer */}
+              <div className="relative w-full sm:w-[65%] h-[50vh] sm:h-full bg-[#f3f3f3] flex items-center justify-center group border-b sm:border-b-0 sm:border-r border-gray-200">
+
+
+
+                {fullscreenReview.index > 0 && (
+                  <button
+                    onClick={() => setFullscreenReview(prev => prev ? { ...prev, index: prev.index - 1 } : null)}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/60 rounded-full flex items-center justify-center text-white hover:bg-black/80 transition-colors z-20 shadow-md"
+                  >
+                    <ChevronLeft className="w-6 h-6" />
+                  </button>
+                )}
+
+                {fullscreenReview.index < (fullscreenReview.review.images?.length || 0) - 1 && (
+                  <button
+                    onClick={() => setFullscreenReview(prev => prev ? { ...prev, index: prev.index + 1 } : null)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/60 rounded-full flex items-center justify-center text-white hover:bg-black/80 transition-colors z-20 shadow-md"
+                  >
+                    <ChevronRight className="w-6 h-6" />
+                  </button>
+                )}
+
+                <Image
+                  src={fullscreenReview.review.images[fullscreenReview.index]}
+                  alt={`Review image ${fullscreenReview.index + 1}`}
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 768px) 100vw, 65vw"
+                  priority
+                />
+
+
+              </div>
+
+              {/* Right Column: Review Details */}
+              <div className="w-full sm:w-[35%] flex flex-col h-[50vh] sm:h-full bg-white overflow-y-auto">
+                <div className="p-5 sm:p-8">
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold shrink-0">
+                      <User className="w-5 h-5" />
+                    </div>
+                    <span className="font-bold text-gray-900">{fullscreenReview.review.name}</span>
+                  </div>
+
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <div className="flex items-center gap-0.5">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`w-4 h-4 ${i < (fullscreenReview.review.rating || 5)
+                            ? "fill-[#f89820] text-[#f89820]"
+                            : "fill-gray-200 text-gray-200"
+                            }`}
+                        />
+                      ))}
+                    </div>
+                    {fullscreenReview.review.verified && (
+                      <span className="text-xs font-semibold text-gray-600 ml-1">Verified Purchase</span>
+                    )}
+                  </div>
+
+                  {fullscreenReview.review.title && (
+                    <h4 className="text-[15px] font-bold text-gray-900 mb-2">{fullscreenReview.review.title}</h4>
+                  )}
+
+                  {fullscreenReview.review.text && (
+                    <p className="text-[14px] text-gray-800 leading-relaxed mb-6">
+                      {fullscreenReview.review.text}
+                    </p>
+                  )}
+
+                  {/* Thumbnails */}
+                  {fullscreenReview.review.images && fullscreenReview.review.images.length > 0 && (
+                    <div className="flex gap-2 flex-wrap mt-2">
+                      {fullscreenReview.review.images.map((img: string, i: number) => (
+                        <button
+                          key={i}
+                          onClick={() => setFullscreenReview(prev => prev ? { ...prev, index: i } : null)}
+                          className={`relative w-[68px] h-[68px] rounded-lg overflow-hidden border-2 transition-all ${i === fullscreenReview.index ? 'border-primary' : 'border-gray-200 hover:border-gray-300'}`}
+                        >
+                          <Image src={img} alt="" fill className="object-cover" />
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           </motion.div>
         )}

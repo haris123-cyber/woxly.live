@@ -35,6 +35,7 @@ import {
   MoreHorizontal,
   LayoutGrid,
   ArrowLeft,
+  AlignJustify,
 } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 
@@ -59,6 +60,7 @@ export default function ShopPage() {
   const [sortBy, setSortBy] = useState("popular");
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   const priceBounds = useMemo(() => {
     const prices = PRODUCTS.map((p) => p.price);
@@ -403,44 +405,50 @@ export default function ShopPage() {
     <div className="bg-background min-h-screen pb-12 overflow-x-hidden">
       {/* ── MOBILE LAYOUT ── */}
       <div className="lg:hidden px-5 pt-4 pb-8">
-        <h1 className="text-xl font-bold text-foreground mb-4">Product List</h1>
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-xl font-bold text-foreground">Product List</h1>
+          <button
+            type="button"
+            onClick={() => setFilterOpen(true)}
+            className="flex items-center gap-1.5 text-sm font-medium text-foreground bg-gray-100 px-3 py-1.5 rounded-full"
+          >
+            <Filter className="w-4 h-4" />
+            Filter
+            {activeFiltersCount > 0 && (
+              <span className="w-5 h-5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center">
+                {activeFiltersCount}
+              </span>
+            )}
+          </button>
+        </div>
 
 
 
         {/* Sort / Filter bar */}
         <div className="relative mb-4">
-          <div className="flex items-center justify-between gap-2 py-2 ">
+          <div className="flex items-center justify-between gap-2 p-2 pl-4 bg-primary/5 rounded-2xl">
             <button
               type="button"
               onClick={() => setSortMenuOpen((v) => !v)}
-              className="flex items-center gap-1.5 text-sm font-medium text-foreground"
+              className="flex items-center gap-1 text-[13px] text-gray-500"
             >
-              Sort by
-              {sortMenuOpen ? (
-                <ChevronUp className="w-4 h-4 text-muted-foreground" />
-              ) : (
-                <ChevronDown className="w-4 h-4 text-muted-foreground" />
-              )}
-              <span className="text-xs text-muted-foreground font-normal ml-1 truncate max-w-[100px]">
-                {sortLabel}
-              </span>
+              Sorted by <span className="font-bold text-gray-900 ml-1">{sortLabel}</span>
             </button>
 
-            <div className="flex items-center gap-3">
-
-              <span className="w-px h-5 bg-border" />
+            <div className="flex items-center bg-white rounded-full p-1 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
               <button
                 type="button"
-                onClick={() => setFilterOpen(true)}
-                className="flex items-center gap-1.5 text-sm font-medium text-foreground"
+                onClick={() => setViewMode("grid")}
+                className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${viewMode === 'grid' ? 'bg-primary/10 text-primary' : 'text-gray-400 hover:text-gray-600'}`}
               >
-                <Filter className="w-4 h-4" />
-                Filter
-                {activeFiltersCount > 0 && (
-                  <span className="w-5 h-5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center">
-                    {activeFiltersCount}
-                  </span>
-                )}
+                <LayoutGrid className="w-4 h-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewMode("list")}
+                className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${viewMode === 'list' ? 'bg-primary/10 text-primary' : 'text-gray-400 hover:text-gray-600'}`}
+              >
+                <AlignJustify className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -639,10 +647,10 @@ export default function ShopPage() {
 
 
 
-        {/* Product grid — 2 columns */}
-        <div className="grid grid-cols-2 gap-3 sm:gap-4">
+        {/* Product grid — 2 columns or list */}
+        <div className={viewMode === 'grid' ? "grid grid-cols-2 gap-3 sm:gap-4" : "flex flex-col"}>
           {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product.id} product={product} layout={viewMode} />
           ))}
 
           {filteredProducts.length === 0 && (

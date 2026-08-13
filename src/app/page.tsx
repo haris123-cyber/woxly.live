@@ -34,7 +34,7 @@ const ProductCarousel = ({
         )}
         <Link
           href={link}
-          className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.12em] text-black-600 hover:text-black-700 shrink-0 inline-flex items-center gap-1 text-muted-foreground"
+          className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.12em] text-primary hover:text-primary/80 shrink-0 inline-flex items-center gap-1 text-muted-foreground"
         >
           See all
           <ArrowRight className="w-3.5 h-3.5 " strokeWidth={2} />
@@ -121,7 +121,7 @@ export default function Home() {
           </p>
           <Link
             href="/shop"
-            className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.12em] text-black-600 hover:text-black-700 shrink-0 inline-flex items-center gap-1 text-muted-foreground"
+            className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.12em] text-primary hover:text-primary/80 shrink-0 inline-flex items-center gap-1 text-muted-foreground"
           >
             See all
             <ArrowRight className="w-3.5 h-3.5" strokeWidth={2} />
