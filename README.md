@@ -1,6 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Woxly E-Commerce
 
-## Getting Started
+Woxly is a modern, high-performance e-commerce web application built with **Next.js 16**, **React 19**, and **Tailwind CSS**. Designed for an exceptional user experience, it features smooth animations, responsive design, and global state management for an intuitive shopping flow.
+
+## 🚀 Tech Stack
+
+- **Framework:** [Next.js 16](https://nextjs.org/) (App Router)
+- **Library:** [React 19](https://react.dev/)
+- **Styling:** [Tailwind CSS v4](https://tailwindcss.com/)
+- **State Management:** [Zustand](https://github.com/pmndrs/zustand)
+- **UI Components:** [shadcn/ui](https://ui.shadcn.com/) + Custom Components
+- **Animations:** [Framer Motion](https://www.framer.com/motion/) & Embla Carousel
+- **Forms & Validation:** [React Hook Form](https://react-hook-form.com/) & [Zod](https://zod.dev/)
+- **Icons:** [Lucide React](https://lucide.dev/) & Tabler Icons
+- **Notifications:** [Sonner](https://sonner.emilkowal.ski/)
+
+## 🛒 Application Flow & Features
+
+Woxly provides a complete end-to-end shopping experience. Below is the primary user flow:
+
+### 1. Discovery & Browsing
+- **Home Page (`/`)**: Features a dynamic Hero Slider for promotions, featured product categories, and trending/bestselling items.
+- **Shop Page (`/shop`)**: A comprehensive product catalog with robust filtering and sorting capabilities. Users can toggle between **Grid View** and **List View** seamlessly.
+- **Product Details (`/products/[slug]`)**: In-depth product information, including image galleries (with full-screen lightbox and thumbnail navigation), pricing, variants, and customer reviews.
+
+### 2. User Engagement
+- **Watchlist (`/watchlist`)**: Users can save items they are interested in for later by clicking the heart icon on any product card.
+- **Authentication (`/login`, `/signup`)**: Secure user authentication for account management and order tracking.
+
+### 3. Purchasing Flow
+- **Cart (`/cart`)**: Sliding drawer or dedicated page to review selected items, adjust quantities, and see total costs.
+- **Checkout (`/checkout`)**: Streamlined checkout process for shipping details, payment, and order confirmation.
+- **Order Success (`/order-success/[id]`)**: Confirmation screen providing the user with their order ID and next steps.
+
+### 4. Post-Purchase & Support
+- **Track Order (`/track-order`)**: Users can input their order ID and email to see real-time shipping updates.
+- **Account (`/account`)**: User profile management and order history.
+- **Information Pages**: Accessible via the footer, including About, Contact, FAQs, Privacy Policy, Terms of Service, and Return Policy.
+
+## 🛠️ Getting Started
 
 First, run the development server:
 
@@ -18,19 +55,27 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📂 Project Structure
 
-## Learn More
+```
+src/
+├── app/                  # Next.js App Router pages and layouts
+│   ├── products/         # Dynamic product routes
+│   ├── shop/             # Main catalog and filtering
+│   ├── checkout/         # Checkout flow
+│   └── ...               # Other routes (cart, track-order, etc.)
+├── components/           # Reusable UI components
+│   ├── home/             # Home page specific components (HeroSlider, etc.)
+│   ├── layout/           # Header, Footer, Navigation
+│   ├── product/          # ProductCard, Galleries, Reviews
+│   └── ui/               # Base UI components (buttons, inputs, dialogs)
+├── store/                # Zustand state stores (cart, watchlist)
+└── lib/                  # Utility functions and shared logic
+```
 
-To learn more about Next.js, take a look at the following resources:
+## 📝 Scripts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `npm run dev` - Starts the development server.
+- `npm run build` - Builds the application for production.
+- `npm run start` - Starts the production server.
+- `npm run lint` - Runs ESLint to catch syntax and styling issues.
