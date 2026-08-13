@@ -118,21 +118,7 @@ function TrackOrderInner() {
                 <p className="text-gray-500 text-[14px] mt-2">Track your order in real-time</p>
               </div>
 
-              {/* Graphic Placeholder (matching the truck/map style) */}
-              <div className="w-48 h-24 relative opacity-90 hidden sm:block">
-                <div className="absolute inset-0 bg-[#dcfce7] rounded-xl overflow-hidden">
-                  {/* Map lines */}
-                  <div className="absolute top-1/4 left-0 right-0 h-px bg-[#bbf7d0]" />
-                  <div className="absolute top-2/4 left-0 right-0 h-px bg-[#bbf7d0]" />
-                  <div className="absolute top-3/4 left-0 right-0 h-px bg-[#bbf7d0]" />
-                  <div className="absolute top-0 bottom-0 left-1/3 w-px bg-[#bbf7d0]" />
-                  <div className="absolute top-0 bottom-0 left-2/3 w-px bg-[#bbf7d0]" />
-                </div>
-                {/* Route path */}
-                <div className="absolute top-1/2 left-8 right-16 h-0 border-t-2 border-dashed border-[#16a34a] -translate-y-1/2 opacity-30" />
-                <MapPin className="absolute top-3 left-6 w-7 h-7 text-[#16a34a]" fill="#f0fdf4" />
-                <Truck className="absolute bottom-3 right-4 w-12 h-12 text-[#16a34a]" fill="#f0fdf4" strokeWidth={1.5} />
-              </div>
+
             </div>
 
             <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
@@ -169,7 +155,7 @@ function TrackOrderInner() {
                   <div className="relative">
                     {/* Continuous Vertical Line */}
                     <div className="absolute left-[23px] top-2 bottom-8 w-[2px] bg-gray-200"></div>
-                    
+
                     <div className="space-y-0 relative z-10">
                       {trackingData.steps.map((step: any, index: number) => {
                         const isCompleted = step.completed;
@@ -285,7 +271,8 @@ function TrackOrderInner() {
 
                   <button className="w-full py-2.5 bg-white border border-[#16a34a] text-[#15803d] rounded-xl text-sm font-bold hover:bg-[#f0fdf4] transition-colors flex items-center justify-center gap-2 shadow-sm">
                     <MessageCircle className="w-4 h-4" />
-                    Contact Support
+                    <Link href="/contact">
+                      Contact Support</Link>
                   </button>
                 </div>
 

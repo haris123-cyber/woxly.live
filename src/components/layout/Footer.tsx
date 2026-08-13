@@ -123,25 +123,23 @@ export function Footer() {
           <div className="flex flex-col items-center lg:items-end">
             <span className="text-[10px] font-bold text-gray-500 tracking-[0.15em] uppercase mb-3 text-center lg:text-right">SECURE PAYMENTS</span>
             <div className="flex flex-wrap justify-center lg:justify-end gap-2">
-              <div className="w-[50px] h-[32px] bg-white border border-gray-200 rounded flex items-center justify-center">
-                <span className="text-[12px] font-bold text-gray-700 tracking-tighter">UPI</span>
+              <div className="w-[50px] h-[32px] bg-white border border-gray-200 rounded flex items-center justify-center p-1">
+                <img src="/payments/upi.svg" alt="UPI" className="w-full h-full object-contain" />
               </div>
-              <div className="w-[50px] h-[32px] bg-white border border-gray-200 rounded flex items-center justify-center overflow-hidden relative">
-                <div className="w-[18px] h-[18px] rounded-full bg-[#EB001B] absolute left-[8px]"></div>
-                <div className="w-[18px] h-[18px] rounded-full bg-[#F79E1B] absolute right-[8px] mix-blend-multiply opacity-90"></div>
+              <div className="w-[50px] h-[32px] bg-white border border-gray-200 rounded flex items-center justify-center p-1">
+                <img src="/payments/mastercard.svg" alt="Mastercard" className="w-full h-full object-contain" />
               </div>
-              <div className="w-[50px] h-[32px] bg-white border border-gray-200 rounded flex items-center justify-center">
-                <span className="text-[14px] font-bold text-[#1434CB] italic">VISA</span>
+              <div className="w-[50px] h-[32px] bg-white border border-gray-200 rounded flex items-center justify-center p-1.5">
+                <img src="/payments/visa.png.png" alt="Visa" className="w-full h-full object-contain" />
               </div>
-              <div className="w-[50px] h-[32px] bg-white border border-gray-200 rounded flex items-center justify-center">
-                <span className="text-[10px] font-bold text-[#00AEEF]">RuPay</span>
+              <div className="w-[50px] h-[32px] bg-white border border-gray-200 rounded flex items-center justify-center p-1">
+                <img src="/payments/rupay.png" alt="RuPay" className="w-full h-full object-contain" />
               </div>
-              <div className="w-[50px] h-[32px] bg-white border border-gray-200 rounded flex items-center justify-center gap-[2px]">
-                <span className="text-[13px] font-medium text-gray-600">G</span>
-                <span className="text-[13px] font-medium text-gray-500">Pay</span>
+              <div className="w-[50px] h-[32px] bg-white border border-gray-200 rounded flex items-center justify-center p-1.5">
+                <img src="/payments/gpay.svg" alt="Google Pay" className="w-full h-full object-contain" />
               </div>
-              <div className="w-[50px] h-[32px] bg-white border border-gray-200 rounded flex items-center justify-center">
-                <span className="text-[9px] font-bold text-[#5f259f]">PhonePe</span>
+              <div className="w-[50px] h-[32px] bg-white border border-gray-200 rounded flex items-center justify-center p-1">
+                <img src="/payments/phonepe.png" alt="PhonePe" className="w-full h-full object-contain" />
               </div>
             </div>
           </div>

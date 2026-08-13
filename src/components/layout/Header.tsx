@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, Suspense, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Search, ShoppingBag, Menu, Heart, User, Home, Package } from "lucide-react";
+import { Search, ShoppingBag, Menu, Heart, User, Home, Package, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/store/useCartStore";
 import { useUIStore } from "@/store/useUIStore";
@@ -15,6 +15,19 @@ export function Header() {
   const itemCount = useCartStore((state) => state.getItemCount());
   const watchlistCount = useWatchlistStore((state) => state.getWatchlistCount());
   const { toggleMobileMenu } = useUIStore();
+
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsProfileDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     setIsMounted(true);
@@ -62,7 +75,7 @@ export function Header() {
                 suppressHydrationWarning
                 type="text"
                 placeholder="Search..."
-                className="w-full h-10 sm:h-11 pl-10 sm:pl-11 pr-4 rounded-full border border-border/80 bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm placeholder:text-muted-foreground/60 shadow-sm"
+                className="w-full h-10 sm:h-11 pl-10 sm:pl-11 pr-4 rounded-full border border-border/80 bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[16px] sm:text-sm placeholder:text-muted-foreground/60 shadow-sm"
               />
             </div>
           </div>
@@ -71,11 +84,11 @@ export function Header() {
           <Button
             variant="ghost"
             size="icon"
-            className={`sm:hidden relative shrink-0 rounded-full w-9 h-9 transition-all duration-300 ${isMounted && itemCount > 0 ? '' : pathname === '/cart' ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:text-primary hover:bg-muted/50'}`}
+            className={`sm:hidden relative shrink-0 rounded-full w-9 h-9 transition-all duration-300 ${isMounted && itemCount > 0 ? '' : pathname === '/cart' ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:text-primary hover:bg-muted/50'}`}
             asChild
           >
             <Link href="/cart">
-              <ShoppingBag className="w-7 h-7" />
+              <ShoppingBag className="w-8 h-8" />
               {isMounted && itemCount > 0 && (
                 <span className="absolute top-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-[#2563eb] text-[10px] font-bold text-white border border-background">
                   {itemCount > 99 ? "99+" : itemCount}
@@ -107,7 +120,7 @@ export function Header() {
             <Button
               variant="ghost"
               size="icon"
-              className={`relative w-10 h-10 transition-all duration-300 rounded-full ${isMounted && itemCount > 0 ? 'bg-primary/10 text-primary shadow-[0_0_15px_rgba(37,99,235,0.4)]' : pathname === '/cart' ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:text-primary hover:bg-muted/50'}`}
+              className={`relative w-10 h-10 transition-all duration-300 rounded-full ${pathname === '/cart' ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:text-primary hover:bg-muted/50'}`}
               asChild
             >
               <Link href="/cart">
@@ -120,17 +133,39 @@ export function Header() {
               </Link>
             </Button>
 
-            {/* Profile */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className={`w-10 h-10 rounded-full transition-colors ${pathname === '/account' ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:text-primary hover:bg-muted/50'}`}
-              asChild
-            >
-              <Link href="/account" aria-label="Profile">
+            {/* Profile Dropdown */}
+            <div className="relative" ref={dropdownRef}>
+              <Button
+                variant="ghost"
+                size="icon"
+                className={`w-10 h-10 rounded-full transition-colors ${isProfileDropdownOpen ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:text-primary hover:bg-muted/50'}`}
+                onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                aria-label="Profile"
+              >
                 <User className="w-6 h-6" />
-              </Link>
-            </Button>
+              </Button>
+
+              {isProfileDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border border-gray-100 py-1.5 z-50 animate-in fade-in zoom-in duration-200">
+                  <Link
+                    href="/login"
+                    className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                    onClick={() => setIsProfileDropdownOpen(false)}
+                  >
+                    <LogIn className="w-4 h-4 mr-2.5 text-gray-500" />
+                    Login
+                  </Link>
+                  <Link
+                    href="/account"
+                    className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                    onClick={() => setIsProfileDropdownOpen(false)}
+                  >
+                    <User className="w-4 h-4 mr-2.5 text-gray-500" />
+                    Profile
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 

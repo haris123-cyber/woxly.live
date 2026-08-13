@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/product/ProductCard";
 import { HeroSlider } from "@/components/home/HeroSlider";
 import { PRODUCTS } from "@/lib/mock-data";
-import { ChevronRight, ShieldCheck, Headphones, ArrowRight, Mail } from "lucide-react";
+import { ChevronRight, ShieldCheck, Headphones, ArrowRight, Mail, Bell } from "lucide-react";
 import { IconTruck, IconRefresh, IconLock, IconCash } from "@tabler/icons-react";
 
 // Reusable Product Carousel Component
@@ -26,7 +26,7 @@ const ProductCarousel = ({
       <h2 className="font-heading text-lg sm:text-2xl font-bold mb-1">{title}</h2>
       <div className="flex items-center justify-between gap-0 sm:gap-0 mb-1">
         {description ? (
-          <p className="text-[10px] sm:text-xs text-zinc-500 uppercase tracking-[0.12em] font-medium truncate min-w-0 flex-1 mb-">
+          <p className="text-[10px] sm:text-xs text-zinc-500 uppercase tracking-[0.12em] font-medium line-clamp-2 sm:truncate min-w-0 flex-1">
             {description}
           </p>
         ) : (
@@ -116,8 +116,8 @@ export default function Home() {
       <section className="container mx-auto px-5 sm:px-6 py-6">
         <h2 className="font-heading text-lg sm:text-2xl font-bold mb-0">Shop by Category</h2>
         <div className="flex items-center justify-between gap-3 sm:gap-4 mb-4">
-          <p className="text-[10px] sm:text-xs text-zinc-500 uppercase tracking-[0.12em] font-medium truncate min-w-0 flex-1">
-            Browse everything you need. From groceries to fashion and more.
+          <p className="text-[10px] sm:text-xs text-zinc-500 uppercase tracking-[0.12em] font-medium line-clamp-2 sm:truncate min-w-0 flex-1">
+            Clean categories. Faster discovery.
           </p>
           <Link
             href="/shop"
@@ -219,7 +219,7 @@ export default function Home() {
       {fruitsProducts.length > 0 && (
         <ProductCarousel
           title="Fresh Fruits & Veg"
-          description="Farm-fresh produce picked daily. Delivered to your door."
+          description="Farm-fresh produce picked daily."
           products={fruitsProducts}
           link="/shop"
           prependElement={fruitsPromo}
@@ -254,7 +254,7 @@ export default function Home() {
           </section>
           <ProductCarousel
             title="Fashion & Apparel"
-            description="Latest trends and essentials. Start with the right style."
+            description="Everyday wear. Every size. Every style."
             products={fashionProducts}
             link="/shop"
           />
@@ -388,7 +388,7 @@ export default function Home() {
       )}
 
       {/* Bottom Banner Slots */}
-      <section className="container mx-auto px-5 sm:px-6 py-6 sm:py-8">
+      <section className="container mx-auto px-2 sm:px-6 py-6 sm:py-8">
         <div className="flex flex-col gap-2 sm:gap-2">
           <Link
             href="/shop"
@@ -435,35 +435,68 @@ export default function Home() {
         </div>
 
         {/* Newsletter */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 lg:gap-12 mt-5">
-          <div className="max-w-md">
-            <h2 className="font-heading text-2xl sm:text-3xl font-bold text-foreground mb-2">
-              Stay in the loop
-            </h2>
-            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-              Get updates on new products, promotions, and exclusive offers.
-            </p>
-          </div>
+        <div className="mt-6 mb-2">
+          <div className="bg-[#14452f] rounded-[10px] sm:rounded-[20px] p-6 sm:p-8 lg:px-10 relative overflow-hidden flex flex-col md:flex-row items-center justify-between">
+            {/* Background Pattern */}
+            <div className="absolute -bottom-10 -right-10 opacity-30 pointer-events-none">
+              <svg width="250" height="250" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M100 0C150 0 200 50 200 100C200 150 150 200 100 200C50 200 0 150 0 100C0 50 50 0 100 0Z" fill="#2d6a4f" />
+                <path d="M50 50C100 50 150 100 150 150C100 150 50 100 50 50Z" fill="#1b4332" />
+                <path d="M150 50C100 50 50 100 50 150C100 150 150 100 150 50Z" fill="#40916c" />
+              </svg>
+            </div>
 
-          <div className="w-full lg:max-w-lg">
-            <form className="flex flex-col sm:flex-row gap-2.5" action="#">
-              <input
-                type="email"
-                name="email"
-                placeholder="email@example.com"
-                className="w-full sm:flex-1 h-12 px-4 rounded-lg bg-zinc-100 border-0 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
-              />
-              <Button
-                type="submit"
-                className="w-full sm:w-auto h-12 px-5 rounded-lg bg-zinc-500 hover:bg-zinc-600 text-white font-medium border-0 gap-2 shrink-0"
-              >
-                <Mail className="w-4 h-4" />
-                Subscribe
-              </Button>
-            </form>
-            <p className="text-xs text-muted-foreground mt-2.5">
-              We respect your privacy. No spam, ever. Unsubscribe anytime.
-            </p>
+            <div className="relative z-10 max-w-lg w-full">
+              <h2 className="font-heading text-[22px] sm:text-[26px] font-bold text-white mb-1.5">
+                Stay in the loop
+              </h2>
+              <p className="text-[12px] sm:text-[13px] text-green-50/90 mb-5 leading-snug">
+                Get updates on new products,<br className="hidden sm:block" />promotions, and exclusive offers.
+              </p>
+
+              <form className="flex w-full bg-white p-1 rounded-full items-center mb-3 flex-row shadow-lg border border-white" action="#">
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Enter your email"
+                  className="flex-1 w-full h-10 px-4 bg-transparent border-none text-[13px] sm:text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-0"
+                  required
+                />
+                <Button
+                  type="submit"
+                  className="h-9 sm:h-10 px-5 sm:px-6 rounded-full bg-[#1b5e20] hover:bg-[#14452f] text-white text-[12px] sm:text-[13px] font-medium border-0 gap-1.5 shrink-0 transition-colors"
+                >
+                  Subscribe <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                </Button>
+              </form>
+              <div className="flex items-center gap-1.5 text-[10px] sm:text-[11px] text-green-100/90 ml-1">
+                <ShieldCheck className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                <span>No spam. Unsubscribe anytime.</span>
+              </div>
+            </div>
+
+            {/* Right Illustration */}
+            <div className="relative z-10 hidden md:flex items-center justify-center shrink-0 w-48 h-32 mr-4 lg:mr-10">
+              <div className="relative w-36 h-24">
+                {/* Back of envelope */}
+                <div className="absolute inset-0 bg-[#2d6a4f] rounded-lg shadow-md" style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)' }}></div>
+                {/* Letter inside */}
+                <div className="absolute -top-7 left-1/2 -translate-x-1/2 w-[85%] h-[110%] bg-[#f8f9fa] rounded shadow-sm border border-gray-100 flex flex-col p-3.5 gap-2.5">
+                  <div className="w-1/3 h-1.5 bg-gray-200 rounded-full"></div>
+                  <div className="w-full h-1.5 bg-gray-200 rounded-full"></div>
+                  <div className="w-5/6 h-1.5 bg-gray-200 rounded-full"></div>
+                  <div className="w-2/3 h-1.5 bg-gray-200 rounded-full"></div>
+                </div>
+                {/* Front flaps */}
+                <div className="absolute inset-0 bg-[#40916c] rounded-lg shadow-[0_-2px_10px_rgba(0,0,0,0.15)]" style={{ clipPath: 'polygon(0 0, 50% 50%, 100% 0, 100% 100%, 0 100%)' }}></div>
+                <div className="absolute inset-0 bg-[#1b4332] rounded-lg opacity-30" style={{ clipPath: 'polygon(0 100%, 50% 50%, 100% 100%)' }}></div>
+
+                {/* Notification Bell */}
+                <div className="absolute -top-3 -right-3 w-9 h-9 bg-[#f59e0b] rounded-full flex items-center justify-center shadow-lg border-2 border-white">
+                  <Bell className="w-4 h-4 text-white fill-white" />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

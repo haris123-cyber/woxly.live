@@ -24,6 +24,7 @@ import {
   ChevronRight,
   ChevronLeft,
   ArrowLeft,
+  ArrowRight,
   Percent,
   BadgePercent,
   ShieldCheck,
@@ -36,6 +37,7 @@ import {
   Package,
   MapPin,
   Zap,
+  Paperclip,
 } from "lucide-react";
 
 const WhatsAppIcon = ({ className }: { className?: string }) => (
@@ -91,13 +93,14 @@ export default function ProductDetailPage() {
     product?.colors?.[0] || "Brown"
   );
   const [selectedSize, setSelectedSize] = useState<string | undefined>(
-    product?.sizes?.[0] || "8"
+    "S"
   );
   const [imageIndex, setImageIndex] = useState(0);
   const [activeTab, setActiveTab] = useState<"description" | "reviews">("description");
   const [isWarrantyOpen, setIsWarrantyOpen] = useState(false);
   const [isDeliveryOpen, setIsDeliveryOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [fullscreenReviewImage, setFullscreenReviewImage] = useState<string | null>(null);
 
   const [emblaRefMobile, emblaApiMobile] = useEmblaCarousel({ loop: true });
   const [emblaRefDesktop, emblaApiDesktop] = useEmblaCarousel({ loop: true });
@@ -202,7 +205,7 @@ export default function ProductDetailPage() {
   };
   const colorLabels = product?.colors || ["Brown", "Light Brown", "Black"];
   const colors = colorLabels.map((c) => colorMap[c] || "#8B5E3C");
-  const sizeLabels = product?.sizes || ["6", "8", "10", "14", "18", "20"];
+  const sizeLabels = ["S", "M", "L", "XL", "XXL"];
   const gallery = [
     product.image,
     "/images/product_placeholder.png",
@@ -371,9 +374,13 @@ export default function ProductDetailPage() {
               {review.images && review.images.length > 0 && (
                 <div className="flex gap-2 overflow-x-auto hide-scrollbar mt-2">
                   {review.images.map((img, i) => (
-                    <div key={i} className="relative w-16 h-16 rounded-md overflow-hidden shrink-0 border border-gray-200">
+                    <button
+                      key={i}
+                      onClick={() => setFullscreenReviewImage(img)}
+                      className="relative w-16 h-16 rounded-md overflow-hidden shrink-0 border border-gray-200 cursor-zoom-in hover:opacity-90 transition-opacity"
+                    >
                       <Image src={img} alt={`Review image ${i + 1}`} fill className="object-cover" />
-                    </div>
+                    </button>
                   ))}
                 </div>
               )}
@@ -445,8 +452,8 @@ export default function ProductDetailPage() {
   const renderOfferTickets = () => {
     const tickets = [
       { id: 1, title: "Online payment offer", discount: "10% OFF", subtitle: "On all products", color: "bg-[#dc2626]" },
-      { id: 2, title: "First order offer", discount: "15% OFF", subtitle: "For new users", color: "bg-[#2563eb]" },
-      { id: 3, title: "Special weekend sale", discount: "20% OFF", subtitle: "On select items", color: "bg-[#16a34a]" },
+      { id: 2, title: "First order offer", discount: "15% OFF", subtitle: "For new users", color: "bg-[#dc2626]" },
+      { id: 3, title: "Special weekend sale", discount: "20% OFF", subtitle: "On select items", color: "bg-[#dc2626]" },
     ];
 
     return (
@@ -590,7 +597,7 @@ export default function ProductDetailPage() {
 
           {/* Description */}
           <div className="flex items-start justify-between gap-4 mb-4">
-            <p className="text-sm text-gray-600 leading-relaxed">
+            <p className="text-sm text-black leading-relaxed">
               {product.description || "Healthy and nutritious oats to kickstart your day with energy."}
             </p>
             <div className="flex items-center gap-1.5 shrink-0 px-2 py-0.5 mt-0.5">
@@ -632,7 +639,7 @@ export default function ProductDetailPage() {
                     <button
                       key={colorName}
                       onClick={() => setSelectedColor(colorName)}
-                      className={`relative w-10 h-7 rounded-md border-2 overflow-hidden ${selectedColor === colorName ? "border-gray-900" : "border-transparent"}`}
+                      className={`relative w-10 h-8 rounded-md border-2 overflow-hidden ${selectedColor === colorName ? "border-primary" : "border-transparent"}`}
                     >
                       <div className="absolute inset-0 m-[2px] rounded-sm border border-gray-200" style={{ backgroundColor: colors[i] }} />
                     </button>
@@ -644,14 +651,16 @@ export default function ProductDetailPage() {
               <div className="flex flex-col gap-2 border-b border-gray-100 pb-6">
                 <div className="flex items-center justify-between">
                   <span className="text-[13px] font-semibold text-gray-900">Size: <span className="font-bold">{selectedSize}</span></span>
-                  <button className="text-[11px] font-medium text-gray-500 underline hover:text-gray-900">View Size Chart</button>
+                  <button className="flex items-center gap-1.5 text-[11px] font-medium text-blue-600 hover:text-blue-700 transition-colors">
+                    View size chart
+                  </button>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {sizeLabels.map((size) => (
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
-                      className={`h-9 min-w-[3.25rem] px-3 rounded-md text-[13px] font-bold border transition-colors ${selectedSize === size ? "bg-gray-100 border-gray-900 text-gray-900" : "bg-white border-gray-200 text-gray-600 hover:border-gray-300"}`}
+                      className={`h-9 min-w-[3.25rem] px-3 rounded-md text-[13px] font-bold border transition-colors ${selectedSize === size ? "bg-gray-100 border-primary border-2 text-gray-900" : "bg-white border-gray-200 text-gray-600 hover:border-gray-300"}`}
                     >
                       {size}
                     </button>
@@ -734,40 +743,49 @@ export default function ProductDetailPage() {
 
           {/* Offers & Discounts */}
           <div className="mb-6 mt-6">
-            <h3 className="text-[10px] text-muted-foreground uppercase tracking-[0.2em] mb-4 font-semibold">
-              Offers & Discounts
-            </h3>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-[10px] text-muted-foreground uppercase tracking-[0.2em] font-semibold">
+                Offers & Discounts
+              </h3>
+              <Link
+                href="#"
+                className="text-[9px] sm:text-xs font-bold uppercase tracking-[0.12em] text-black-600 hover:text-black-700 shrink-0 inline-flex items-center gap-1 text-muted-foreground"
+              >
+                See all
+                <ArrowRight className="w-3.5 h-3.5" strokeWidth={2} />
+              </Link>
+            </div>
 
             {renderOfferTickets()}
 
             <div className="grid grid-cols-3 border border-gray-100 rounded-sm py-3 divide-x divide-gray-100 mb-6 mt-4">
-              <div className="flex items-center justify-center gap-2 px-1">
+              <div className="flex items-center justify-center gap-1.5 px-1">
                 <div className="w-8 h-8 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
                   <IconTruckDelivery stroke={1.5} className="w-4 h-4 text-[#1e1b4b]" />
                 </div>
                 <div className="flex flex-col text-left">
-                  <span className="text-[10px] sm:text-[11px] font-bold text-[#1e1b4b] leading-tight">Free Delivery</span>
-                  <span className="text-[9px] sm:text-[10px] text-gray-500 leading-tight">On all orders</span>
+                  <span className="text-[11px] sm:text-[12px] font-bold text-[#1e1b4b] leading-tight">Free Delivery</span>
+                  <span className="text-[10px] sm:text-[11px] text-gray-500 leading-tight">On all orders</span>
                 </div>
               </div>
 
-              <div className="flex items-center justify-center gap-2 px-1">
+              <div className="flex items-center justify-center gap-1.5 px-1">
                 <div className="w-8 h-8 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
                   <IconTruckReturn stroke={1.5} className="w-4 h-4 text-[#1e1b4b]" />
                 </div>
                 <div className="flex flex-col text-left">
-                  <span className="text-[10px] sm:text-[11px] font-bold text-[#1e1b4b] leading-tight">No Return</span>
-                  <span className="text-[9px] sm:text-[10px] text-gray-500 leading-tight">Check policy</span>
+                  <span className="text-[11px] sm:text-[12px] font-bold text-[#1e1b4b] leading-tight">No Return</span>
+                  <span className="text-[10px] sm:text-[11px] text-gray-500 leading-tight">Check policy</span>
                 </div>
               </div>
 
-              <div className="flex items-center justify-center gap-2 px-1">
+              <div className="flex items-center justify-center gap-1.5 px-1">
                 <div className="w-8 h-8 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
                   <IconShieldCheck stroke={1.5} className="w-4 h-4 text-[#1e1b4b]" />
                 </div>
                 <div className="flex flex-col text-left">
-                  <span className="text-[10px] sm:text-[11px] font-bold text-[#1e1b4b] leading-tight">High Quality</span>
-                  <span className="text-[9px] sm:text-[10px] text-gray-500 leading-tight">Premium material</span>
+                  <span className="text-[11px] sm:text-[12px] font-bold text-[#1e1b4b] leading-tight">High Quality</span>
+                  <span className="text-[10px] sm:text-[11px] text-gray-500 leading-tight">Premium material</span>
                 </div>
               </div>
             </div>
@@ -790,7 +808,7 @@ export default function ProductDetailPage() {
                   )}
                 </button>
                 {isWarrantyOpen && (
-                  <div className="pb-4 text-sm text-muted-foreground leading-relaxed">
+                  <div className="pb-4 text-sm text-black/70 leading-relaxed">
                     All products come with a standard 1-year warranty covering manufacturing defects. Extended warranty options are available at checkout.
                   </div>
                 )}
@@ -811,7 +829,7 @@ export default function ProductDetailPage() {
                   )}
                 </button>
                 {isDeliveryOpen && (
-                  <div className="pb-4 text-sm text-muted-foreground leading-relaxed">
+                  <div className="pb-4 text-sm text-black/70 leading-relaxed">
                     Free standard delivery on orders over ₹50. Next day delivery available for orders placed before 2 PM. Tracking information will be provided once dispatched.
                   </div>
                 )}
@@ -845,7 +863,7 @@ export default function ProductDetailPage() {
             </div>
 
             {activeTab === "description" && (
-              <p className="text-sm text-muted-foreground leading-relaxed">
+              <p className="text-sm text-foreground leading-relaxed">
                 {product.description ||
                   "Coorg blend. 75% chicory-free. Strong, South Indian style. Add up to 3 extra input fields for customers (e.g. gift note, review text). Maximum 3 custom fields allowed."}
               </p>
@@ -1120,9 +1138,23 @@ export default function ProductDetailPage() {
 
             {/* Offers & Discounts Desktop */}
             <div className="mb-6 mt-6">
-              <h3 className="text-[10px] text-muted-foreground uppercase tracking-[0.2em] mb-4 font-semibold">
-                Offers & Discounts
-              </h3>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-[10px] text-muted-foreground uppercase tracking-[0.2em] font-semibold">
+                  Offers & Discounts
+                </h3>
+                <Link
+                  href="#"
+                  className="text-[10px] sm:text-md font-bold uppercase tracking-[0.12em] text-black-600 hover:text-black-700 shrink-0 inline-flex items-center gap-1 text-muted-foreground"
+                >
+                  See all
+                  <ArrowRight className="w-3.5 h-3.5" strokeWidth={2} />
+                </Link>
+              </div>
+
+
+
+
+
 
               {renderOfferTickets()}
 
@@ -1175,7 +1207,7 @@ export default function ProductDetailPage() {
                     )}
                   </button>
                   {isWarrantyOpen && (
-                    <div className="pb-4 text-sm text-muted-foreground leading-relaxed">
+                    <div className="pb-4 text-sm text-black leading-relaxed">
                       All products come with a standard 1-year warranty covering manufacturing defects. Extended warranty options are available at checkout.
                     </div>
                   )}
@@ -1196,7 +1228,7 @@ export default function ProductDetailPage() {
                     )}
                   </button>
                   {isDeliveryOpen && (
-                    <div className="pb-4 text-sm text-muted-foreground leading-relaxed">
+                    <div className="pb-4 text-sm text-black/70 leading-relaxed">
                       Free standard delivery on orders over ₹50. Next day delivery available for orders placed before 2 PM. Tracking information will be provided once dispatched.
                     </div>
                   )}
@@ -1262,11 +1294,9 @@ export default function ProductDetailPage() {
 
       {/* ── MANUFACTURER BANNERS ── */}
       <div className=" py-10 lg:py-12 border-t  border-gray-200">
-        <div className="container mx-auto px-5 lg:px-6 max-w-7xl">
-          <h2 className="text-[20px] lg:text-[24px] font-bold text-gray-900 mb-6">
-            From the manufacturer
-          </h2>
-          <div className="flex flex-col gap-6">
+        <div className="container mx-auto px-1 lg:px-6 max-w-7xl">
+
+          <div className="flex flex-col gap-3">
             {/* Banner 1 */}
             <div className="w-full aspect-[16/9] lg:aspect-[21/9] relative bg-[#f4f4f5]  overflow-hidden shadow-sm cursor-pointer group">
               <Image
@@ -1345,6 +1375,37 @@ export default function ProductDetailPage() {
                   <Image src={img} alt="" fill className="object-cover bg-white" />
                 </button>
               ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Review Image Lightbox */}
+      <AnimatePresence>
+        {fullscreenReviewImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center"
+            onClick={() => setFullscreenReviewImage(null)}
+          >
+            <button
+              onClick={() => setFullscreenReviewImage(null)}
+              className="absolute top-6 right-6 w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-colors"
+            >
+              <Plus className="w-6 h-6 rotate-45" />
+            </button>
+
+            <div className="relative w-full max-w-4xl aspect-square sm:aspect-video mx-4" onClick={(e) => e.stopPropagation()}>
+              <Image
+                src={fullscreenReviewImage}
+                alt="Review image"
+                fill
+                className="object-contain"
+                sizes="100vw"
+                priority
+              />
             </div>
           </motion.div>
         )}

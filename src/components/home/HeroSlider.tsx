@@ -152,23 +152,7 @@ export function HeroSlider() {
           ))}
         </div>
 
-        {/* Prev / Next buttons */}
-        <button
-          type="button"
-          onClick={prev}
-          aria-label="Previous slide"
-          className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 w-5 h-5 sm:w-11 sm:h-11 rounded-full bg-white/70 hover:bg-white text-zinc-800 shadow-md flex items-center justify-center transition-all opacity-90 hover:opacity-100"
-        >
-          <ChevronLeft className="w-3 h-3 sm:w-5 sm:h-5" />
-        </button>
-        <button
-          type="button"
-          onClick={next}
-          aria-label="Next slide"
-          className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 w-5 h-5 sm:w-11 sm:h-11 rounded-full bg-white/70 hover:bg-white text-zinc-800 shadow-md flex items-center justify-center transition-all opacity-90 hover:opacity-100"
-        >
-          <ChevronRight className="w-3 h-3 sm:w-5 sm:h-5" />
-        </button>
+
 
         {/* Navigation dots */}
         <div className="absolute bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
@@ -178,7 +162,7 @@ export function HeroSlider() {
               type="button"
               onClick={() => scrollTo(idx)}
               aria-label={`Go to slide ${idx + 1}`}
-              className={`h-1.5 rounded-full transition-all duration-300 border-0 p-0 cursor-pointer ${idx === current ? "w-10 sm:w-14 bg-primary" : "w-2 sm:w-2.5 bg-white/50"
+              className={`h-2 rounded-full transition-all duration-300 border-0 p-0 cursor-pointer ${idx === current ? "w-10 sm:w-14 bg-primary" : "w-2 sm:w-2 bg-white/50"
                 }`}
             />
           ))}

@@ -101,7 +101,7 @@ export default function OrderSuccessPage() {
 
             <div className="flex items-start justify-between relative px-2">
               {/* Connecting Lines */}
-              <div className="absolute top-5 left-8 right-[50%] h-[2px] bg-green-500" />
+              <div className="absolute top-5 left-8 right-[50%] h-[2px] bg-green-600" />
               <div className="absolute top-5 left-[50%] right-8 h-[2px] bg-gray-100" />
 
               {/* Step 1 */}

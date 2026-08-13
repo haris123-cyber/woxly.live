@@ -181,36 +181,21 @@ export default function CheckoutPage() {
                           type="button"
                           onClick={() => {
                             setFullName(addr.name || "");
+                            setEmail(addr.email || "");
 
                             // Sanitize phone to exactly 10 digits to pass validation (for legacy dummy data)
                             const sanitizedPhone = (addr.phone || "").replace(/\D/g, '').slice(-10);
                             setPhone(sanitizedPhone.padEnd(10, '0'));
 
                             setAddressLine(addr.addressLine || "");
+                            setCity(addr.city || "");
+                            setStateValue(addr.state || "");
 
                             const pcode = (addr.pinCode || "")
                               .replace(/\D/g, "")
                               .slice(0, 6);
 
                             setPincode(pcode);
-
-                            // Let the pincode API determine City + State
-                            if (pcode.length === 6) {
-                              fetch(`https://api.postalpincode.in/pincode/${pcode}`)
-                                .then(res => res.json())
-                                .then(data => {
-                                  if (data?.[0]?.Status === "Success") {
-                                    const postOffice = data[0].PostOffice[0];
-
-                                    setCity(postOffice.District || "");
-                                    setStateValue(postOffice.State || "");
-                                  }
-                                })
-                                .catch(err => console.error("Pincode lookup failed:", err));
-                            } else {
-                              setCity("");
-                              setStateValue("");
-                            }
 
                             setShowSavedAddresses(false);
                           }}
