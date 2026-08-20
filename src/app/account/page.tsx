@@ -15,6 +15,8 @@ import {
 import { useAddressStore, Address } from "@/store/useAddressStore";
 import { useRewardStore } from "@/store/useRewardStore";
 import { useCartStore } from "@/store/useCartStore";
+import { useAuthStore } from "@/store/useAuthStore";
+import { NotLoggedInView } from "@/components/auth/NotLoggedInView";
 import { toast } from "sonner";
 
 const navItems = [
@@ -797,6 +799,12 @@ function AccountPageInner() {
   const [showMobileMenu, setShowMobileMenu] = useState(!isValidTab);
   const [orders, setOrders] = useState<OrderItem[]>(initialOrders);
   const { coins } = useRewardStore();
+  const { isLoggedIn, login } = useAuthStore();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
     if (tabParam && ['orders', 'returns', 'details', 'address', 'rewards'].includes(tabParam)) {
@@ -857,6 +865,10 @@ function AccountPageInner() {
     address: <AddressPanel />,
     rewards: <RewardPanel />,
   };
+
+  if (isMounted && !isLoggedIn) {
+    return <NotLoggedInView message="Sign in to view your account and enjoy a personalized experience." />;
+  }
 
   return (
     <div className="min-h-screen bg-[#f8fafc] pb-24 lg:pb-12">

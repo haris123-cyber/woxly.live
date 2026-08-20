@@ -3,11 +3,12 @@
 import { useState, useEffect, Suspense, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Search, ShoppingBag, Menu, Heart, User, Home, Package, LogIn } from "lucide-react";
+import { Search, ShoppingBag, Menu, Heart, User, Home, Package, LogIn, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/store/useCartStore";
 import { useUIStore } from "@/store/useUIStore";
 import { useWatchlistStore } from "@/store/useWatchlistStore";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export function Header() {
   const pathname = usePathname();
@@ -15,6 +16,7 @@ export function Header() {
   const itemCount = useCartStore((state) => state.getItemCount());
   const watchlistCount = useWatchlistStore((state) => state.getWatchlistCount());
   const { toggleMobileMenu } = useUIStore();
+  const { isLoggedIn, login, logout } = useAuthStore();
 
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -97,6 +99,30 @@ export function Header() {
             </Link>
           </Button>
 
+          {/* Mobile Login Button */}
+          {isMounted && !isLoggedIn && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="sm:hidden relative shrink-0 rounded-full w-9 h-9 text-muted-foreground hover:text-primary hover:bg-muted/50"
+              onClick={login}
+              aria-label="Login"
+            >
+              <LogIn className="w-5 h-5" />
+            </Button>
+          )}
+          {isMounted && isLoggedIn && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="sm:hidden relative shrink-0 rounded-full w-9 h-9 text-muted-foreground hover:text-primary hover:bg-muted/50"
+              onClick={logout}
+              aria-label="Logout"
+            >
+              <LogOut className="w-5 h-5" />
+            </Button>
+          )}
+
           {/* Right Actions - Hidden on mobile */}
           <div className="hidden sm:flex items-center gap-2 shrink-0">
             {/* Watchlist */}
@@ -147,14 +173,29 @@ export function Header() {
 
               {isProfileDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border border-gray-100 py-1.5 z-50 animate-in fade-in zoom-in duration-200">
-                  <Link
-                    href="/login"
-                    className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                    onClick={() => setIsProfileDropdownOpen(false)}
-                  >
-                    <LogIn className="w-4 h-4 mr-2.5 text-gray-500" />
-                    Login
-                  </Link>
+                  {isMounted && isLoggedIn ? (
+                    <button
+                      className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors text-left"
+                      onClick={() => {
+                        logout();
+                        setIsProfileDropdownOpen(false);
+                      }}
+                    >
+                      <LogOut className="w-4 h-4 mr-2.5 text-gray-500" />
+                      Logout
+                    </button>
+                  ) : (
+                    <button
+                      className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors text-left"
+                      onClick={() => {
+                        login();
+                        setIsProfileDropdownOpen(false);
+                      }}
+                    >
+                      <LogIn className="w-4 h-4 mr-2.5 text-gray-500" />
+                      Login
+                    </button>
+                  )}
                   <Link
                     href="/account"
                     className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
