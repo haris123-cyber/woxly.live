@@ -799,12 +799,12 @@ function AccountPageInner() {
   const [showMobileMenu, setShowMobileMenu] = useState(!isValidTab);
   const [orders, setOrders] = useState<OrderItem[]>(initialOrders);
   const { coins } = useRewardStore();
-  const { isLoggedIn, login } = useAuthStore();
-  const [isMounted, setIsMounted] = useState(false);
+  // const { isLoggedIn, login } = useAuthStore();
+  // const [isMounted, setIsMounted] = useState(false);
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  // useEffect(() => {
+  //   setIsMounted(true);
+  // }, []);
 
   useEffect(() => {
     if (tabParam && ['orders', 'returns', 'details', 'address', 'rewards'].includes(tabParam)) {
@@ -866,9 +866,9 @@ function AccountPageInner() {
     rewards: <RewardPanel />,
   };
 
-  if (isMounted && !isLoggedIn) {
-    return <NotLoggedInView message="Sign in to view your account and enjoy a personalized experience." />;
-  }
+  // if (isMounted && !isLoggedIn) {
+  //   return <NotLoggedInView message="Sign in to view your account and enjoy a personalized experience." />;
+  // }
 
   return (
     <div className="min-h-screen bg-[#f8fafc] pb-24 lg:pb-12">
@@ -876,6 +876,13 @@ function AccountPageInner() {
 
         {/* ── Navigation / Menu (Visible on Desktop always, Visible on Mobile if showMobileMenu is true) ── */}
         <div className={`w-full lg:w-[340px] shrink-0 ${!showMobileMenu ? 'hidden lg:block' : 'block'}`}>
+
+          {/* Breadcrumbs */}
+          <div className="text-[13px] text-gray-500 flex items-center gap-2 mb-6">
+            <Link href="/" className="hover:text-primary transition-colors">Home</Link>
+            <span className="text-gray-300">/</span>
+            <span className="text-primary font-medium">Account</span>
+          </div>
 
           {/* Header Mobile Style */}
           <div className="flex items-center justify-between mb-6 lg:mb-8">

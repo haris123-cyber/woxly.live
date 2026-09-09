@@ -65,6 +65,7 @@ export default function Home() {
   const fashionProducts = PRODUCTS.filter(p => p.category === 'Fashion');
   const drinkProducts = PRODUCTS.filter(p => p.category === 'Beverages');
   const stationaryProducts = PRODUCTS.filter(p => p.category === 'Stationery');
+  const meatProducts = PRODUCTS.filter(p => p.category === 'Meat & Seafood');
 
   const categoryImages = [
     { name: "Vegetables & Fruits", image: "/images/product_placeholder.png" },
@@ -213,8 +214,8 @@ export default function Home() {
       {/* Specific Category Sections */}
       {fruitsProducts.length > 0 && (
         <>
-          <section className="container mx-auto px-5 sm:px-6 mt-6 mb-5">
-            <div className="relative rounded-md overflow-hidden bg-zinc-900 h-[105px] sm:h-64 md:h-80 flex items-center shadow-xl group">
+          <section className="container mx-auto px-5 sm:px-6 mt-2 mb-0">
+            <div className="relative rounded-md overflow-hidden bg-zinc-900 h-[110px] sm:h-64 md:h-80 flex items-center shadow-xl group">
               <Image
                 src="/images/hero_liquor.png"
                 alt="Dairy & Beverages"
@@ -247,8 +248,8 @@ export default function Home() {
 
       {fashionProducts.length > 0 && (
         <>
-          <section className="container mx-auto px-5 sm:px-6 mt-6">
-            <div className="relative rounded-md overflow-hidden bg-zinc-900 h-[105px] sm:h-64 md:h-80 flex items-center shadow-xl group">
+          <section className="container mx-auto px-5 sm:px-6 mt-0 mb-0">
+            <div className="relative rounded-md overflow-hidden bg-zinc-900 h-[110px] sm:h-64 md:h-80 flex items-center shadow-xl group">
               <Image
                 src="/images/hero_fashion.png"
                 alt="Trending Fashion"
@@ -281,8 +282,8 @@ export default function Home() {
 
       {drinkProducts.length > 0 && (
         <>
-          <section className="container mx-auto px-5 sm:px-6 mt-6 mb-5">
-            <div className="relative rounded-xl overflow-hidden bg-zinc-900 h-[140px] sm:h-64 md:h-80 flex items-center shadow-lg group">
+          <section className="container mx-auto px-5 sm:px-6 mt-0 mb-0">
+            <div className="relative rounded-md overflow-hidden bg-zinc-900 h-[110px] sm:h-64 md:h-80 flex items-center shadow-lg group">
               <Image
                 src="/images/hero_liquor.png"
                 alt="Premium Liquors"
@@ -328,19 +329,44 @@ export default function Home() {
         </>
       )}
 
-      <section className="container mx-auto px-5 sm:px-6 mt-6 mb-5">
-        <div className="relative rounded-md overflow-hidden bg-zinc-900 h-[105px] sm:h-64 md:h-80 flex items-center shadow-xl group">
-          <Image
-            src="/images/hero_liquor.png"
-            alt="Dairy & Beverages"
-            fill
-            className="object-cover opacity-80"
+      {meatProducts.length > 0 && (
+        <>
+          <section className="container mx-auto px-5 sm:px-6 mt-0 mb-0">
+            <div className="relative rounded-md overflow-hidden bg-zinc-900 h-[110px] sm:h-64 md:h-80 flex items-center shadow-lg group">
+              <Image
+                src="/images/hero_liquor.png"
+                alt="Fresh Meat & Seafood"
+                fill
+                className="object-cover opacity-80"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent" />
+              <div className="relative z-10 p-5 sm:p-8 md:p-12 w-[70%] sm:max-w-md flex flex-col items-start">
+                <h2 className="font-heading text-16 sm:text-3xl md:text-5xl font-extrabold mb-1 sm:mb-3 text-white drop-shadow-md leading-tight tracking-tight">
+                  Fresh Meat & Seafood
+                </h2>
+                <p className="text-white/90 text-[10px] sm:text-base mb-3 sm:mb-6 drop-shadow-sm font-medium leading-snug">
+                  Premium cuts and fresh catches delivered.
+                </p>
+                <Button asChild className="bg-[#8b5cf6] hover:bg-[#7c3aed] text-white rounded-xl font-bold border-0 text-[10px] sm:text-sm h-7 sm:h-10 px-4 sm:px-6 transition-colors shadow-none">
+                  <Link href="/shop">
+                    Explore <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 ml-1.5" />
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </section>
+          <ProductCarousel
+            title="Fresh Meat & Seafood"
+            description="Premium cuts and fresh catches delivered."
+            products={meatProducts}
+            link="/shop"
           />
+        </>
+      )}
 
-        </div>
-      </section>
 
-      <section className="container mx-auto px-5 sm:px-6 mt-6 mb-6">
+
+      <section className="container mx-auto px-5 sm:px-6 mt-0 mb-2">
         <div className="relative rounded-xl overflow-hidden bg-zinc-900 h-[200px] sm:h-64 md:h-80 flex items-center shadow-lg group">
           <Image
             src="/images/hero_liquor.png"

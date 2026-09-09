@@ -13,16 +13,16 @@ import { useEffect, useState } from "react";
 export default function WatchlistPage() {
   const router = useRouter();
   const { items, clearWatchlist } = useWatchlistStore();
-  const { isLoggedIn, login } = useAuthStore();
-  const [isMounted, setIsMounted] = useState(false);
+  // const { isLoggedIn, login } = useAuthStore();
+  // const [isMounted, setIsMounted] = useState(false);
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  // useEffect(() => {
+  //   setIsMounted(true);
+  // }, []);
 
-  if (isMounted && !isLoggedIn) {
-    return <NotLoggedInView message="Sign in to view your watchlist and enjoy a personalized experience." />;
-  }
+  // if (isMounted && !isLoggedIn) {
+  //   return <NotLoggedInView message="Sign in to view your watchlist and enjoy a personalized experience." />;
+  // }
 
   return (
     <div className="bg-background min-h-screen pt-4 lg:pt-0">

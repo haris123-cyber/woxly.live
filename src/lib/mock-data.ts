@@ -13,6 +13,7 @@ export const CATEGORIES = [
   { id: '10', name: 'Liquor', slug: 'liquor', icon: 'Wine' },
   { id: '11', name: 'Stationery', slug: 'stationery', icon: 'PenTool' },
   { id: '12', name: 'More', slug: 'more', icon: 'MoreHorizontal' },
+  { id: '13', name: 'Meat & Seafood', slug: 'meat-seafood', icon: 'Beef' },
 ];
 
 export const PRODUCTS: Product[] = [
@@ -405,6 +406,28 @@ export const PRODUCTS: Product[] = [
     id: '66', name: 'LED Desk Lamp', slug: 'desk-lamp', price: 2389,
     image: '/images/product_placeholder.png',
     category: 'More', brand: 'HomeGoods', rating: 4.7, reviews: 4, description: 'Adjustable LED desk lamp with dimming.', inStock: true
+  },
+  
+  // MEAT & SEAFOOD
+  {
+    id: '70', name: 'Fresh Chicken Breast 500g', slug: 'chicken-breast', price: 249,
+    image: '/images/product_placeholder.png',
+    category: 'Meat & Seafood', brand: 'Fresh Farm', rating: 4.8, reviews: 4, description: 'Tender and juicy chicken breast.', inStock: true
+  },
+  {
+    id: '71', name: 'Premium Atlantic Salmon 300g', slug: 'atlantic-salmon', price: 599, originalPrice: 699,
+    image: '/images/product_placeholder.png',
+    category: 'Meat & Seafood', brand: 'Ocean Catch', rating: 4.9, reviews: 4, description: 'Freshly caught atlantic salmon.', inStock: true, hasOffer: true
+  },
+  {
+    id: '72', name: 'Mutton Curry Cut 500g', slug: 'mutton-curry-cut', price: 649,
+    image: '/images/product_placeholder.png',
+    category: 'Meat & Seafood', brand: 'Fresh Farm', rating: 4.7, reviews: 4, description: 'Premium quality mutton for curries.', inStock: true
+  },
+  {
+    id: '73', name: 'Peeled Prawns 250g', slug: 'peeled-prawns', price: 349,
+    image: '/images/product_placeholder.png',
+    category: 'Meat & Seafood', brand: 'Ocean Catch', rating: 4.6, reviews: 4, description: 'Freshly peeled medium prawns.', inStock: true
   }
 ];
 

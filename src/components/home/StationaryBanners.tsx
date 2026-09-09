@@ -62,7 +62,7 @@ export function StationaryBanners() {
   }, [emblaApi, onSelect]);
 
   return (
-    <section className="container mx-auto px-3 sm:px-6 mt-6 mb-5">
+    <section className="container mx-auto px-3 sm:px-6 mt-0 mb-0">
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex touch-pan-y flex-row -ml-4">
           {slides.map((slide) => (
