@@ -44,22 +44,22 @@ export const PRODUCTS: Product[] = [
   // FRUITS & VEG
   {
     id: '5', name: 'Fresh Bananas 1kg', slug: 'fresh-bananas-1kg', price: 99,
-    image: '/images/product_placeholder.png',
+    image: '/images/veg/Bananas_product_.jpeg',
     category: 'Fruits & Veg', brand: 'Fresh Farm', rating: 4.6, reviews: 4, description: 'Fresh and organic bananas.', inStock: true
   },
   {
     id: '6', name: 'Green Apples 1kg', slug: 'green-apples-1kg', price: 269,
-    image: '/images/product_placeholder.png',
+    image: '/images/veg/Green_apples.jpeg',
     category: 'Fruits & Veg', brand: 'Fresh Farm', rating: 4.8, reviews: 4, description: 'Crisp and juicy green apples.', inStock: true
   },
   {
     id: '7', name: 'Fresh Strawberries 500g', slug: 'fresh-strawberries-500g', price: 389,
-    image: '/images/product_placeholder.png',
+    image: '/images/veg/Fresh_strawberries.jpeg',
     category: 'Fruits & Veg', brand: 'Berry Farm', rating: 4.9, reviews: 4, description: 'Sweet and fresh strawberries.', inStock: true
   },
   {
     id: '8', name: 'Fresh Avocados (Pack of 3)', slug: 'fresh-avocados', price: 309, originalPrice: 399,
-    image: '/images/product_placeholder.png',
+    image: '/images/veg/Fresh_avocados.jpeg',
     category: 'Fruits & Veg', brand: 'Fresh Farm', rating: 4.7, reviews: 4, description: 'Ripe and ready to eat avocados.', inStock: true,
     isSale: true, hasOffer: true
   },
@@ -291,12 +291,13 @@ export const PRODUCTS: Product[] = [
   // NEW FRUITS & VEG
   {
     id: '47', name: 'Fresh Oranges 1kg', slug: 'fresh-oranges', price: 189,
-    image: '/images/product_placeholder.png',
+    image: '/images/veg/Oranges_on_studio.jpeg',
     category: 'Fruits & Veg', brand: 'Fresh Farm', rating: 4.8, reviews: 4, description: 'Juicy and sweet fresh oranges.', inStock: true
   },
   {
     id: '48', name: 'Organic Broccoli 500g', slug: 'organic-broccoli', price: 149,
-    image: '/images/product_placeholder.png',
+    image: '/images/veg/Organic_broccoli.jpeg',
+    images: ['/images/veg/Organic_broccoli_2.jpg'],
     category: 'Fruits & Veg', brand: 'Fresh Farm', rating: 4.6, reviews: 4, description: 'Fresh organic green broccoli.', inStock: true
   },
 
@@ -407,7 +408,7 @@ export const PRODUCTS: Product[] = [
     image: '/images/product_placeholder.png',
     category: 'More', brand: 'HomeGoods', rating: 4.7, reviews: 4, description: 'Adjustable LED desk lamp with dimming.', inStock: true
   },
-  
+
   // MEAT & SEAFOOD
   {
     id: '70', name: 'Fresh Chicken Breast 500g', slug: 'chicken-breast', price: 249,

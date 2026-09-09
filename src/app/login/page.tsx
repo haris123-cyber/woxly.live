@@ -74,7 +74,7 @@ export default function LoginPage() {
         <div className="w-full bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 p-8 sm:p-10">
 
           {/* Google Button */}
-          <button
+          <button suppressHydrationWarning
             type="button"
             className="w-full h-[52px] bg-[#18181b] hover:bg-[#09090b] text-white rounded-2xl text-[14px] font-semibold shadow-sm flex items-center justify-center gap-3 transition-all"
           >
@@ -98,7 +98,7 @@ export default function LoginPage() {
           </div>
 
           {/* Guest Button */}
-          <button
+          <button suppressHydrationWarning
             type="button"
             onClick={() => router.push("/shop")}
             className="w-full h-[52px] bg-white border border-gray-200 hover:bg-gray-50 text-gray-800 rounded-2xl text-[14px] font-semibold transition-all flex items-center justify-center gap-3"
@@ -123,7 +123,7 @@ export default function LoginPage() {
               <Label htmlFor="email" className="text-[13px] font-bold text-gray-900">Email address</Label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <Input
+                <input suppressHydrationWarning
                   id="email"
                   type="email"
                   placeholder="you@example.com"
@@ -145,14 +145,14 @@ export default function LoginPage() {
               </div>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <Input
+                <input suppressHydrationWarning
                   id="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
                   className="h-[52px] rounded-2xl border-gray-200 focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary text-[14px] pl-11 pr-12 placeholder:text-gray-400"
                   {...form.register("password")}
                 />
-                <button
+                <button suppressHydrationWarning
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors focus:outline-none"
@@ -165,7 +165,7 @@ export default function LoginPage() {
               )}
             </div>
 
-            <button
+            <button suppressHydrationWarning
               type="submit"
               className="w-full h-[52px] bg-primary hover:bg-primary/90 text-white rounded-2xl text-[14px] font-semibold transition-all mt-6 flex items-center justify-center gap-2"
             >

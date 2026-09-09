@@ -86,7 +86,7 @@ export function StationaryBanners() {
       {/* Pagination Dots */}
       <div className="flex justify-center items-center gap-1.5 mt-4 mb-2">
         {slides.map((_, idx) => (
-          <button
+          <button suppressHydrationWarning
             key={idx}
             onClick={() => emblaApi?.scrollTo(idx)}
             aria-label={`Go to slide ${idx + 1}`}

@@ -11,7 +11,7 @@ export function WhatsAppWidget() {
   }
 
   return (
-    <button
+    <button suppressHydrationWarning
       onClick={() => window.open("https://wa.me/1234567890", "_blank")}
       className="fixed bottom-[70px] sm:bottom-6 right-4 sm:right-6 z-50 flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-full px-3 py-3 sm:py-2.5 shadow-[0_4px_14px_rgba(37,211,102,0.4)] transition-transform hover:scale-105 active:scale-95"
       aria-label="Chat on WhatsApp"

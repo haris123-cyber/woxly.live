@@ -214,11 +214,9 @@ export default function ProductDetailPage() {
   const sizeLabels = ["S", "M", "L", "XL", "XXL"];
   const gallery = [
     product.image,
-    "/images/product_placeholder.png",
-    "/images/product_placeholder.png",
-    "/images/product_placeholder.png",
-    "/images/product_placeholder.png",
-    "/images/product_placeholder.png",
+    ...(product.images && product.images.length > 0
+      ? product.images.slice(0, 1)
+      : ["/images/product_placeholder.png"]),
   ];
   const originalPrice = product.originalPrice;
   const discountPercentage = originalPrice ? Math.round(((originalPrice - product.price) / originalPrice) * 100) : 0;

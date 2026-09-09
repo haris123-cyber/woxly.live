@@ -198,7 +198,7 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
         {/* Offer tab */}
         {hasOffer && <OfferLabel discountPercentage={discountPercentage} originalPrice={originalPrice} price={product.price} />}
 
-        <button
+        <button suppressHydrationWarning
           onClick={(e) => {
             e.preventDefault();
             toggleItem(product);
@@ -247,7 +247,7 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
           }}
           className="hidden md:flex opacity-0 group-hover:opacity-100 z-20"
         >
-          <button
+          <button suppressHydrationWarning
             onClick={handleAddToCart}
             disabled={!product.inStock}
             style={{
@@ -320,7 +320,7 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
           </div>
 
           {layout === 'grid' && (
-            <button
+            <button suppressHydrationWarning
               onClick={handleAddToCart}
               disabled={!product.inStock}
               className={`lg:hidden flex shrink-0 items-center justify-center w-8 h-8 rounded-full text-white shadow-sm transition-transform active:scale-95 ${product.inStock ? "bg-primary" : "bg-gray-400"}`}
@@ -332,7 +332,7 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
         </div>
 
         {layout === 'list' && (
-          <button
+          <button suppressHydrationWarning
             onClick={handleAddToCart}
             disabled={!product.inStock}
             className={`mt-2 sm:mt-3 w-full py-2 sm:py-2 rounded-md text-white font-bold text-[13px] sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 transition-opacity hover:opacity-90 ${product.inStock ? "bg-primary" : "bg-primary/80"}`}

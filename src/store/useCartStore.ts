@@ -22,6 +22,7 @@ export interface Product {
   hasOffer?: boolean;
   colors?: string[];
   sizes?: string[];
+  images?: string[];
 }
 
 export interface CartItem extends Product {

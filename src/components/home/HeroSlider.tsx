@@ -157,7 +157,7 @@ export function HeroSlider() {
         {/* Navigation dots */}
         <div className="absolute bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
           {slides.map((_, idx) => (
-            <button
+            <button suppressHydrationWarning
               key={idx}
               type="button"
               onClick={() => scrollTo(idx)}

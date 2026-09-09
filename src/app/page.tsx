@@ -429,7 +429,7 @@ export default function Home() {
               </p>
 
               <form className="flex w-full bg-white p-1 rounded-full items-center mb-3 flex-row shadow-lg border border-white" action="#">
-                <input
+                <input suppressHydrationWarning
                   type="email"
                   name="email"
                   placeholder="Enter your email"

@@ -70,7 +70,7 @@ export default function ContactPage() {
           <form className="flex flex-col gap-5">
             <div className="flex flex-col gap-1.5">
               <label className="text-[13px] font-semibold text-gray-700">Full name</label>
-              <input type="text" placeholder="Your name" className="w-full px-4 py-2.5 rounded border border-gray-200 text-[15px] text-gray-800 focus:outline-none focus:border-gray-400 placeholder:text-gray-400" />
+              <input suppressHydrationWarning type="text" placeholder="Your name" className="w-full px-4 py-2.5 rounded border border-gray-200 text-[15px] text-gray-800 focus:outline-none focus:border-gray-400 placeholder:text-gray-400" />
             </div>
 
             <div className="flex flex-col gap-1.5">
@@ -80,13 +80,13 @@ export default function ContactPage() {
                   <span className="text-lg leading-none">🇮🇳</span>
                   <ChevronDown className="w-3 h-3 text-gray-500" />
                 </div>
-                <input type="text" placeholder="+91" className="flex-1 px-4 py-2.5 text-[15px] text-gray-800 focus:outline-none placeholder:text-gray-400" />
+                <input suppressHydrationWarning type="text" placeholder="+91" className="flex-1 px-4 py-2.5 text-[15px] text-gray-800 focus:outline-none placeholder:text-gray-400" />
               </div>
             </div>
 
             <div className="flex flex-col gap-1.5">
               <label className="text-[13px] font-semibold text-gray-700">Email</label>
-              <input type="email" placeholder="your@email.com" className="w-full px-4 py-2.5 rounded border border-gray-200 text-[15px] text-gray-800 focus:outline-none focus:border-gray-400 placeholder:text-gray-400" />
+              <input suppressHydrationWarning type="email" placeholder="your@email.com" className="w-full px-4 py-2.5 rounded border border-gray-200 text-[15px] text-gray-800 focus:outline-none focus:border-gray-400 placeholder:text-gray-400" />
             </div>
 
             <div className="flex flex-col gap-1.5">
@@ -106,7 +106,7 @@ export default function ContactPage() {
               <textarea placeholder="Type your message..." rows={4} className="w-full px-4 py-2.5 rounded border border-gray-200 text-[15px] text-gray-800 focus:outline-none focus:border-gray-400 placeholder:text-gray-400 resize-none"></textarea>
             </div>
 
-            <button type="button" className="w-full py-3.5 mt-2 bg-primary hover:bg-[#250d53] text-white font-semibold rounded text-[15px] transition-colors">
+            <button suppressHydrationWarning type="button" className="w-full py-3.5 mt-2 bg-primary hover:bg-[#250d53] text-white font-semibold rounded text-[15px] transition-colors">
               Submit message
             </button>
           </form>

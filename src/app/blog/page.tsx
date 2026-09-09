@@ -57,7 +57,7 @@ export default function BlogPage() {
         {/* Full-width Search */}
         <div className="relative w-full mb-6">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <input
+          <input suppressHydrationWarning
             type="text"
             placeholder="Search posts"
             value={searchQuery}
@@ -69,7 +69,7 @@ export default function BlogPage() {
         <div className="flex items-center justify-between gap-3 mb-5">          {/* Category Filter */}
           <div className="flex gap-2 overflow-x-auto hide-scrollbar min-w-0">
             {categories.map((cat) => (
-              <button
+              <button suppressHydrationWarning
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
                 className={`whitespace-nowrap px-4 py-1.5 rounded-full text-[14px] font-medium transition-colors ${selectedCategory === cat

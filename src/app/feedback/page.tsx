@@ -15,7 +15,7 @@ export default function FeedbackPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col gap-1.5">
               <label className="text-[13px] font-semibold text-gray-700">Full name</label>
-              <input 
+              <input suppressHydrationWarning 
                 type="text" 
                 placeholder="Your name" 
                 className="w-full px-4 py-2.5 rounded border border-gray-200 text-[15px] text-gray-800 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary placeholder:text-gray-400 transition-colors" 
@@ -24,7 +24,7 @@ export default function FeedbackPage() {
             
             <div className="flex flex-col gap-1.5">
               <label className="text-[13px] font-semibold text-gray-700">Email</label>
-              <input 
+              <input suppressHydrationWarning 
                 type="email" 
                 placeholder="your@email.com" 
                 className="w-full px-4 py-2.5 rounded border border-gray-200 text-[15px] text-gray-800 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary placeholder:text-gray-400 transition-colors" 
@@ -41,7 +41,7 @@ export default function FeedbackPage() {
                   <span className="text-lg leading-none">🇮🇳</span>
                   <ChevronDown className="w-3 h-3 text-gray-500" />
                 </div>
-                <input 
+                <input suppressHydrationWarning 
                   type="text" 
                   placeholder="+91" 
                   className="flex-1 px-4 py-2.5 text-[15px] text-gray-800 focus:outline-none placeholder:text-gray-400" 
@@ -51,7 +51,7 @@ export default function FeedbackPage() {
             
             <div className="flex flex-col gap-1.5">
               <label className="text-[13px] font-semibold text-gray-700">Order ID (optional)</label>
-              <input 
+              <input suppressHydrationWarning 
                 type="text" 
                 placeholder="#ORD..." 
                 className="w-full px-4 py-2.5 rounded border border-gray-200 text-[15px] text-gray-800 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary placeholder:text-gray-400 transition-colors" 
@@ -79,7 +79,7 @@ export default function FeedbackPage() {
               <div className="flex items-center justify-between w-full px-4 py-2.5 rounded border border-gray-200 bg-white">
                 <div className="flex items-center gap-1.5">
                   {[1, 2, 3, 4, 5].map((star) => (
-                    <button type="button" key={star} className="text-gray-300 hover:text-yellow-400 focus:outline-none transition-colors">
+                    <button suppressHydrationWarning type="button" key={star} className="text-gray-300 hover:text-yellow-400 focus:outline-none transition-colors">
                       <Star className="w-5 h-5" strokeWidth={2} />
                     </button>
                   ))}
@@ -100,7 +100,7 @@ export default function FeedbackPage() {
           </div>
 
           {/* Submit Button */}
-          <button 
+          <button suppressHydrationWarning 
             type="button" 
             className="w-full py-3.5 mt-2 bg-primary hover:opacity-90 text-white font-semibold rounded text-[15px] transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
           >

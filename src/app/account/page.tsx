@@ -194,7 +194,7 @@ function OrderCard({ order, showCancelBtn = false, showRefundBox = true, onCance
               <Truck className="w-3.5 h-3.5" /> Track
             </Link>
           )}
-          <button className="text-gray-400 p-1 hover:bg-gray-50 rounded-full transition-colors">
+          <button suppressHydrationWarning className="text-gray-400 p-1 hover:bg-gray-50 rounded-full transition-colors">
             {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
           </button>
         </div>
@@ -215,7 +215,7 @@ function OrderCard({ order, showCancelBtn = false, showRefundBox = true, onCance
 
               <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                 {showCancelBtn && order.cancelAction && (
-                  <button
+                  <button suppressHydrationWarning
                     onClick={(e) => { e.stopPropagation(); onCancel?.(order.id); }}
                     className="px-4 py-2 border border-red-200 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg text-[12px] font-bold transition-colors shadow-sm"
                   >
@@ -223,7 +223,7 @@ function OrderCard({ order, showCancelBtn = false, showRefundBox = true, onCance
                   </button>
                 )}
                 {order.returnAction && (
-                  <button
+                  <button suppressHydrationWarning
                     onClick={(e) => { e.stopPropagation(); onReturn?.(order.id); }}
                     className="px-4 py-2 border border-blue-200 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg text-[12px] font-bold transition-colors shadow-sm"
                   >
@@ -231,7 +231,7 @@ function OrderCard({ order, showCancelBtn = false, showRefundBox = true, onCance
                   </button>
                 )}
                 {order.reviewAction && (
-                  <button onClick={(e) => e.stopPropagation()} className="px-4 py-2 border border-gray-200 text-gray-700 bg-white hover:bg-gray-50 rounded-lg text-[12px] font-bold transition-colors shadow-sm flex items-center gap-1.5">
+                  <button suppressHydrationWarning onClick={(e) => e.stopPropagation()} className="px-4 py-2 border border-gray-200 text-gray-700 bg-white hover:bg-gray-50 rounded-lg text-[12px] font-bold transition-colors shadow-sm flex items-center gap-1.5">
                     <Star className="w-3.5 h-3.5 fill-gray-400 text-gray-400" /> Rate Product
                   </button>
                 )}
@@ -282,7 +282,7 @@ function OrdersPanel({ orders, onCancel, onReturn }: { orders: OrderItem[], onCa
           </div>
         </div>
         <Link href="/contact">
-          <button className="border border-[#16a34a] text-[#16a34a] hover:bg-[#16a34a] hover:text-white px-4 py-2.5 rounded-xl font-bold text-[13px] flex items-center justify-center gap-1.5 transition-colors shrink-0 w-full sm:w-auto">
+          <button suppressHydrationWarning className="border border-[#16a34a] text-[#16a34a] hover:bg-[#16a34a] hover:text-white px-4 py-2.5 rounded-xl font-bold text-[13px] flex items-center justify-center gap-1.5 transition-colors shrink-0 w-full sm:w-auto">
             Contact Support
             <ChevronRight className="w-4 h-4" strokeWidth={2.5} />
           </button>
@@ -319,7 +319,7 @@ function DetailsPanel() {
             <label className="text-[13px] font-bold text-gray-700 mb-2 block">First Name</label>
             <div className="h-12 border border-gray-200 rounded-xl px-4 flex items-center gap-3 focus-within:border-[#2563eb] focus-within:ring-2 focus-within:ring-[#2563eb]/20 transition-all">
               <User className="w-5 h-5 text-gray-400 shrink-0" strokeWidth={1.5} />
-              <input type="text" defaultValue="Jenny" className="text-[14px] text-gray-900 font-medium bg-transparent outline-none flex-1 h-full w-full" />
+              <input suppressHydrationWarning type="text" defaultValue="Jenny" className="text-[14px] text-gray-900 font-medium bg-transparent outline-none flex-1 h-full w-full" />
             </div>
           </div>
 
@@ -327,7 +327,7 @@ function DetailsPanel() {
             <label className="text-[13px] font-bold text-gray-700 mb-2 block">Last Name</label>
             <div className="h-12 border border-gray-200 rounded-xl px-4 flex items-center gap-3 focus-within:border-[#2563eb] focus-within:ring-2 focus-within:ring-[#2563eb]/20 transition-all">
               <User className="w-5 h-5 text-gray-400 shrink-0" strokeWidth={1.5} />
-              <input type="text" defaultValue="Wilson" className="text-[14px] text-gray-900 font-medium bg-transparent outline-none flex-1 h-full w-full" />
+              <input suppressHydrationWarning type="text" defaultValue="Wilson" className="text-[14px] text-gray-900 font-medium bg-transparent outline-none flex-1 h-full w-full" />
             </div>
           </div>
 
@@ -335,7 +335,7 @@ function DetailsPanel() {
             <label className="text-[13px] font-bold text-gray-700 mb-2 block">Email Address</label>
             <div className="h-12 border border-gray-200 rounded-xl px-4 flex items-center gap-3 focus-within:border-[#2563eb] focus-within:ring-2 focus-within:ring-[#2563eb]/20 transition-all">
               <Mail className="w-5 h-5 text-gray-400 shrink-0" strokeWidth={1.5} />
-              <input type="email" defaultValue="jenny.wilson@email.com" className="text-[14px] text-gray-900 font-medium bg-transparent outline-none flex-1 h-full w-full" />
+              <input suppressHydrationWarning type="email" defaultValue="jenny.wilson@email.com" className="text-[14px] text-gray-900 font-medium bg-transparent outline-none flex-1 h-full w-full" />
             </div>
           </div>
 
@@ -343,7 +343,7 @@ function DetailsPanel() {
             <label className="text-[13px] font-bold text-gray-700 mb-2 block">Phone Number</label>
             <div className="h-12 border border-gray-200 rounded-xl px-4 flex items-center gap-3 focus-within:border-[#2563eb] focus-within:ring-2 focus-within:ring-[#2563eb]/20 transition-all">
               <Phone className="w-5 h-5 text-gray-400 shrink-0" strokeWidth={1.5} />
-              <input type="tel" defaultValue="+1 234 567 8900" className="text-[14px] text-gray-900 font-medium bg-transparent outline-none flex-1 h-full w-full" />
+              <input suppressHydrationWarning type="tel" defaultValue="+1 234 567 8900" className="text-[14px] text-gray-900 font-medium bg-transparent outline-none flex-1 h-full w-full" />
             </div>
           </div>
 
@@ -351,7 +351,7 @@ function DetailsPanel() {
             <label className="text-[13px] font-bold text-gray-700 mb-2 block">New Password (leave blank to keep current)</label>
             <div className="h-12 border border-gray-200 rounded-xl px-4 flex items-center gap-3 focus-within:border-[#2563eb] focus-within:ring-2 focus-within:ring-[#2563eb]/20 transition-all">
               <Lock className="w-5 h-5 text-gray-400 shrink-0" strokeWidth={1.5} />
-              <input type={showPassword ? "text" : "password"} defaultValue="••••••••" className={`text-[14px] text-gray-900 font-medium bg-transparent outline-none flex-1 h-full w-full ${!showPassword ? 'tracking-[4px]' : ''}`} />
+              <input suppressHydrationWarning type={showPassword ? "text" : "password"} defaultValue="••••••••" className={`text-[14px] text-gray-900 font-medium bg-transparent outline-none flex-1 h-full w-full ${!showPassword ? 'tracking-[4px]' : ''}`} />
               <div onClick={() => setShowPassword(!showPassword)}>
                 {showPassword ? (
                   <Eye className="w-5 h-5 text-gray-400 shrink-0 cursor-pointer hover:text-gray-600 transition-colors" strokeWidth={1.5} />
@@ -372,7 +372,7 @@ function DetailsPanel() {
           </div>
         </div>
 
-        <button
+        <button suppressHydrationWarning
           onClick={() => toast.success("Account Details Saved", { description: "Your personal information has been updated successfully." })}
           className="w-full bg-[#2563eb] hover:bg-blue-700 text-white py-3.5 rounded-xl font-bold flex justify-center items-center gap-2 transition-colors shadow-sm"
         >
@@ -436,7 +436,7 @@ function AddressPanel() {
     <div className="w-full">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-[24px] font-extrabold text-[#0f172a]">My Addresses</h2>
-        <button
+        <button suppressHydrationWarning
           onClick={() => {
             if (showForm) {
               setShowForm(false);
@@ -473,11 +473,11 @@ function AddressPanel() {
                 </div>
               </div>
               <div className="flex gap-2">
-                <button onClick={() => handleEdit(addr)} className="flex flex-col items-center justify-center gap-1 bg-[#f8fafc] hover:bg-[#eff6ff] p-2 sm:px-3 rounded-lg text-[#2563eb] transition-colors">
+                <button suppressHydrationWarning onClick={() => handleEdit(addr)} className="flex flex-col items-center justify-center gap-1 bg-[#f8fafc] hover:bg-[#eff6ff] p-2 sm:px-3 rounded-lg text-[#2563eb] transition-colors">
                   <Edit2 className="w-4 h-4" strokeWidth={2} />
                   <span className="text-[10px] font-bold">Edit</span>
                 </button>
-                <button onClick={() => deleteAddress(addr.id)} className="flex flex-col items-center justify-center gap-1 bg-[#fef2f2] hover:bg-[#fee2e2] p-2 sm:px-3 rounded-lg text-[#ef4444] transition-colors">
+                <button suppressHydrationWarning onClick={() => deleteAddress(addr.id)} className="flex flex-col items-center justify-center gap-1 bg-[#fef2f2] hover:bg-[#fee2e2] p-2 sm:px-3 rounded-lg text-[#ef4444] transition-colors">
                   <Trash2 className="w-4 h-4" strokeWidth={2} />
                   <span className="text-[10px] font-bold">Delete</span>
                 </button>
@@ -533,28 +533,28 @@ function AddressPanel() {
           <div className="space-y-5">
             <div>
               <label className="block text-sm font-medium text-gray-900 mb-1.5">Label <span className="text-gray-400 font-normal">(e.g. Home, Office)</span></label>
-              <input type="text" placeholder="Home" value={formData.label || ""} onChange={(e) => setFormData({ ...formData, label: e.target.value })} className="w-full rounded-lg border-2 border-gray-200 focus:border-[#8b5cf6] px-4 py-2.5 focus:outline-none focus:ring-4 focus:ring-[#8b5cf6]/20 transition-all" />
+              <input suppressHydrationWarning type="text" placeholder="Home" value={formData.label || ""} onChange={(e) => setFormData({ ...formData, label: e.target.value })} className="w-full rounded-lg border-2 border-gray-200 focus:border-[#8b5cf6] px-4 py-2.5 focus:outline-none focus:ring-4 focus:ring-[#8b5cf6]/20 transition-all" />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-900 mb-1.5">Full name <span className="text-gray-400 font-normal">(Optional)</span></label>
-              <input type="text" placeholder="Your name" value={formData.name || ""} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="w-full rounded-lg border-2 border-gray-200 focus:border-[#8b5cf6] px-4 py-2.5 focus:outline-none focus:ring-4 focus:ring-[#8b5cf6]/20 transition-all" />
+              <input suppressHydrationWarning type="text" placeholder="Your name" value={formData.name || ""} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="w-full rounded-lg border-2 border-gray-200 focus:border-[#8b5cf6] px-4 py-2.5 focus:outline-none focus:ring-4 focus:ring-[#8b5cf6]/20 transition-all" />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-900 mb-1.5">Mobile number <span className="text-red-500">*</span></label>
               <div className="flex border border-gray-300 rounded-lg overflow-hidden focus-within:border-[#8b5cf6] focus-within:ring-4 focus-within:ring-[#8b5cf6]/20 transition-all">
-                <button type="button" className="flex items-center gap-2 px-3 bg-gray-50 border-r border-gray-300">
+                <button suppressHydrationWarning type="button" className="flex items-center gap-2 px-3 bg-gray-50 border-r border-gray-300">
                   <span className="text-lg leading-none">🇮🇳</span>
                   <span className="text-xs text-gray-600 font-medium">↕</span>
                 </button>
-                <input type="tel" value={formData.phone || ""} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="flex-1 px-4 py-2.5 focus:outline-none" />
+                <input suppressHydrationWarning type="tel" value={formData.phone || ""} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="flex-1 px-4 py-2.5 focus:outline-none" />
               </div>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-900 mb-1.5">Email address <span className="text-gray-400 font-normal">(Optional)</span></label>
-              <input type="email" value={formData.email || ""} onChange={(e) => setFormData({ ...formData, email: e.target.value })} placeholder="Email" className="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:outline-none focus:border-[#8b5cf6] focus:ring-4 focus:ring-[#8b5cf6]/20 transition-all" />
+              <input suppressHydrationWarning type="email" value={formData.email || ""} onChange={(e) => setFormData({ ...formData, email: e.target.value })} placeholder="Email" className="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:outline-none focus:border-[#8b5cf6] focus:ring-4 focus:ring-[#8b5cf6]/20 transition-all" />
               <p className="text-xs text-gray-500 mt-1.5">Optional. Used for order updates and receipts.</p>
             </div>
 
@@ -565,7 +565,7 @@ function AddressPanel() {
 
             <div>
               <label className="block text-sm font-medium text-gray-900 mb-1.5">Pin code <span className="text-red-500">*</span></label>
-              <input type="text" value={formData.pinCode || ""} onChange={(e) => setFormData({ ...formData, pinCode: e.target.value })} className="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:outline-none focus:border-[#8b5cf6] focus:ring-4 focus:ring-[#8b5cf6]/20 transition-all" />
+              <input suppressHydrationWarning type="text" value={formData.pinCode || ""} onChange={(e) => setFormData({ ...formData, pinCode: e.target.value })} className="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:outline-none focus:border-[#8b5cf6] focus:ring-4 focus:ring-[#8b5cf6]/20 transition-all" />
               {formData.pinCode && formData.pinCode.length > 5 && (
                 <div className="mt-2 space-y-1">
                   <p className="text-xs text-emerald-600 font-medium flex items-center gap-1">✓ Location found • {formData.city || "Kozhikode"}, {formData.state || "Kerala"}</p>
@@ -577,7 +577,7 @@ function AddressPanel() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-900 mb-1.5">City <span className="text-red-500">*</span></label>
-                <input type="text" value={formData.city || ""} onChange={(e) => setFormData({ ...formData, city: e.target.value })} className="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:outline-none focus:border-[#8b5cf6]" />
+                <input suppressHydrationWarning type="text" value={formData.city || ""} onChange={(e) => setFormData({ ...formData, city: e.target.value })} className="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:outline-none focus:border-[#8b5cf6]" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-900 mb-1.5">State <span className="text-gray-400 font-normal">(Optional)</span></label>
@@ -600,10 +600,10 @@ function AddressPanel() {
             </div>
 
             <div className="pt-2 flex items-center gap-3">
-              <button onClick={handleSave} type="button" className="bg-primary hover:bg-primary/90   text-white px-6 py-2.5 rounded-lg font-bold text-sm">
+              <button suppressHydrationWarning onClick={handleSave} type="button" className="bg-primary hover:bg-primary/90   text-white px-6 py-2.5 rounded-lg font-bold text-sm">
                 Save Address
               </button>
-              <button onClick={() => setShowForm(false)} type="button" className="text-gray-500 hover:text-gray-900 font-medium text-sm">
+              <button suppressHydrationWarning onClick={() => setShowForm(false)} type="button" className="text-gray-500 hover:text-gray-900 font-medium text-sm">
                 Cancel
               </button>
             </div>
@@ -673,7 +673,7 @@ function RewardPanel() {
           </div>
         </div>
 
-        <button
+        <button suppressHydrationWarning
           onClick={handleRedeem}
           className="w-full bg-white hover:bg-gray-50 text-[#166534] font-bold py-3 px-4 rounded-xl transition-colors shadow-sm flex items-center justify-center gap-2 text-[14px]"
         >
@@ -877,13 +877,6 @@ function AccountPageInner() {
         {/* ── Navigation / Menu (Visible on Desktop always, Visible on Mobile if showMobileMenu is true) ── */}
         <div className={`w-full lg:w-[340px] shrink-0 ${!showMobileMenu ? 'hidden lg:block' : 'block'}`}>
 
-          {/* Breadcrumbs */}
-          <div className="text-[13px] text-gray-500 flex items-center gap-2 mb-6">
-            <Link href="/" className="hover:text-primary transition-colors">Home</Link>
-            <span className="text-gray-300">/</span>
-            <span className="text-primary font-medium">Account</span>
-          </div>
-
           {/* Header Mobile Style */}
           <div className="flex items-center justify-between mb-6 lg:mb-8">
             <div>
@@ -902,7 +895,7 @@ function AccountPageInner() {
           </div>
 
           {/* Member Card */}
-          <button onClick={() => { setActiveNav('rewards'); setShowMobileMenu(false); }} className="w-full bg-primary/5 border border-primary/10 rounded-[16px] p-4 flex items-center justify-between mb-8 transition-all hover:bg-primary/10 text-left">
+          <button suppressHydrationWarning onClick={() => { setActiveNav('rewards'); setShowMobileMenu(false); }} className="w-full bg-primary/5 border border-primary/10 rounded-[16px] p-4 flex items-center justify-between mb-8 transition-all hover:bg-primary/10 text-left">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                 <Crown className="w-5 h-5 text-primary" />
@@ -923,7 +916,7 @@ function AccountPageInner() {
             {navItems.map((item, index) => {
               const Icon = item.icon;
               return (
-                <button
+                <button suppressHydrationWarning
                   key={item.id}
                   onClick={() => { setActiveNav(item.id); setShowMobileMenu(false); }}
                   className={`w-full flex items-center justify-between p-4 text-left transition-colors ${index !== navItems.length - 1 ? 'border-b border-gray-50' : ''} ${activeNav === item.id ? 'bg-gray-50' : 'hover:bg-gray-50'}`}
@@ -973,7 +966,7 @@ function AccountPageInner() {
         <div className={`flex-1 ${showMobileMenu ? 'hidden lg:block' : 'block'}`}>
           <div className="bg-white border border-gray-100 rounded-[16px] shadow-sm overflow-hidden p-4 sm:p-6 min-h-[600px]">
             {/* Back button for mobile */}
-            <button
+            <button suppressHydrationWarning
               onClick={() => setShowMobileMenu(true)}
               className="lg:hidden flex items-center gap-2 text-gray-500 hover:text-primary mb-6 transition-colors font-medium text-[13px]"
             >

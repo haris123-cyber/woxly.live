@@ -53,7 +53,7 @@ export function MobileMenu() {
         {/* Blue Curved Header */}
         <div className="bg-[#2563eb] text-white rounded-br-[2.5rem] p-6 pb-8 shadow-sm relative z-10 shrink-0">
           <div className="flex justify-between items-center mb-6">
-            <button onClick={closeMobileMenu} className="p-2 -ml-2 rounded-full hover:bg-white/10 transition-colors">
+            <button suppressHydrationWarning onClick={closeMobileMenu} className="p-2 -ml-2 rounded-full hover:bg-white/10 transition-colors">
               <X className="w-7 h-7" strokeWidth={2.5} />
             </button>
 
