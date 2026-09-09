@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Search, ShoppingBag, Menu, Heart, User, Home, Package, LogIn, LogOut } from "lucide-react";
+import { Search, ShoppingBag, Menu, Heart, User, Home, Package, LogIn, LogOut, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/store/useCartStore";
 import { useUIStore } from "@/store/useUIStore";
@@ -19,6 +19,7 @@ export function Header() {
   const { isLoggedIn, login, logout } = useAuthStore();
 
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -63,65 +64,61 @@ export function Header() {
             <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
           </Button>
 
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 shrink-0">
-            <span className="font-heading font-bold text-lg sm:text-2xl leading-none text-foreground">Woxly</span>
-          </Link>
+          <div className="flex items-center justify-between w-full">
+            {/* Logo */}
+            <Link
+              href="/"
+              className="flex items-center gap-2 shrink-0 md:static absolute left-1/2 -translate-x-1/2 md:translate-x-0"
+            >
+              <span className="font-heading font-bold text-lg sm:text-2xl leading-none text-foreground">
+                Woxly
+              </span>
+            </Link>
 
-          {/* Search Bar */}
-          <div className="flex-1 flex justify-center px-2 sm:px-4">
-            <div className="relative w-full max-w-xl">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground pointer-events-none" />
+            {/* Search + Cart */}
+            <div className="flex items-center gap-2 sm:gap-4 ml-auto">
+              {/* Desktop Search Bar */}
+              <div className="relative hidden md:block w-[300px] md:w-[420px]">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
+                <input type="text" placeholder="Search" className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
+              </div>
 
-              <input
-                suppressHydrationWarning
-                type="text"
-                placeholder="Search..."
-                className="w-full h-10 sm:h-11 pl-10 sm:pl-11 pr-4 rounded-full border border-border/80 bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[16px] sm:text-sm placeholder:text-muted-foreground/60 shadow-sm"
-              />
+              {/* Mobile Search Button */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className={`md:hidden shrink-0 rounded-xl w-9 h-9 transition-all duration-300 ${isMobileSearchOpen ? 'bg-primary/20 text-primary' : ' hover:bg-primary/20'}`}
+                onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
+              >
+                <Search className="w-5 h-5" />
+              </Button>
+
+              {/* Mobile Cart Button */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className={`sm:hidden relative shrink-0 rounded-full w-9 h-9 transition-all duration-300 ${isMounted && itemCount > 0
+                  ? ''
+                  : pathname === '/cart'
+                    ? 'bg-primary/20 text-primary'
+                    : 'text-muted-foreground hover:text-primary hover:bg-muted/50'
+                  }`}
+                asChild
+              >
+                <Link href="/cart">
+                  <ShoppingBag className="w-8 h-8" />
+
+                  {isMounted && itemCount > 0 && (
+                    <span className="absolute top-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-[#2563eb] text-[10px] font-bold text-white border border-background">
+                      {itemCount > 99 ? "99+" : itemCount}
+                    </span>
+                  )}
+                </Link>
+              </Button>
             </div>
           </div>
 
-          {/* Mobile Cart Button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className={`sm:hidden relative shrink-0 rounded-full w-9 h-9 transition-all duration-300 ${isMounted && itemCount > 0 ? '' : pathname === '/cart' ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:text-primary hover:bg-muted/50'}`}
-            asChild
-          >
-            <Link href="/cart">
-              <ShoppingBag className="w-8 h-8" />
-              {isMounted && itemCount > 0 && (
-                <span className="absolute top-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-[#2563eb] text-[10px] font-bold text-white border border-background">
-                  {itemCount > 99 ? "99+" : itemCount}
-                </span>
-              )}
-            </Link>
-          </Button>
 
-          {/* Mobile Login Button */}
-          {isMounted && !isLoggedIn && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="sm:hidden relative shrink-0 rounded-full w-9 h-9 text-muted-foreground hover:text-primary hover:bg-muted/50"
-              onClick={login}
-              aria-label="Login"
-            >
-              <LogIn className="w-5 h-5" />
-            </Button>
-          )}
-          {isMounted && isLoggedIn && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="sm:hidden relative shrink-0 rounded-full w-9 h-9 text-muted-foreground hover:text-primary hover:bg-muted/50"
-              onClick={logout}
-              aria-label="Logout"
-            >
-              <LogOut className="w-5 h-5" />
-            </Button>
-          )}
 
           {/* Right Actions - Hidden on mobile */}
           <div className="hidden sm:flex items-center gap-2 shrink-0">
@@ -209,6 +206,29 @@ export function Header() {
             </div>
           </div>
         </div>
+
+        {/* Mobile Search Bar Dropdown */}
+        {isMobileSearchOpen && (
+          <div className="md:hidden w-full px-4 py-3 border-t border-border/50 bg-background flex items-center gap-3 animate-in slide-in-from-top-2 duration-200">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
+              <input
+                type="text"
+                placeholder="Search"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                autoFocus
+              />
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="shrink-0 w-9 h-9 text-muted-foreground hover:text-foreground"
+              onClick={() => setIsMobileSearchOpen(false)}
+            >
+              <X className="w-5 h-5" />
+            </Button>
+          </div>
+        )}
 
         {/* Mobile Bottom Navigation Bar */}
         <Suspense fallback={

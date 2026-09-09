@@ -6,6 +6,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { MobileMenu } from "@/components/layout/MobileMenu";
+import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { Toaster } from "@/components/ui/sonner";
 import { WhatsAppWidget } from "@/components/layout/WhatsAppWidget";
 
@@ -45,6 +46,7 @@ export default function RootLayout({
           <Header />
           <MobileMenu />
           <main className="flex-1">
+            <Breadcrumbs />
             {children}
           </main>
           <Footer />

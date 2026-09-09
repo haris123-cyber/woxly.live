@@ -1,12 +1,13 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Heart, ShoppingCart, Star, Percent } from "lucide-react";
 import { type Product } from "@/store/useCartStore";
 import { useCartStore } from "@/store/useCartStore";
 import { useWatchlistStore } from "@/store/useWatchlistStore";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { toast } from "sonner";
 
 interface ProductCardProps {
@@ -32,17 +33,75 @@ function OfferLabel({ discountPercentage, originalPrice, price }: { discountPerc
               <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
             </svg>
             <div className="flex flex-col text-white pt-0.5 overflow-hidden">
-              <span className="text-[6px] sm:text-[8px] font-bold uppercase leading-none tracking-wider text-white/90 mb-0.5 whitespace-nowrap truncate">Limited Offer</span>
-              <span className="text-[12px] sm:text-[18px] font-extrabold italic leading-none tracking-tight whitespace-nowrap truncate">{discountPercentage}% OFF</span>
+              <span className="text-[10px] sm:text-[12px] font-bold uppercase leading-none tracking-wider text-white/90 mb-0.5 whitespace-nowrap truncate">Limited Offer</span>
+              <span className="text-[14px] sm:text-[18px] font-extrabold italic leading-none tracking-tight whitespace-nowrap truncate">{discountPercentage}% OFF</span>
             </div>
           </div>
 
           {/* Right Side Content */}
           <div className="w-[40px] sm:w-[50px] flex flex-col items-center justify-center shrink-0 pr-0.5 sm:pr-1">
-            <span className="text-[7px] sm:text-[9px] font-bold text-[#b33a00] leading-none mb-0.5">Save</span>
-            <span className="text-[10px] sm:text-[13px] font-extrabold text-[#b33a00] leading-none truncate w-full text-center">₹{saveAmount}</span>
+            <span className="text-[10px] sm:text-[9px] font-bold text-[#b33a00] leading-none mb-0.5">Save</span>
+            <span className="text-[12px] sm:text-[13px] font-extrabold text-[#b33a00] leading-none truncate w-full text-center">₹{saveAmount}</span>
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+function SeparateOfferLabel() {
+  const [offerIndex, setOfferIndex] = useState(0);
+
+  const offers = [
+    {
+      title: "LIMITED OFFER",
+      text: "Buy 1 Get 1 Free",
+    },
+    {
+      title: "LIMITED OFFER",
+      text: "FREE SHIPPING",
+    },
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setOfferIndex((prev) => (prev + 1) % offers.length);
+    }, 3000); // 3 seconds per banner
+    return () => clearInterval(interval);
+  }, [offers.length]);
+
+  return (
+    <div className="absolute bottom-0 left-0 right-0 z-10 overflow-hidden pointer-events-none">
+      <div
+        className="flex transition-transform duration-500 ease-in-out w-full"
+        style={{ transform: `translateX(-${offerIndex * 100}%)` }}
+      >
+        {offers.map((offer, index) => (
+          <div
+            key={index}
+            className="flex items-stretch w-full h-[40px] sm:h-[48px] shrink-0"
+          >
+            {/* Lightning section */}
+            <div className="w-[36px] sm:w-[44px] shrink-0 bg-[#d10000] flex items-center justify-center">
+              <svg
+                className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-300 drop-shadow-sm"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+              </svg>
+            </div>
+
+            {/* Text section */}
+            <div className="flex-1 flex flex-col justify-center px-2 sm:px-3 bg-gradient-to-r from-[#e3000f] to-[#ff5100] text-white min-w-0">
+              <span className="text-[9px] sm:text-[10px] font-bold uppercase leading-none tracking-wider text-white/90 mb-0.5 whitespace-nowrap">
+                {offer.title}
+              </span>
+              <span className="text-[13px] sm:text-[17px] font-extrabold italic leading-none tracking-tight whitespace-nowrap pt-0.5">
+                {offer.text}
+              </span>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -51,8 +110,15 @@ function OfferLabel({ discountPercentage, originalPrice, price }: { discountPerc
 export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
   const addItem = useCartStore((state) => state.addItem);
   const router = useRouter();
+  const pathname = usePathname();
+  const isShopPage = pathname === '/shop';
   const { toggleItem, isInWatchlist } = useWatchlistStore();
-  const inWatchlist = isInWatchlist(product.id);
+  
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  const inWatchlist = mounted ? isInWatchlist(product.id) : false;
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -74,7 +140,10 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
   const isHotSale = product.isHotSale || false;
   const isNewArrived = product.isNewArrived || false;
   const isLimited = product.isLimited || false;
-  const hasOffer = product.hasOffer || false;
+  const hasOffer = (product.hasOffer || false) && !isShopPage;
+
+  // Determine which type of offer label to show
+  const showSeparateLabel = ['2', '6', '10'].includes(product.id) && !hasOffer && !isShopPage;
 
   return (
     <Link
@@ -203,7 +272,9 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
           </button>
         </div>
 
-
+        <div className="absolute bottom-0 left-0 w-full z-10 pointer-events-none" style={{ borderBottomLeftRadius: 'inherit', borderBottomRightRadius: 'inherit' }}>
+          {showSeparateLabel && <SeparateOfferLabel />}
+        </div>
       </div>
 
       <div className={layout === 'list' ? 'flex-1 min-w-0 flex flex-col justify-center py-2 pr-2 sm:pr-4' : ''}>
@@ -264,7 +335,7 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
           <button
             onClick={handleAddToCart}
             disabled={!product.inStock}
-            className={`mt-2 sm:mt-3 w-full py-2 sm:py-2 rounded-xl text-white font-bold text-[13px] sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 transition-opacity hover:opacity-90 ${product.inStock ? "bg-primary" : "bg-primary/80"}`}
+            className={`mt-2 sm:mt-3 w-full py-2 sm:py-2 rounded-md text-white font-bold text-[13px] sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 transition-opacity hover:opacity-90 ${product.inStock ? "bg-primary" : "bg-primary/80"}`}
           >
             <ShoppingCart className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             <span className="truncate">{product.inStock ? "Add to cart" : "Out of stock"}</span>

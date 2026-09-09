@@ -11,7 +11,8 @@ export const CATEGORIES = [
   { id: '8', name: 'Electronics', slug: 'electronics', icon: 'Smartphone' },
   { id: '9', name: 'Home Care', slug: 'home-care', icon: 'Home' },
   { id: '10', name: 'Liquor', slug: 'liquor', icon: 'Wine' },
-  { id: '11', name: 'More', slug: 'more', icon: 'MoreHorizontal' },
+  { id: '11', name: 'Stationery', slug: 'stationery', icon: 'PenTool' },
+  { id: '12', name: 'More', slug: 'more', icon: 'MoreHorizontal' },
 ];
 
 export const PRODUCTS: Product[] = [
@@ -86,9 +87,9 @@ export const PRODUCTS: Product[] = [
 
   // BEVERAGES
   {
-    id: '13', name: 'Coca-Cola Soft Drink 1.5L', slug: 'coca-cola-1-5l', price: 139,
+    id: '13', name: 'Coca-Cola Soft Drink 1.5L', slug: 'coca-cola-1-5l', price: 139, originalPrice: 159,
     image: '/images/product_placeholder.png',
-    category: 'Beverages', brand: 'Coca-Cola', rating: 4.5, reviews: 4, description: 'Refreshing carbonated beverage.', inStock: true
+    category: 'Beverages', brand: 'Coca-Cola', rating: 4.5, reviews: 4, description: 'Refreshing carbonated beverage.', inStock: true, hasOffer: true
   },
   {
     id: '14', name: 'Fresh Orange Juice 1L', slug: 'orange-juice-1l', price: 189,
@@ -108,9 +109,9 @@ export const PRODUCTS: Product[] = [
 
   // SNACKS
   {
-    id: '17', name: 'Classic Potato Chips', slug: 'classic-potato-chips', price: 149,
+    id: '17', name: 'Classic Potato Chips', slug: 'classic-potato-chips', price: 149, originalPrice: 199,
     image: '/images/product_placeholder.png',
-    category: 'Snacks', brand: 'Lays', rating: 4.4, reviews: 4, description: 'Crispy salted potato chips.', inStock: true
+    category: 'Snacks', brand: 'Lays', rating: 4.4, reviews: 4, description: 'Crispy salted potato chips.', inStock: true, hasOffer: true
   },
   {
     id: '18', name: 'Mixed Nuts 200g', slug: 'mixed-nuts', price: 429,
@@ -130,9 +131,9 @@ export const PRODUCTS: Product[] = [
 
   // FASHION
   {
-    id: '21', name: 'Brown Leather Handbag', slug: 'brown-handbag', price: 3189,
+    id: '21', name: 'Brown Leather Handbag', slug: 'brown-handbag', price: 3189, originalPrice: 4299,
     image: '/images/product_placeholder.png',
-    category: 'Fashion', brand: 'FashionBrand', rating: 4.6, reviews: 4, description: 'Stylish brown leather handbag.', inStock: true
+    category: 'Fashion', brand: 'FashionBrand', rating: 4.6, reviews: 4, description: 'Stylish brown leather handbag.', inStock: true, hasOffer: true
   },
   {
     id: '22', name: 'Nike Running Shoes', slug: 'nike-running-shoes', price: 5589,
@@ -242,7 +243,22 @@ export const PRODUCTS: Product[] = [
   {
     id: '41', name: 'Hardcover Notebook', slug: 'notebook', price: 709,
     image: '/images/product_placeholder.png',
-    category: 'More', brand: 'Stationery', rating: 4.7, reviews: 4, description: 'Ruled pages hardcover notebook.', inStock: true
+    category: 'Stationery', brand: 'PaperCraft', rating: 4.7, reviews: 4, description: 'Ruled pages hardcover notebook.', inStock: true
+  },
+  {
+    id: '67', name: 'Premium Ballpoint Pens (Pack of 5)', slug: 'ballpoint-pens', price: 299,
+    image: '/images/product_placeholder.png',
+    category: 'Stationery', brand: 'Parker', rating: 4.8, reviews: 4, description: 'Smooth writing ballpoint pens.', inStock: true
+  },
+  {
+    id: '68', name: 'Desk Organizer', slug: 'desk-organizer', price: 899,
+    image: '/images/product_placeholder.png',
+    category: 'Stationery', brand: 'OfficePro', rating: 4.6, reviews: 4, description: 'Multifunctional wooden desk organizer.', inStock: true
+  },
+  {
+    id: '69', name: 'Sticky Notes Set', slug: 'sticky-notes', price: 149,
+    image: '/images/product_placeholder.png',
+    category: 'Stationery', brand: 'PostIt', rating: 4.9, reviews: 4, description: 'Colorful sticky notes for reminders.', inStock: true
   },
   {
     id: '42', name: 'Yoga Mat', slug: 'yoga-mat', price: 1589,

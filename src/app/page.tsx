@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/product/ProductCard";
 import { HeroSlider } from "@/components/home/HeroSlider";
+import { StationaryBanners } from "@/components/home/StationaryBanners";
 import { PRODUCTS } from "@/lib/mock-data";
 import { ChevronRight, ShieldCheck, Headphones, ArrowRight, Mail, Bell } from "lucide-react";
 import { IconTruck, IconRefresh, IconLock, IconCash } from "@tabler/icons-react";
@@ -63,6 +64,7 @@ export default function Home() {
   const fruitsProducts = PRODUCTS.filter(p => p.category === 'Fruits & Veg');
   const fashionProducts = PRODUCTS.filter(p => p.category === 'Fashion');
   const drinkProducts = PRODUCTS.filter(p => p.category === 'Beverages');
+  const stationaryProducts = PRODUCTS.filter(p => p.category === 'Stationery');
 
   const categoryImages = [
     { name: "Vegetables & Fruits", image: "/images/product_placeholder.png" },
@@ -206,54 +208,70 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Best Sellers */}
-      <ProductCarousel
-        title="Best Sellers"
 
-        description="Our most loved picks. Top-rated customer favorites."
-        products={bestSellers}
-        link="/shop"
-      />
 
       {/* Specific Category Sections */}
       {fruitsProducts.length > 0 && (
-        <ProductCarousel
-          title="Fresh Fruits & Veg"
-          description="Farm-fresh produce picked daily."
-          products={fruitsProducts}
-          link="/shop"
-          prependElement={fruitsPromo}
-        />
-      )}
-
-      {fashionProducts.length > 0 && (
         <>
-          <section className="container mx-auto px-5 sm:px-6 mt-6">
-            <div className="relative rounded-0 sm:rounded-sm overflow-hidden bg-zinc-900 h-44 -mt-10 sm:h-64 md:h-80 flex items-center shadow-lg group">
+          <section className="container mx-auto px-5 sm:px-6 mt-6 mb-5">
+            <div className="relative rounded-md overflow-hidden bg-zinc-900 h-[105px] sm:h-64 md:h-80 flex items-center shadow-xl group">
               <Image
-                src="/images/hero_fashion.png"
-                alt="Fashion Collection"
+                src="/images/hero_liquor.png"
+                alt="Dairy & Beverages"
                 fill
-                className="object-cover opacity-80 "
+                className="object-cover opacity-80"
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
-              <div className="relative z-10 p-5 sm:p-8 md:p-16 max-w-2xl">
-                <h2 className="font-heading text-xl sm:text-3xl md:text-5xl font-bold mb-2 sm:mb-3 text-white drop-shadow-md">
-                  Trending Fashion
-                </h2>
-                <p className="text-white/90 text-xs sm:text-lg mb-3 sm:mb-6 drop-shadow-sm">
-                  Step up your style game with our latest premium apparel collection.
-                </p>
-                <Button asChild style={{ background: "#2563eb", color: "#fff", borderRadius: "8px", fontWeight: 700, padding: "7px 14px" }} className="hover:opacity-90 transition-opacity border-0 text-xs sm:text-base h-8 sm:h-auto">
+              <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent" />
+              <div className="relative z-10 p-5 sm:p-8 md:p-12 w-[70%] sm:max-w-md flex flex-col items-start">
+                <h2 className="font-heading text-16 sm:text-3xl md:text-5xl font-extrabold mb-1 sm:mb-3 text-white drop-shadow-md leading-tight tracking-tight">
+                  Fruits & Vegetables                </h2>
+                <p className="text-white/90 text-[10px] sm:text-base mb-3 sm:mb-6 drop-shadow-sm font-medium leading-snug">
+                  Picked fresh. Delivered to your door.                </p>
+                <Button asChild className="bg-[#8b5cf6] hover:bg-[#7c3aed] text-white rounded-xl font-bold border-0 text-[10px] sm:text-sm h-7 sm:h-10 px-4 sm:px-6 transition-colors shadow-none">
                   <Link href="/shop">
-                    Explore Trends <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform" />
+                    Explore <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 ml-1.5" />
                   </Link>
                 </Button>
               </div>
             </div>
           </section>
           <ProductCarousel
-            title="Fashion & Apparel"
+            title="Fruits & Vegetables"
+            description="Picked fresh. Delivered to your door."
+            products={fruitsProducts}
+            link="/shop"
+            prependElement={fruitsPromo}
+          />
+        </>
+      )}
+
+      {fashionProducts.length > 0 && (
+        <>
+          <section className="container mx-auto px-5 sm:px-6 mt-6">
+            <div className="relative rounded-md overflow-hidden bg-zinc-900 h-[105px] sm:h-64 md:h-80 flex items-center shadow-xl group">
+              <Image
+                src="/images/hero_fashion.png"
+                alt="Trending Fashion"
+                fill
+                className="object-cover opacity-80 "
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent" />
+              <div className="relative z-10 p-5 sm:p-8 md:p-12 w-[70%] sm:max-w-md flex flex-col items-start">
+                <h2 className="font-heading text-16 sm:text-3xl md:text-5xl font-extrabold mb-1 sm:mb-3 text-white drop-shadow-md leading-tight tracking-tight">
+                  Fashion & Clothing
+                </h2>
+                <p className="text-white/90 text-[10px] sm:text-base mb-3 sm:mb-6 drop-shadow-sm font-medium leading-snug">
+                  Everyday wear. Every size. Every style.                </p>
+                <Button asChild className="bg-[#8b5cf6] hover:bg-[#7c3aed] text-white rounded-xl font-bold border-0 text-[10px] sm:text-sm h-7 sm:h-10 px-4 sm:px-6 transition-colors shadow-none">
+                  <Link href="/shop">
+                    Explore <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 ml-1.5" />
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </section>
+          <ProductCarousel
+            title="Fashion & Clothing"
             description="Everyday wear. Every size. Every style."
             products={fashionProducts}
             link="/shop"
@@ -264,175 +282,105 @@ export default function Home() {
       {drinkProducts.length > 0 && (
         <>
           <section className="container mx-auto px-5 sm:px-6 mt-6 mb-5">
-            <div className="relative rounded-0 sm:rounded-lg overflow-hidden bg-zinc-900 h-44 -mt-10 sm:h-64 md:h-80 flex items-center shadow-lg group">
+            <div className="relative rounded-xl overflow-hidden bg-zinc-900 h-[140px] sm:h-64 md:h-80 flex items-center shadow-lg group">
               <Image
                 src="/images/hero_liquor.png"
                 alt="Premium Liquors"
                 fill
                 className="object-cover opacity-80"
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
-              <div className="relative z-10 p-5 sm:p-8 md:p-16 max-w-2xl">
-                <h2 className="font-heading text-xl sm:text-3xl md:text-5xl font-bold mb-2 sm:mb-3 text-white drop-shadow-md">
-                  Premium Liquors
+              <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent" />
+              <div className="relative z-10 p-5 sm:p-8 md:p-12 w-[70%] sm:max-w-md flex flex-col items-start">
+                <h2 className="font-heading text-16 sm:text-3xl md:text-5xl font-extrabold mb-1 sm:mb-3 text-white drop-shadow-md leading-tight tracking-tight">
+                  Dairy & Beverages
                 </h2>
-                <p className="text-white/90 text-xs sm:text-lg mb-3 sm:mb-6 drop-shadow-sm">
-                  Discover the finest selection of beverages for your perfect evening.
+                <p className="text-white/90 text-[10px] sm:text-base mb-3 sm:mb-6 drop-shadow-sm font-medium leading-snug">
+                  Cold, fresh, and ready to pour.
                 </p>
-                <Button asChild style={{ background: "#2563eb", color: "#fff", borderRadius: "8px", fontWeight: 700, padding: "7px 14px" }} className="hover:opacity-90 transition-opacity border-0 text-xs sm:text-base h-8 sm:h-auto">
+                <Button asChild className="bg-[#8b5cf6] hover:bg-[#7c3aed] text-white rounded-xl font-bold border-0 text-[10px] sm:text-sm h-7 sm:h-10 px-4 sm:px-6 transition-colors shadow-none">
                   <Link href="/shop">
-                    Explore Spirits <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform" />
+                    Explore <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 ml-1.5" />
                   </Link>
                 </Button>
               </div>
             </div>
           </section>
           <ProductCarousel
-            title="Beverages & Drinks"
-            description="Stay refreshed. Juices, drinks, tea, coffee and more."
+            title="Dairy & Beverages"
+            description="Cold, fresh, and ready to pour."
             products={drinkProducts}
             link="/shop"
           />
 
-          {/* ── Stella-Style 3-Panel Banners ── */}
-          <section className="container mx-auto px-5 sm:px-6 mt-5 mb-16">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:h-[500px]">
 
-              {/* Left Large Banner — teal text | image split */}
-              <div
-                className="relative rounded-[20px] sm:rounded-[24px] overflow-hidden flex min-h-[280px] sm:min-h-[360px] lg:min-h-full group"
-                style={{ background: "#2dd4bf" }}
-              >
-                <div className="relative z-10 flex flex-col justify-between w-[46%] sm:w-[42%] shrink-0 p-5 sm:p-8 lg:p-10">
-                  <div>
-                    <div className="flex items-center gap-1.5 sm:gap-2 mb-4 sm:mb-6">
-                      <div className="w-4 h-4 sm:w-5 sm:h-5 bg-white rounded-sm flex items-center justify-center">
-                        <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-[#2dd4bf] rounded-[2px]" />
-                      </div>
-                      <span className="text-white font-bold text-base sm:text-xl tracking-tight">woxly</span>
-                    </div>
-
-                    <h2 className="text-xl sm:text-3xl lg:text-5xl font-bold text-white leading-[1.15] tracking-tight">
-                      Your Style,<br />
-                      Delivered.<br />
-                      Exclusively<br />
-                      Online.
-                    </h2>
-                  </div>
-
-                  <Link href="/shop" className="text-white/90 text-xs sm:text-sm font-medium hover:text-white hover:underline transition-colors mt-4">
-                    www.woxly.com
-                  </Link>
-                </div>
-
-                <div className="relative flex-1 min-h-full">
-                  <Image
-                    src="/images/hero_fashion.png"
-                    alt="Style Delivered"
-                    fill
-                    className="object-cover object-center"
-                  />
-                </div>
-              </div>
-
-
-              {/* Right Stacked Banners */}
-              <div className="flex flex-col gap-4 sm:gap-6 h-full">
-
-                {/* Top Right Banner — image left, text right */}
-                <div className="flex-1 relative rounded-[20px] sm:rounded-[24px] overflow-hidden bg-[#fafafa] flex items-center min-h-[180px] sm:min-h-[240px] group border border-zinc-100">
-                  <div className="relative w-[42%] sm:w-[45%] h-full min-h-[180px] sm:min-h-[240px] shrink-0">
-                    <Image
-                      src="/images/promo_electronics.png"
-                      alt="Accessories"
-                      fill
-                      className="object-contain p-3 sm:p-4 drop-shadow-xl"
-                    />
-                  </div>
-                  <div className="relative z-10 flex-1 py-5 pr-5 pl-2 sm:p-8 sm:pl-4">
-                    <p className="text-xs sm:text-sm font-semibold text-zinc-500 mb-1.5 sm:mb-2">Timeless elegance</p>
-                    <h3 className="text-base sm:text-[1.75rem] font-bold text-zinc-900 leading-tight mb-3 sm:mb-6">
-                      Discover our<br />accessories collection
-                    </h3>
-                    <Button asChild style={{ background: "#2563eb", color: "#fff", borderRadius: "8px", fontWeight: 700, padding: "0 16px" }} className="hover:opacity-90 transition-opacity border-0 h-8 sm:h-10 text-xs sm:text-sm">
-                      <Link href="/shop?category=electronics">Shop Now</Link>
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Bottom Right Banner — text left, image right */}
-                <div className="flex-1 relative rounded-[20px] sm:rounded-[24px] overflow-hidden bg-[#fafafa] flex items-center min-h-[180px] sm:min-h-[240px] group border border-zinc-100">
-                  <div className="relative z-10 flex-1 py-5 pl-5 pr-2 sm:p-8 sm:pr-4">
-                    <p className="text-xs sm:text-sm font-semibold text-zinc-500 mb-1.5 sm:mb-2">Find your perfect pair</p>
-                    <h3 className="text-base sm:text-[1.75rem] font-bold text-zinc-900 leading-tight mb-3 sm:mb-6">
-                      Explore our shoes<br />collection
-                    </h3>
-                    <Button asChild style={{ background: "#2563eb", color: "#fff", borderRadius: "8px", fontWeight: 700, padding: "0 16px" }} className="hover:opacity-90 transition-opacity border-0 h-8 sm:h-10 text-xs sm:text-sm">
-                      <Link href="/shop?category=fashion ">Shop Now</Link>
-                    </Button>
-                  </div>
-                  <div className="relative w-[42%] sm:w-[45%] h-full min-h-[180px] sm:min-h-[240px] shrink-0">
-                    <Image
-                      src="/images/promo_fashion.png"
-                      alt="Shoes"
-                      fill
-                      className="object-contain p-3 sm:p-4 drop-shadow-xl"
-                    />
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          </section>
         </>
       )}
 
-      {/* Bottom Banner Slots */}
-      <section className="container mx-auto px-2 sm:px-6 py-6 sm:py-8">
-        <div className="flex flex-col gap-2 sm:gap-2">
-          <Link
-            href="/shop"
-            className="relative flex w-full aspect-[2/1] sm:aspect-[3/1] items-center justify-center  bg-zinc-900 overflow-hidden hover:opacity-95 transition-opacity"
-          >
-            <span className="text-sm sm:text-base font-medium text-white/50 select-none">600 × 200</span>
-          </Link>
-          <Link
-            href="/shop"
-            className="relative flex w-full min-h-[100px] aspect-[3/1] sm:min-h-[88px] sm:aspect-[6/1] items-center justify-center  bg-zinc-800 overflow-hidden hover:opacity-95 transition-opacity"
-          >
-            <span className="text-xs sm:text-sm font-medium text-white/40 select-none">Banner</span>
-          </Link>
+      {stationaryProducts.length > 0 && (
+        <>
+          <StationaryBanners />
+          <ProductCarousel
+            title="Stationery & Office Supplies"
+            description="Pens, notebooks, and desk essentials."
+            products={stationaryProducts}
+            link="/shop"
+          />
+        </>
+      )}
+
+      <section className="container mx-auto px-5 sm:px-6 mt-6 mb-5">
+        <div className="relative rounded-md overflow-hidden bg-zinc-900 h-[105px] sm:h-64 md:h-80 flex items-center shadow-xl group">
+          <Image
+            src="/images/hero_liquor.png"
+            alt="Dairy & Beverages"
+            fill
+            className="object-cover opacity-80"
+          />
+
         </div>
       </section>
 
+      <section className="container mx-auto px-5 sm:px-6 mt-6 mb-6">
+        <div className="relative rounded-xl overflow-hidden bg-zinc-900 h-[200px] sm:h-64 md:h-80 flex items-center shadow-lg group">
+          <Image
+            src="/images/hero_liquor.png"
+            alt="Premium Liquors"
+            fill
+            className="object-cover opacity-80"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent" />
+
+        </div>
+      </section>
       {/* Features + Newsletter */}
       <section className="container mx-auto px-5 sm:px-6 mt-2 mb-5">
         {/* Service highlights */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 border border-primary-100/80 sm:border-zinc-200 rounded-2xl sm:rounded-xl overflow-hidden mb-6 sm:mb-16 bg-white shadow-sm">
+        <div className="grid grid-cols-2 sm:grid-cols-4 border border-gray-100 sm:border-zinc-200 rounded-xl sm:rounded-xl bg-white mb-6 sm:mb-16 shadow-sm">
           {[
-            { icon: IconTruck, title: "Free Delivery", desc: "On orders above ₹499" },
-            { icon: IconRefresh, title: "Easy Returns", desc: "30-day hassle-free" },
-            { icon: IconLock, title: "Secure Payment", desc: "UPI, cards, net banking" },
-            { icon: IconCash, title: "Cash on Delivery", desc: "Available on select pincodes" },
+            { icon: IconTruck, title: "Free Delivery", desc: "Doorstep in your delivery area" },
+            { icon: IconRefresh, title: "Easy Returns", desc: "Hassle-free return policy" },
+            { icon: IconLock, title: "Secure Payment", desc: "Checkout with confidence" },
+            { icon: IconLock, title: "Cash on Delivery", desc: "Pay when you receive" },
           ].map((item, i) => (
             <div
               key={item.title}
-              className={`flex flex-row items-center gap-3 sm:gap-4 p-4 sm:p-6 
-                ${i % 2 === 0 ? "border-r border-zinc-100/80 sm:border-r-0" : ""}
-                ${i < 2 ? "border-b border-zinc-100/80 sm:border-b-0" : ""}
+              className={`flex flex-row items-center gap-3 py-4 px-3 sm:p-6 
+                ${i < 2 ? "border-b border-gray-100 sm:border-b-0" : ""}
+                ${i % 2 === 1 ? "border-l border-gray-100" : ""}
                 ${i >= 1 ? "sm:border-l sm:border-zinc-200" : ""}
               `}
             >
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#f5f3ff] flex items-center justify-center shrink-0">
-                <item.icon className="w-5 h-5 sm:w-5 sm:h-5 text-primary" strokeWidth={1.5} />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-0 bg-[#f5f3ff] flex items-center justify-center shrink-0">
+                <item.icon className="w-5 h-5 sm:w-5 sm:h-5 text-primary stroke-[1.5]" />
               </div>
-              <div className="min-w-0">
-                <p className="font-bold text-[13px] sm:text-base text-zinc-900 leading-tight">{item.title}</p>
-                <p className="text-[9px] sm:text-sm text-muted-foreground mt-0.5 leading-snug hidden sm:block">{item.desc}</p>
+              <div className="min-w-0 flex-1">
+                <p className="font-bold text-[13px] sm:text-base text-gray-900 leading-tight pr-1">{item.title}</p>
+                <p className="hidden sm:block text-[13px] sm:text-sm text-gray-500 sm:text-muted-foreground leading-snug mt-1">{item.desc}</p>
               </div>
             </div>
           ))}
         </div>
+
 
         {/* Newsletter */}
         <div className="mt-6 mb-2">

@@ -195,8 +195,11 @@ export default function ProductDetailPage() {
       </div>
     );
   }
-
-  const inWatchlist = isInWatchlist(product.id);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  const inWatchlist = mounted ? isInWatchlist(product.id) : false;
   const colorMap: Record<string, string> = {
     Black: "#1f2937",
     Silver: "#c0c0c0",
@@ -1288,50 +1291,6 @@ export default function ProductDetailPage() {
         </section>
       </div>
 
-      {/* ── MANUFACTURER BANNERS ── */}
-      <div className=" py-10 lg:py-12 border-t  border-gray-200">
-        <div className="container mx-auto px-1 lg:px-6 max-w-7xl">
-
-          <div className="flex flex-col gap-3">
-            {/* Banner 1 */}
-            <div className="w-full aspect-[16/9] lg:aspect-[21/9] relative bg-[#f4f4f5]  overflow-hidden shadow-sm cursor-pointer group">
-              <Image
-                src="/images/product_placeholder.png"
-                alt="Manufacturer Banner 1"
-                fill
-                className="object-cover group-hover:scale-[1.02] transition-transform duration-700"
-              />
-              <div className="absolute inset-0 flex items-center justify-center bg-black/5 group-hover:bg-transparent transition-colors">
-                <span className="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-lg text-sm font-bold text-gray-600 tracking-widest uppercase">Banner 1</span>
-              </div>
-            </div>
-            {/* Banner 2 */}
-            <div className="w-full aspect-[16/9] lg:aspect-[21/9] relative bg-[#f4f4f5]  overflow-hidden shadow-sm cursor-pointer group">
-              <Image
-                src="/images/product_placeholder.png"
-                alt="Manufacturer Banner 2"
-                fill
-                className="object-cover group-hover:scale-[1.02] transition-transform duration-700"
-              />
-              <div className="absolute inset-0 flex items-center justify-center bg-black/5 group-hover:bg-transparent transition-colors">
-                <span className="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-lg text-sm font-bold text-gray-600 tracking-widest uppercase">Banner 2</span>
-              </div>
-            </div>
-            {/* Banner 3 */}
-            <div className="w-full aspect-[16/9] lg:aspect-[21/9] relative bg-[#f4f4f5]  overflow-hidden shadow-sm cursor-pointer group">
-              <Image
-                src="/images/product_placeholder.png"
-                alt="Manufacturer Banner 3"
-                fill
-                className="object-cover group-hover:scale-[1.02] transition-transform duration-700"
-              />
-              <div className="absolute inset-0 flex items-center justify-center bg-black/5 group-hover:bg-transparent transition-colors">
-                <span className="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-lg text-sm font-bold text-gray-600 tracking-widest uppercase">Banner 3</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* Fullscreen Image Lightbox */}
       <AnimatePresence>
