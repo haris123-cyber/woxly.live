@@ -20,23 +20,27 @@ export const PRODUCTS: Product[] = [
   // GROCERY
   {
     id: '1', name: 'Quaker Oats 1kg', slug: 'quaker-oats-1kg', price: 229, originalPrice: 269,
-    image: '/images/product_placeholder.png',
+    image: '/images/grocery/Quaker_Oats.jpeg',
+    images: ['/images/grocery/Quaker_Oats (2).jpeg'],
     category: 'Grocery', brand: 'Quaker', rating: 4.6, reviews: 4, description: 'Healthy and nutritious oats.', inStock: true,
     isSale: true, isHotSale: true, hasOffer: true
   },
   {
     id: '2', name: 'India Gate Rice 1kg', slug: 'india-gate-rice-1kg', price: 249,
-    image: '/images/product_placeholder.png',
+    image: '/images/grocery/india_Gate_Rice.jpeg',
+    images: ['/images/grocery/india_Gate_Rice (2).jpeg'],
     category: 'Grocery', brand: 'India Gate', rating: 4.6, reviews: 4, description: 'Premium quality basmati rice.', inStock: true
   },
   {
     id: '3', name: 'Whole Wheat Pasta 500g', slug: 'whole-wheat-pasta', price: 149,
-    image: '/images/product_placeholder.png',
+    image: '/images/grocery/Whole_wheat_past.jpeg',
+    images: ['/images/grocery/Whole_wheat_pasta (2).jpeg'],
     category: 'Grocery', brand: 'Barilla', rating: 4.5, reviews: 4, description: 'Healthy whole wheat penne pasta.', inStock: true
   },
   {
     id: '4', name: 'Extra Virgin Olive Oil 500ml', slug: 'olive-oil-500ml', price: 509, originalPrice: 629,
-    image: '/images/product_placeholder.png',
+    image: '/images/grocery/Olive_oil_bottles.jpeg',
+    images: ['/images/grocery/Four_olive_oil_bottles.jpeg'],
     category: 'Grocery', brand: 'Filippo Berio', rating: 4.8, reviews: 4, description: 'Premium cold pressed olive oil.', inStock: true,
     isNewArrived: true, isLimited: true, hasOffer: true
   },
@@ -67,39 +71,39 @@ export const PRODUCTS: Product[] = [
   // DAIRY & EGGS
   {
     id: '9', name: 'Amul Fresh Milk 1L', slug: 'amul-fresh-milk-1l', price: 109,
-    image: '/images/product_placeholder.png',
+    image: '/images/DAIRY & EGGS/amul_fresh_milk_1789022080468.jpg',
     category: 'Dairy & Eggs', brand: 'Amul', rating: 4.7, reviews: 4, description: 'Pasteurized fresh milk.', inStock: true
   },
   {
     id: '10', name: 'Farm Fresh Eggs (12 pack)', slug: 'farm-fresh-eggs', price: 309,
-    image: '/images/product_placeholder.png',
+    image: '/images/DAIRY & EGGS/farm_fresh_eggs_1789022099897.jpg',
     category: 'Dairy & Eggs', brand: 'Farm Valley', rating: 4.8, reviews: 4, description: 'Organic free range eggs.', inStock: true
   },
   {
     id: '11', name: 'Cheddar Cheese Block 250g', slug: 'cheddar-cheese', price: 349,
-    image: '/images/product_placeholder.png',
+    image: '/images/DAIRY & EGGS/cheddar_cheese_block_1789022122231.jpg',
     category: 'Dairy & Eggs', brand: 'Kraft', rating: 4.6, reviews: 4, description: 'Sharp and aged cheddar cheese.', inStock: true
   },
   {
     id: '12', name: 'Greek Yogurt 500g', slug: 'greek-yogurt', price: 259,
-    image: '/images/product_placeholder.png',
+    image: '/images/DAIRY & EGGS/Greek_yogurt_product_photography_20260910121334.jpeg',
     category: 'Dairy & Eggs', brand: 'Chobani', rating: 4.8, reviews: 4, description: 'Thick and creamy greek yogurt.', inStock: true
   },
 
   // BEVERAGES
   {
     id: '13', name: 'Coca-Cola Soft Drink 1.5L', slug: 'coca-cola-1-5l', price: 139, originalPrice: 159,
-    image: '/images/product_placeholder.png',
+    image: '/images/DAIRY & EGGS/Coca-Cola_bottle_in_studio_20260910121358.jpeg',
     category: 'Beverages', brand: 'Coca-Cola', rating: 4.5, reviews: 4, description: 'Refreshing carbonated beverage.', inStock: true, hasOffer: true
   },
   {
     id: '14', name: 'Fresh Orange Juice 1L', slug: 'orange-juice-1l', price: 189,
-    image: '/images/product_placeholder.png',
+    image: '/images/DAIRY & EGGS/Orange_juice_carton_on_background_20260910121403.jpeg',
     category: 'Beverages', brand: 'Tropicana', rating: 4.5, reviews: 4, description: '100% natural orange juice.', inStock: true
   },
   {
     id: '15', name: 'Pure Spring Water 6-pack', slug: 'spring-water-6pack', price: 389,
-    image: '/images/product_placeholder.png',
+    image: '/images/DAIRY & EGGS/Pure_Spring_Water_6-pack_20260910121409.jpeg',
     category: 'Beverages', brand: 'Evian', rating: 4.7, reviews: 4, description: 'Natural spring water.', inStock: true
   },
   {
@@ -111,88 +115,103 @@ export const PRODUCTS: Product[] = [
   // SNACKS
   {
     id: '17', name: 'Classic Potato Chips', slug: 'classic-potato-chips', price: 149, originalPrice: 199,
-    image: '/images/product_placeholder.png',
+    image: '/images/snacks/Potato_chips_product_photography_20260910123202.jpeg',
+    images: ['/images/snacks/Potato_chips_product_photography_20260910123233.jpeg'],
     category: 'Snacks', brand: 'Lays', rating: 4.4, reviews: 4, description: 'Crispy salted potato chips.', inStock: true, hasOffer: true
   },
   {
     id: '18', name: 'Mixed Nuts 200g', slug: 'mixed-nuts', price: 429,
-    image: '/images/product_placeholder.png',
+    image: '/images/snacks/Mixed_nuts_product_photography_20260910123211.jpeg',
+    images: ['/images/snacks/Mixed_nuts_product_photography_20260910123238.jpeg'],
     category: 'Snacks', brand: 'Planters', rating: 4.8, reviews: 4, description: 'Healthy roasted mixed nuts.', inStock: true
   },
   {
     id: '19', name: 'Dark Chocolate Bar', slug: 'dark-chocolate', price: 189,
-    image: '/images/product_placeholder.png',
+    image: '/images/snacks/Dark_chocolate_bar_product_photo…_20260910123217.jpeg',
+    images: ['/images/snacks/Dark_chocolate_bar_photography_20260910123222.jpeg'],
     category: 'Snacks', brand: 'Lindt', rating: 4.9, reviews: 4, description: '70% cocoa dark chocolate.', inStock: true
   },
   {
     id: '20', name: 'Caramel Popcorn', slug: 'caramel-popcorn', price: 269,
-    image: '/images/product_placeholder.png',
+    image: '/images/snacks/Caramel_popcorn_product_photography_20260910123226.jpeg',
+    images: ['/images/snacks/Caramel_popcorn_product_photography_20260910123230.jpeg'],
     category: 'Snacks', brand: 'Kernel', rating: 4.7, reviews: 4, description: 'Sweet and crunchy caramel popcorn.', inStock: true
   },
 
   // FASHION
   {
     id: '21', name: 'Brown Leather Handbag', slug: 'brown-handbag', price: 3189, originalPrice: 4299,
-    image: '/images/product_placeholder.png',
+    image: '/images/fashion/Brown_leather_handbag.jpeg',
+    images: ['/images/fashion/Brown_leather_handbag.jpeg'],
     category: 'Fashion', brand: 'FashionBrand', rating: 4.6, reviews: 4, description: 'Stylish brown leather handbag.', inStock: true, hasOffer: true
   },
   {
     id: '22', name: 'Nike Running Shoes', slug: 'nike-running-shoes', price: 5589,
-    image: '/images/product_placeholder.png',
+    image: '/images/fashion/Running_shoes.jpeg',
+    images: ['/images/fashion/Running_shoes.jpeg'],
     category: 'Fashion', brand: 'Nike', rating: 4.7, reviews: 4, description: 'Comfortable running shoes.', sizes: ['8', '9', '10', '11'], inStock: true
   },
   {
     id: '23', name: 'Classic Analog Watch', slug: 'classic-watch', price: 3989,
-    image: '/images/product_placeholder.png',
+    image: '/images/fashion/classic_analog_watch.jpeg',
+    images: ['/images/fashion/classic_analog_watch (2).jpeg'],
     category: 'Fashion', brand: 'Timeless', rating: 4.6, reviews: 4, description: 'Classic analog watch.', inStock: true
   },
   {
     id: '24', name: 'Denim Jacket', slug: 'denim-jacket', price: 4789,
-    image: '/images/product_placeholder.png',
+    image: '/images/fashion/Denim_jacket_product.jpeg',
+    images: ['/images/fashion/Denim_jacket_product (2).jpeg'],
     category: 'Fashion', brand: 'Levi', rating: 4.8, reviews: 4, description: 'Classic blue denim jacket.', sizes: ['S', 'M', 'L', 'XL'], inStock: true
   },
 
   // BEAUTY
   {
     id: '25', name: 'Luxury Perfume 50ml', slug: 'luxury-perfume-50ml', price: 7189,
-    image: '/images/product_placeholder.png',
+    image: '/images/beauty/Luxury_perfume_product_photography_20260910124345.jpeg',
+    images: ['/images/beauty/Luxury_perfume_bottle_on_background_20260910124349.jpeg'],
     category: 'Beauty', brand: 'Chanel', rating: 4.7, reviews: 4, description: 'Elegant and long lasting fragrance.', inStock: true
   },
   {
     id: '26', name: 'Moisturizing Face Cream', slug: 'face-cream', price: 1989,
-    image: '/images/product_placeholder.png',
+    image: '/images/beauty/Moisturizing_Face_Cream_photogra…_20260910124353.jpeg',
     category: 'Beauty', brand: 'Olay', rating: 4.5, reviews: 4, description: 'Hydrating day cream.', inStock: true
   },
   {
     id: '27', name: 'Matte Red Lipstick', slug: 'matte-lipstick', price: 1189,
-    image: '/images/product_placeholder.png',
+    image: '/images/beauty/Red_lipstick_product_photography_20260910124357.jpeg',
+    images: ['/images/beauty/Matte_Red_Lipstick_Product_Photo…_20260910124400.jpeg'],
     category: 'Beauty', brand: 'MAC', rating: 4.8, reviews: 4, description: 'Long-lasting matte lipstick.', inStock: true
   },
   {
     id: '28', name: 'Vitamin C Serum', slug: 'vitamin-c-serum', price: 2389,
-    image: '/images/product_placeholder.png',
+    image: '/images/beauty/Vitamin_C_serum_product_photography_20260910124403.jpeg',
+    images: ['/images/beauty/Vitamin_C_serum_product_photography_20260910124406.jpeg'],
     category: 'Beauty', brand: 'Ordinary', rating: 4.9, reviews: 4, description: 'Brightening vitamin C skin serum.', inStock: true
   },
 
   // ELECTRONICS
   {
     id: '29', name: 'Sony Wireless Headphones', slug: 'sony-wireless-headphones', price: 15989,
-    image: '/images/product_placeholder.png',
+    image: '/images/electronics/Sony_Wireless_Headphones_photogr…_20260910125050.jpeg',
+    images: ['/images/electronics/Sony_Wireless_Headphones_product…_20260910125055.jpeg'],
     category: 'Electronics', brand: 'Sony', rating: 4.9, reviews: 4, description: 'Noise cancelling over-ear headphones.', colors: ['Black', 'Silver'], inStock: true
   },
   {
     id: '30', name: 'Smart Phone Pro', slug: 'smart-phone-pro', price: 71989,
-    image: '/images/product_placeholder.png',
+    image: '/images/electronics/Smartphone_product_photography_20260910125059.jpeg',
+    images: ['/images/electronics/Smart_Phone_Pro_product_photography_20260910125103.jpeg'],
     category: 'Electronics', brand: 'TechBrand', rating: 4.8, reviews: 4, description: 'Latest generation smartphone.', colors: ['Silver', 'Black'], inStock: true
   },
   {
     id: '31', name: '10-inch Tablet', slug: '10-inch-tablet', price: 27989,
-    image: '/images/product_placeholder.png',
+    image: '/images/electronics/Tablet_product_photography_20260910125113.jpeg',
+    images: ['/images/electronics/Tablet_product_photography_studi…_20260910125117.jpeg'],
     category: 'Electronics', brand: 'TechBrand', rating: 4.6, reviews: 4, description: 'Powerful tablet for work and play.', inStock: true
   },
   {
     id: '32', name: 'Smart Watch Series 5', slug: 'smart-watch', price: 19989,
-    image: '/images/product_placeholder.png',
+    image: '/images/electronics/Smart_Watch_product_photography_20260910125146.jpeg',
+    images: ['/images/electronics/Smart_Watch_Series_5_photography_20260910125149.jpeg'],
     category: 'Electronics', brand: 'TechBrand', rating: 4.7, reviews: 4, description: 'Fitness and health tracking smartwatch.', inStock: true
   },
 
@@ -279,12 +298,14 @@ export const PRODUCTS: Product[] = [
   // NEW GROCERY
   {
     id: '45', name: 'Organic Lentils 1kg', slug: 'organic-lentils', price: 339,
-    image: '/images/product_placeholder.png',
+    image: '/images/grocery/Organic_lentils.jpeg',
+    images: ['/images/grocery/Organic_lentils (2).jpeg'],
     category: 'Grocery', brand: 'NatureFarm', rating: 4.5, reviews: 4, description: 'High protein organic lentils.', inStock: true
   },
   {
     id: '46', name: 'Tomato Pasta Sauce', slug: 'tomato-sauce', price: 229,
-    image: '/images/product_placeholder.png',
+    image: '/images/grocery/Tomato_Pasta_Sauce.jpeg',
+    images: ['/images/grocery/Tomato_Pasta_Sauce (2).jpeg'],
     category: 'Grocery', brand: 'Barilla', rating: 4.7, reviews: 4, description: 'Rich tomato and basil pasta sauce.', inStock: true
   },
 
@@ -340,12 +361,14 @@ export const PRODUCTS: Product[] = [
   // NEW FASHION
   {
     id: '55', name: 'Polarized Sunglasses', slug: 'polarized-sunglasses', price: 2389,
-    image: '/images/product_placeholder.png',
+    image: '/images/fashion/Polarized_sunglasses.jpeg',
+    images: ['/images/fashion/Polarized_sunglasses (2).jpeg'],
     category: 'Fashion', brand: 'RayBan', rating: 4.8, reviews: 4, description: 'Stylish polarized sunglasses with UV protection.', inStock: true
   },
   {
     id: '56', name: 'Winter Wool Scarf', slug: 'wool-scarf', price: 1589,
-    image: '/images/product_placeholder.png',
+    image: '/images/fashion/Winter_wool_scar.jpeg',
+    images: ['/images/fashion/Winter_wool_scar.jpeg'],
     category: 'Fashion', brand: 'FashionBrand', rating: 4.7, reviews: 4, description: 'Warm and cozy winter scarf.', inStock: true
   },
 
