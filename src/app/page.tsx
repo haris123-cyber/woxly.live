@@ -78,7 +78,7 @@ export default function Home() {
     { name: "Bags & Luggage", image: "/images/fashion/Brown_leather_handbag.jpeg" },
     { name: "Beauty & Personal Care", image: "/images/beauty/Luxury_perfume_bottle_on_background_20260910124349.jpeg" },
     { name: "Electronics", image: "/images/electronics/Smart_Phone_Pro_product_photography_20260910125103.jpeg" },
-    { name: "Home & Kitchen", image: "/images/home/Dishwashing_liquid_product_photo…_20260910153837.jpeg" },
+    { name: "Home & Kitchen", image: "/images/home care/Dishwashing_liquid_product_photo…_20260910153837.jpeg" },
     { name: "Liquor", image: "/images/liquor/Vodka_bottles_on_studio_background_20260910154513.jpeg" },
   ];
 

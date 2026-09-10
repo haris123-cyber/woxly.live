@@ -27,8 +27,8 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: '2', name: 'India Gate Rice 1kg', slug: 'india-gate-rice-1kg', price: 249,
-    image: '/images/grocery/india_Gate_Rice.jpeg',
-    images: ['/images/grocery/india_Gate_Rice (2).jpeg'],
+    image: '/images/grocery/India_Gate_Rice.jpeg',
+    images: ['/images/grocery/India_Gate_Rice (2).jpeg'],
     category: 'Grocery', brand: 'India Gate', rating: 4.6, reviews: 4, description: 'Premium quality basmati rice.', inStock: true
   },
   {
@@ -108,8 +108,8 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: '16', name: 'Green Tea Bags (50 pack)', slug: 'green-tea-bags', price: 309,
-    image: '/images/DAIRY & EGGS/Green_tea_bags_product_photography_20260910174221.jpeg',
-    images: ['/images/DAIRY & EGGS/Green_tea_bags_product_photography_20260910174225.jpeg'],
+    image: '/images/liquor/Green_tea_bags_product_photography_20260910174221.jpeg',
+    images: ['/images/liquor/Green_tea_bags_product_photography_20260910174225.jpeg'],
     category: 'Beverages', brand: 'Lipton', rating: 4.6, reviews: 4, description: 'Antioxidant rich green tea.', inStock: true
   },
 
@@ -154,8 +154,8 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: '23', name: 'Classic Analog Watch', slug: 'classic-watch', price: 3989,
-    image: '/images/fashion/classic_analog_watch.jpeg',
-    images: ['/images/fashion/classic_analog_watch (2).jpeg'],
+    image: '/images/fashion/Classic_analog_watch.jpeg',
+    images: ['/images/fashion/Classic_analog_watch (2).jpeg'],
     category: 'Fashion', brand: 'Timeless', rating: 4.6, reviews: 4, description: 'Classic analog watch.', inStock: true
   },
   {
@@ -307,8 +307,8 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: '46', name: 'Tomato Pasta Sauce', slug: 'tomato-sauce', price: 229,
-    image: '/images/grocery/Tomato_Pasta_Sauce.jpeg',
-    images: ['/images/grocery/Tomato_Pasta_Sauce (2).jpeg'],
+    image: '/images/grocery/Tomato_pasta_sauce.jpeg',
+    images: ['/images/grocery/Tomato_pasta_sauce.jpeg'],
     category: 'Grocery', brand: 'Barilla', rating: 4.7, reviews: 4, description: 'Rich tomato and basil pasta sauce.', inStock: true
   },
 
