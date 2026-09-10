@@ -68,18 +68,18 @@ export default function Home() {
   const meatProducts = PRODUCTS.filter(p => p.category === 'Meat & Seafood');
 
   const categoryImages = [
-    { name: "Vegetables & Fruits", image: "/images/product_placeholder.png" },
-    { name: "Grocery & Staples", image: "/images/product_placeholder.png" },
-    { name: "Dairy & Eggs", image: "/images/product_placeholder.png" },
-    { name: "Beverages", image: "/images/product_placeholder.png" },
-    { name: "Snacks & Munchies", image: "/images/product_placeholder.png" },
-    { name: "Food", image: "/images/product_placeholder.png" },
-    { name: "Fashion", image: "/images/product_placeholder.png" },
-    { name: "Bags & Luggage", image: "/images/product_placeholder.png" },
-    { name: "Beauty & Personal Care", image: "/images/product_placeholder.png" },
-    { name: "Electronics", image: "/images/product_placeholder.png" },
-    { name: "Home & Kitchen", image: "/images/product_placeholder.png" },
-    { name: "Liquor", image: "/images/product_placeholder.png" },
+    { name: "Vegetables & Fruits", image: "/images/veg/Organic_broccoli_2.jpg" },
+    { name: "Grocery & Staples", image: "/images/grocery/Quaker_Oats (2).jpeg" },
+    { name: "Dairy & Eggs", image: "/images/DAIRY & EGGS/farm_fresh_eggs_1789022099897.jpg" },
+    { name: "Beverages", image: "/images/liquor/Coca-Cola_bottle_in_studio_20260910121358.jpeg" },
+    { name: "Snacks & Munchies", image: "/images/snacks/lays_potato_chips_1789021004659.jpg" },
+    { name: "Food", image: "/images/meat&seafood/Atlantic_Salmon_product_photography_20260910165654.jpeg" },
+    { name: "Fashion", image: "/images/fashion/Denim_jacket_product.jpeg" },
+    { name: "Bags & Luggage", image: "/images/fashion/Brown_leather_handbag.jpeg" },
+    { name: "Beauty & Personal Care", image: "/images/beauty/Luxury_perfume_bottle_on_background_20260910124349.jpeg" },
+    { name: "Electronics", image: "/images/electronics/Smart_Phone_Pro_product_photography_20260910125103.jpeg" },
+    { name: "Home & Kitchen", image: "/images/home/Dishwashing_liquid_product_photo…_20260910153837.jpeg" },
+    { name: "Liquor", image: "/images/liquor/Vodka_bottles_on_studio_background_20260910154513.jpeg" },
   ];
 
   const fruitsPromo = (
