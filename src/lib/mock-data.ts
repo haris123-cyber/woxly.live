@@ -34,7 +34,7 @@ export const PRODUCTS: Product[] = [
   {
     id: '3', name: 'Whole Wheat Pasta 500g', slug: 'whole-wheat-pasta', price: 149,
     image: '/images/grocery/Whole_wheat_past.jpeg',
-    images: ['/images/grocery/Whole_wheat_pasta (2).jpeg'],
+    images: ['/images/grocery/Whole_wheat_pasta.jpeg'],
     category: 'Grocery', brand: 'Barilla', rating: 4.5, reviews: 4, description: 'Healthy whole wheat penne pasta.', inStock: true
   },
   {
@@ -288,7 +288,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: '69', name: 'Sticky Notes Set', slug: 'sticky-notes', price: 149,
-    image: '/images/product_placeholder.png',
+    image: '/images/more/sticky_notes_set.jpg',
     category: 'Stationery', brand: 'PostIt', rating: 4.9, reviews: 4, description: 'Colorful sticky notes for reminders.', inStock: true
   },
   {
