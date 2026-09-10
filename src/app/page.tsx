@@ -217,7 +217,7 @@ export default function Home() {
           <section className="container mx-auto px-5 sm:px-6 mt-2 mb-0">
             <div className="relative rounded-md overflow-hidden bg-zinc-900 h-[110px] sm:h-64 md:h-80 flex items-center shadow-xl group">
               <Image
-                src="/images/hero_liquor.png"
+                src="/images/banners/Fruits_arranged_on_dark_background_20260910170343.jpeg"
                 alt="Dairy & Beverages"
                 fill
                 className="object-cover opacity-80"
@@ -334,7 +334,7 @@ export default function Home() {
           <section className="container mx-auto px-5 sm:px-6 mt-0 mb-0">
             <div className="relative rounded-md overflow-hidden bg-zinc-900 h-[110px] sm:h-64 md:h-80 flex items-center shadow-lg group">
               <Image
-                src="/images/hero_liquor.png"
+                src="/images/banners/Meat_and_seafood_arrangement_20260910171526.jpeg"
                 alt="Fresh Meat & Seafood"
                 fill
                 className="object-cover opacity-80"
@@ -369,7 +369,7 @@ export default function Home() {
       <section className="container mx-auto px-5 sm:px-6 mt-0 mb-2">
         <div className="relative rounded-xl overflow-hidden bg-zinc-900 h-[200px] sm:h-64 md:h-80 flex items-center shadow-lg group">
           <Image
-            src="/images/hero_liquor.png"
+            src="/images/banners/Mobile_phones_displayed_diagonally_20260910171528.jpeg"
             alt="Premium Liquors"
             fill
             className="object-cover opacity-80"

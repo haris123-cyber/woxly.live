@@ -108,7 +108,8 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: '16', name: 'Green Tea Bags (50 pack)', slug: 'green-tea-bags', price: 309,
-    image: '/images/product_placeholder.png',
+    image: '/images/DAIRY & EGGS/Green_tea_bags_product_photography_20260910174221.jpeg',
+    images: ['/images/DAIRY & EGGS/Green_tea_bags_product_photography_20260910174225.jpeg'],
     category: 'Beverages', brand: 'Lipton', rating: 4.6, reviews: 4, description: 'Antioxidant rich green tea.', inStock: true
   },
 
@@ -218,61 +219,71 @@ export const PRODUCTS: Product[] = [
   // HOME CARE
   {
     id: '33', name: 'Laundry Detergent Pods', slug: 'laundry-pods', price: 1029,
-    image: '/images/product_placeholder.png',
+    image: '/images/home care/Laundry_detergent_pods_photographed_20260910153827.jpeg',
+    images: ['/images/home care/Laundry_detergent_pods_product_p…_20260910153831.jpeg'],
     category: 'Home Care', brand: 'Tide', rating: 4.7, reviews: 4, description: 'Stain removing laundry pods.', inStock: true
   },
   {
     id: '34', name: 'Dishwashing Liquid', slug: 'dishwashing-liquid', price: 389,
-    image: '/images/product_placeholder.png',
+    image: '/images/home care/Dishwashing_liquid_product_photo…_20260910153834.jpeg',
+    images: ['/images/home care/Dishwashing_liquid_product_photo…_20260910153837.jpeg'],
     category: 'Home Care', brand: 'Dawn', rating: 4.8, reviews: 4, description: 'Grease cutting dish soap.', inStock: true
   },
   {
     id: '35', name: 'Glass Cleaner Spray', slug: 'glass-cleaner', price: 309,
-    image: '/images/product_placeholder.png',
+    image: '/images/home care/Glass_cleaner_spray_product_phot…_20260910153845.jpeg',
+    images: ['/images/home care/Glass_cleaner_spray_product_phot…_20260910153847.jpeg'],
     category: 'Home Care', brand: 'Windex', rating: 4.5, reviews: 4, description: 'Streak-free window cleaner.', inStock: true
   },
   {
     id: '36', name: 'Paper Towels (6 Rolls)', slug: 'paper-towels', price: 789,
-    image: '/images/product_placeholder.png',
+    image: '/images/home care/Paper_towels_product_photography_20260910153950.jpeg',
+    images: ['/images/home care/Paper_towels_in_studio_20260910153952.jpeg'],
     category: 'Home Care', brand: 'Bounty', rating: 4.9, reviews: 4, description: 'Ultra absorbent paper towels.', inStock: true
   },
 
   // LIQUOR
   {
     id: '37', name: 'Cabernet Red Wine 750ml', slug: 'red-wine', price: 1189,
-    image: '/images/product_placeholder.png',
+    image: '/images/liquor/Cabernet_red_wine_bottle_photogr…_20260910154409.jpeg',
     category: 'Liquor', brand: 'Vineyard', rating: 4.6, reviews: 4, description: 'Rich and bold red wine.', inStock: true
   },
   {
     id: '38', name: 'Craft Beer 6-pack', slug: 'craft-beer', price: 949,
-    image: '/images/product_placeholder.png',
+    image: '/images/liquor/Craft_beer_pack_studio_photography_20260910154413.jpeg',
+    images: ['/images/liquor/Craft_beer_pack_photography_20260910154416.jpeg'],
     category: 'Liquor', brand: 'Brewery', rating: 4.7, reviews: 4, description: 'Locally brewed craft IPA.', inStock: true
   },
   {
     id: '39', name: 'Aged Whiskey 700ml', slug: 'whiskey', price: 3669,
-    image: '/images/product_placeholder.png',
+    image: '/images/liquor/Aged_whiskey_bottles_on_display_20260910154420.jpeg',
+    images: ['/images/liquor/Four_bottles_of_whiskey_20260910154424.jpeg'],
     category: 'Liquor', brand: 'Distillery', rating: 4.9, reviews: 4, description: '12-year aged premium whiskey.', inStock: true
   },
   {
     id: '40', name: 'Premium Vodka 750ml', slug: 'vodka', price: 2389,
-    image: '/images/product_placeholder.png',
+    image: '/images/liquor/Vodka_bottles_on_studio_background_20260910154513.jpeg',
+    images: ['/images/liquor/Vodka_bottles_on_studio_background_20260910154516.jpeg'],
     category: 'Liquor', brand: 'Distillery', rating: 4.5, reviews: 4, description: 'Smooth and triple distilled vodka.', inStock: true
   },
 
   // MORE
   {
     id: '41', name: 'Hardcover Notebook', slug: 'notebook', price: 709,
-    image: '/images/product_placeholder.png',
+    image: '/images/more/Hardcover_notebook_product_photo…_20260910155010.jpeg',
+    images: ['/images/more/Hardcover_notebook_product_photo…_20260910155014.jpeg'],
     category: 'Stationery', brand: 'PaperCraft', rating: 4.7, reviews: 4, description: 'Ruled pages hardcover notebook.', inStock: true
   },
   {
     id: '67', name: 'Premium Ballpoint Pens (Pack of 5)', slug: 'ballpoint-pens', price: 299,
-    image: '/images/product_placeholder.png',
+    image: '/images/more/Ballpoint_pens_product_photography_20260910155021.jpeg',
+    images: ['/images/more/Ballpoint_pens_displayed_for_sale_20260910155018.jpeg'],
     category: 'Stationery', brand: 'Parker', rating: 4.8, reviews: 4, description: 'Smooth writing ballpoint pens.', inStock: true
   },
   {
     id: '68', name: 'Desk Organizer', slug: 'desk-organizer', price: 899,
-    image: '/images/product_placeholder.png',
+    image: '/images/more/Desk_organizer_product_photography_20260910155025.jpeg',
+    images: ['/images/more/Desk_organizer_product_photography_20260910155028.jpeg'],
     category: 'Stationery', brand: 'OfficePro', rating: 4.6, reviews: 4, description: 'Multifunctional wooden desk organizer.', inStock: true
   },
   {
@@ -282,19 +293,11 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: '42', name: 'Yoga Mat', slug: 'yoga-mat', price: 1589,
-    image: '/images/product_placeholder.png',
+    image: '/images/more/Yoga_mat_product_photography_20260910155031.jpeg',
+    images: ['/images/more/Yoga_mat_product_photography_20260910155035.jpeg'],
     category: 'More', brand: 'Fitness', rating: 4.8, reviews: 4, description: 'Non-slip exercise yoga mat.', inStock: true
   },
-  {
-    id: '43', name: 'Premium Dog Food 5kg', slug: 'dog-food', price: 1989,
-    image: '/images/product_placeholder.png',
-    category: 'More', brand: 'PetCare', rating: 4.6, reviews: 4, description: 'Nutritious dry food for adult dogs.', inStock: true
-  },
-  {
-    id: '44', name: 'Basic Tool Set', slug: 'tool-set', price: 2789,
-    image: '/images/product_placeholder.png',
-    category: 'More', brand: 'Hardware', rating: 4.7, reviews: 4, description: 'Essential tools for home repair.', inStock: true
-  },
+
   // NEW GROCERY
   {
     id: '45', name: 'Organic Lentils 1kg', slug: 'organic-lentils', price: 339,
@@ -313,6 +316,7 @@ export const PRODUCTS: Product[] = [
   {
     id: '47', name: 'Fresh Oranges 1kg', slug: 'fresh-oranges', price: 189,
     image: '/images/veg/Oranges_on_studio.jpeg',
+    images: ['/images/veg/Oranges_on_studio.jpeg'],
     category: 'Fruits & Veg', brand: 'Fresh Farm', rating: 4.8, reviews: 4, description: 'Juicy and sweet fresh oranges.', inStock: true
   },
   {
@@ -325,38 +329,31 @@ export const PRODUCTS: Product[] = [
   // NEW DAIRY & EGGS
   {
     id: '49', name: 'Salted Butter 250g', slug: 'salted-butter', price: 269,
-    image: '/images/product_placeholder.png',
+    image: '/images/DAIRY & EGGS/Cream_Cheese_product_photography_20260910155248.jpeg',
+    images: ['/images/DAIRY & EGGS/Cream_cheese_product_photography_20260910155252.jpeg'],
     category: 'Dairy & Eggs', brand: 'Amul', rating: 4.9, reviews: 4, description: 'Creamy and rich salted butter.', inStock: true
   },
   {
     id: '50', name: 'Cream Cheese 200g', slug: 'cream-cheese', price: 229,
-    image: '/images/product_placeholder.png',
+    image: '/images/DAIRY & EGGS/Salted_butter_product_photography_20260910155220.jpeg',
+    images: ['/images/DAIRY & EGGS/Salted_butter_product_photography_20260910155223.jpeg'],
     category: 'Dairy & Eggs', brand: 'Philadelphia', rating: 4.8, reviews: 4, description: 'Smooth and spreadable cream cheese.', inStock: true
   },
 
   // NEW BEVERAGES
   {
     id: '51', name: 'Peach Iced Tea 1L', slug: 'peach-iced-tea', price: 169,
-    image: '/images/product_placeholder.png',
+    image: '/images/liquor/Peach_Iced_Tea_product_photography_20260910155708.jpeg',
+    images: ['/images/liquor/Peach_iced_tea_product_photography_20260910155712.jpeg'],
     category: 'Beverages', brand: 'Lipton', rating: 4.5, reviews: 4, description: 'Refreshing peach flavored iced tea.', inStock: true
   },
   {
     id: '52', name: 'Energy Drink 250ml', slug: 'energy-drink', price: 149,
-    image: '/images/product_placeholder.png',
+    image: '/images/liquor/Energy_drink_product_photography_20260910155912.jpeg',
+    images: ['/images/liquor/Energy_drink_product_photography_20260910155915.jpeg'],
     category: 'Beverages', brand: 'Red Bull', rating: 4.7, reviews: 4, description: 'Vitalizing energy drink.', inStock: true
   },
 
-  // NEW SNACKS
-  {
-    id: '53', name: 'Salted Pretzels 200g', slug: 'salted-pretzels', price: 189,
-    image: '/images/product_placeholder.png',
-    category: 'Snacks', brand: 'Snyder', rating: 4.4, reviews: 4, description: 'Crunchy baked pretzels.', inStock: true
-  },
-  {
-    id: '54', name: 'Tortilla Chips 250g', slug: 'tortilla-chips', price: 259,
-    image: '/images/product_placeholder.png',
-    category: 'Snacks', brand: 'Doritos', rating: 4.6, reviews: 4, description: 'Crispy corn tortilla chips.', inStock: true
-  },
 
   // NEW FASHION
   {
@@ -372,85 +369,32 @@ export const PRODUCTS: Product[] = [
     category: 'Fashion', brand: 'FashionBrand', rating: 4.7, reviews: 4, description: 'Warm and cozy winter scarf.', inStock: true
   },
 
-  // NEW BEAUTY
-  {
-    id: '57', name: 'Hydrating Body Lotion', slug: 'body-lotion', price: 1029,
-    image: '/images/product_placeholder.png',
-    category: 'Beauty', brand: 'Nivea', rating: 4.7, reviews: 4, description: 'Deep moisture body lotion.', inStock: true
-  },
-  {
-    id: '58', name: 'SPF 50 Sunscreen', slug: 'sunscreen', price: 1229,
-    image: '/images/product_placeholder.png',
-    category: 'Beauty', brand: 'Neutrogena', rating: 4.8, reviews: 4, description: 'Broad spectrum SPF 50 sunscreen.', inStock: true
-  },
 
-  // NEW ELECTRONICS
-  {
-    id: '59', name: 'Wireless Ergonomic Mouse', slug: 'wireless-mouse', price: 1989,
-    image: '/images/product_placeholder.png',
-    category: 'Electronics', brand: 'Logitech', rating: 4.6, reviews: 4, description: 'Comfortable wireless optical mouse.', inStock: true
-  },
-  {
-    id: '60', name: 'Portable Bluetooth Speaker', slug: 'bluetooth-speaker', price: 4789,
-    image: '/images/product_placeholder.png',
-    category: 'Electronics', brand: 'JBL', rating: 4.8, reviews: 4, description: 'Waterproof portable bluetooth speaker.', inStock: true
-  },
 
-  // NEW HOME CARE
-  {
-    id: '61', name: 'All-Purpose Cleaner Spray', slug: 'all-purpose-cleaner', price: 349,
-    image: '/images/product_placeholder.png',
-    category: 'Home Care', brand: 'Lysol', rating: 4.7, reviews: 4, description: 'Multi-surface antibacterial cleaner.', inStock: true
-  },
-  {
-    id: '62', name: 'Cleaning Sponges (6 pack)', slug: 'cleaning-sponges', price: 259,
-    image: '/images/product_placeholder.png',
-    category: 'Home Care', brand: 'Scotch-Brite', rating: 4.5, reviews: 4, description: 'Heavy duty scrub sponges.', inStock: true
-  },
-
-  // NEW LIQUOR
-  {
-    id: '63', name: 'London Dry Gin 700ml', slug: 'dry-gin', price: 1989,
-    image: '/images/product_placeholder.png',
-    category: 'Liquor', brand: 'Bombay', rating: 4.6, reviews: 4, description: 'Classic dry gin.', inStock: true
-  },
-  {
-    id: '64', name: 'Silver Tequila 750ml', slug: 'silver-tequila', price: 2789,
-    image: '/images/product_placeholder.png',
-    category: 'Liquor', brand: 'Patron', rating: 4.8, reviews: 4, description: 'Premium blue agave tequila.', inStock: true
-  },
-
-  // NEW MORE
-  {
-    id: '65', name: 'Squeaky Dog Toy', slug: 'dog-toy', price: 549,
-    image: '/images/product_placeholder.png',
-    category: 'More', brand: 'PetCare', rating: 4.4, reviews: 4, description: 'Durable rubber chew toy.', inStock: true
-  },
-  {
-    id: '66', name: 'LED Desk Lamp', slug: 'desk-lamp', price: 2389,
-    image: '/images/product_placeholder.png',
-    category: 'More', brand: 'HomeGoods', rating: 4.7, reviews: 4, description: 'Adjustable LED desk lamp with dimming.', inStock: true
-  },
 
   // MEAT & SEAFOOD
   {
     id: '70', name: 'Fresh Chicken Breast 500g', slug: 'chicken-breast', price: 249,
-    image: '/images/product_placeholder.png',
+    image: '/images/meat&seafood/Chicken_breast_on_studio_background_20260910165310.jpeg',
+    images: ['/images/meat&seafood/Fresh_chicken_breast_product_pho…_20260910165306.jpeg'],
     category: 'Meat & Seafood', brand: 'Fresh Farm', rating: 4.8, reviews: 4, description: 'Tender and juicy chicken breast.', inStock: true
   },
   {
     id: '71', name: 'Premium Atlantic Salmon 300g', slug: 'atlantic-salmon', price: 599, originalPrice: 699,
-    image: '/images/product_placeholder.png',
+    image: '/images/meat&seafood/Atlantic_Salmon_product_photography_20260910165654.jpeg',
+    images: ['/images/meat&seafood/Salmon_product_photography_20260910165650.jpeg'],
     category: 'Meat & Seafood', brand: 'Ocean Catch', rating: 4.9, reviews: 4, description: 'Freshly caught atlantic salmon.', inStock: true, hasOffer: true
   },
   {
     id: '72', name: 'Mutton Curry Cut 500g', slug: 'mutton-curry-cut', price: 649,
-    image: '/images/product_placeholder.png',
+    image: '/images/meat&seafood/Mutton_Curry_Cut_product_photogr…_20260910165657.jpeg',
+    images: ['/images/meat&seafood/Mutton_curry_cut_product_photogr…_20260910165700.jpeg'],
     category: 'Meat & Seafood', brand: 'Fresh Farm', rating: 4.7, reviews: 4, description: 'Premium quality mutton for curries.', inStock: true
   },
   {
     id: '73', name: 'Peeled Prawns 250g', slug: 'peeled-prawns', price: 349,
-    image: '/images/product_placeholder.png',
+    image: '/images/meat&seafood/Peeled_prawns_product_photography_20260910165703.jpeg',
+    images: ['/images/meat&seafood/Peeled_prawns_product_photography_20260910165706.jpeg'],
     category: 'Meat & Seafood', brand: 'Ocean Catch', rating: 4.6, reviews: 4, description: 'Freshly peeled medium prawns.', inStock: true
   }
 ];

@@ -17,7 +17,7 @@ const slides = [
     bgColor: "bg-zinc-900",
     gradient: "from-black/90 via-black/60 to-transparent",
     buttonBg: "bg-[#8b5cf6] hover:bg-[#7c3aed] text-white",
-    image: "/images/product_placeholder.png",
+    image: "/images/banners/Floating_fruits_on_dark_background_20260910171543.jpeg",
   },
   {
     id: 2,
@@ -25,9 +25,9 @@ const slides = [
     desc: "Discover our exclusive collection of fine writing instruments.",
     buttonText: "Shop Now",
     bgColor: "bg-[#1e3a8a]",
-    gradient: "from-[#1e3a8a] via-[#1e40af] to-[#2563eb]",
+    gradient: "from-[#1e3a8a]/90 via-[#1e40af]/60 to-transparent",
     buttonBg: "bg-white text-[#1e3a8a] hover:bg-gray-100",
-    image: null,
+    image: "/images/banners/Headsets_lined_up_diagonally_20260910171540.jpeg",
   },
   {
     id: 3,
@@ -35,9 +35,9 @@ const slides = [
     desc: "Keep your workspace clean and productive.",
     buttonText: "Explore",
     bgColor: "bg-[#064e3b]",
-    gradient: "from-[#064e3b] via-[#065f46] to-[#059669]",
+    gradient: "from-[#064e3b]/90 via-[#065f46]/60 to-transparent",
     buttonBg: "bg-[#8b5cf6] hover:bg-[#7c3aed] text-white",
-    image: null,
+    image: "/images/banners/Liquors_aligned_on_glowing_shelf_20260910171532.jpeg",
   }
 ];
 
@@ -73,10 +73,12 @@ export function StationaryBanners() {
                     src={slide.image}
                     alt={slide.title}
                     fill
+                    priority
                     className="object-cover opacity-80"
                   />
                 )}
                 <div className={`absolute inset-0 bg-gradient-to-r ${slide.gradient}`} />
+
               </div>
             </div>
           ))}
