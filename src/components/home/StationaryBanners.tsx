@@ -13,31 +13,29 @@ const slides = [
     id: 1,
     title: "Stationery & Office",
     desc: "Essentials for work, study, and creativity.",
-    buttonText: "Explore",
-    bgColor: "bg-zinc-900",
-    gradient: "from-black/90 via-black/60 to-transparent",
-    buttonBg: "bg-[#8b5cf6] hover:bg-[#7c3aed] text-white",
-    image: "/images/banners/Floating_fruits_on_dark_background_20260910171543.jpeg",
+
+    image: "/images/banners/banner carosel 1.jpg.jpeg",
   },
   {
     id: 2,
     title: "Premium Pens",
     desc: "Discover our exclusive collection of fine writing instruments.",
-    buttonText: "Shop Now",
-    bgColor: "bg-[#1e3a8a]",
-    gradient: "from-[#1e3a8a]/90 via-[#1e40af]/60 to-transparent",
-    buttonBg: "bg-white text-[#1e3a8a] hover:bg-gray-100",
-    image: "/images/banners/Headsets_lined_up_diagonally_20260910171540.jpeg",
+
+    image: "/images/banners/banner carosel 2.jpg.jpeg",
   },
   {
     id: 3,
     title: "Desk Organizers",
-    desc: "Keep your workspace clean and productive.",
-    buttonText: "Explore",
-    bgColor: "bg-[#064e3b]",
-    gradient: "from-[#064e3b]/90 via-[#065f46]/60 to-transparent",
-    buttonBg: "bg-[#8b5cf6] hover:bg-[#7c3aed] text-white",
-    image: "/images/banners/Liquors_aligned_on_glowing_shelf_20260910171532.jpeg",
+
+    image: "/images/banners/banner carosel 3.jpg.jpeg",
+  },
+
+  {
+    id: 4,
+    title: "Desk Organizers",
+
+
+    image: "/images/banners/banner carosel 4.jpg.jpeg",
   }
 ];
 
@@ -67,18 +65,15 @@ export function StationaryBanners() {
         <div className="flex touch-pan-y flex-row -ml-4">
           {slides.map((slide) => (
             <div key={slide.id} className="flex-[0_0_92%] sm:flex-[0_0_100%] min-w-0 pl-4">
-              <div className={`relative rounded-[12px] sm:rounded-xl overflow-hidden ${slide.bgColor} h-[180px] sm:h-64 md:h-80 flex items-center shadow-sm w-full`}>
+              <div className="flex justify-center items-center w-full">
                 {slide.image && (
-                  <Image
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img
                     src={slide.image}
                     alt={slide.title}
-                    fill
-                    priority
-                    className="object-cover opacity-80"
+                    className="w-auto h-auto max-w-full max-h-[200px] md:max-h-[320px] rounded-[12px] sm:rounded-xl shadow-sm object-contain"
                   />
                 )}
-                <div className={`absolute inset-0 bg-gradient-to-r ${slide.gradient}`} />
-
               </div>
             </div>
           ))}

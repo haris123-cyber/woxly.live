@@ -147,64 +147,29 @@ export default function Home() {
       {/* Promo Banners */}
       <section className="container mx-auto px-5 -mt-5 sm:px-6 py-4">
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-2">
-          <div className="rounded-xl sm:rounded-2xl bg-[#dcedcd] text-[#1b4e2b] p-4 sm:p-6 relative overflow-hidden h-32 sm:h-44 flex flex-col justify-center">
-            <div className="relative z-10 w-2/3">
-              <h3 className="font-bold text-sm sm:text-xl leading-tight mb-1">Up to 30% OFF</h3>
-              <p className="text-xs sm:text-sm mb-2 sm:mb-4 font-medium">on Fresh Vegetables</p>
-              <Button asChild size="sm" variant="outline" className="bg-white border-0 text-black hover:bg-gray-100 rounded-full h-7 sm:h-8 px-3 sm:px-4 text-[10px] sm:text-xs font-bold group w-fit">
-                <Link href="/shop">
-                  Shop Now <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </Button>
-            </div>
-            <div className="absolute -right-4 -bottom-4 w-20 sm:w-32 h-20 sm:h-32">
-              <Image src="/images/promo_veggies.png" alt="Veggies" fill className="object-cover rounded-full" />
-            </div>
+          <div className="rounded-xl relative overflow-hidden flex flex-col justify-center shadow-sm hover:shadow-md transition-shadow">
+            <Link href="/shop" className="block w-full">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/banners/grid 1@4x.png" alt="Promo 1" className="w-full h-auto block" />
+            </Link>
           </div>
-
-          <div className="rounded-xl sm:rounded-2xl bg-[#fee4c6] text-[#8b4513] p-4 sm:p-6 relative overflow-hidden h-32 sm:h-44 flex flex-col justify-center">
-            <div className="relative z-10 w-2/3">
-              <h3 className="font-bold text-sm sm:text-xl leading-tight mb-1">Up to 20% OFF</h3>
-              <p className="text-xs sm:text-sm mb-2 sm:mb-4 font-medium">on Beverages</p>
-              <Button asChild size="sm" variant="outline" className="bg-white border-0 text-black hover:bg-gray-100 rounded-full h-7 sm:h-8 px-3 sm:px-4 text-[10px] sm:text-xs font-bold group w-fit">
-                <Link href="/shop">
-                  Shop Now <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </Button>
-            </div>
-            <div className="absolute -right-4 -bottom-4 w-20 sm:w-32 h-20 sm:h-32">
-              <Image src="/images/promo_drinks.png" alt="Drinks" fill className="object-cover rounded-full" />
-            </div>
+          <div className="rounded-xl relative overflow-hidden flex flex-col justify-center shadow-sm hover:shadow-md transition-shadow">
+            <Link href="/shop" className="block w-full">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/banners/grid 2@4x.png" alt="Promo 2" className="w-full h-auto block" />
+            </Link>
           </div>
-
-          <div className="rounded-xl sm:rounded-2xl bg-[#d8e0ff] text-[#1e3a8a] p-4 sm:p-6 relative overflow-hidden h-32 sm:h-44 flex flex-col justify-center">
-            <div className="relative z-10 w-2/3">
-              <h3 className="font-bold text-sm sm:text-xl leading-tight mb-1">Trendy Fashion</h3>
-              <p className="text-xs sm:text-sm mb-2 sm:mb-4 font-medium">New Arrivals</p>
-              <Button asChild size="sm" variant="outline" className="bg-white border-0 text-black hover:bg-gray-100 rounded-full h-7 sm:h-8 px-3 sm:px-4 text-[10px] sm:text-xs font-bold group w-fit">
-                <Link href="/shop">
-                  Shop Now <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </Button>
-            </div>
-            <div className="absolute -right-2 bottom-0 w-20 sm:w-32 h-20 sm:h-32">
-              <Image src="/images/promo_fashion.png" alt="Fashion" fill className="object-cover rounded-full" />
-            </div>
+          <div className="rounded-xl relative overflow-hidden flex flex-col justify-center shadow-sm hover:shadow-md transition-shadow">
+            <Link href="/shop" className="block w-full">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/banners/grid 3@4x.png" alt="Promo 3" className="w-full h-auto block" />
+            </Link>
           </div>
-
-          <div className="rounded-xl sm:rounded-2xl bg-[#ffe4e6] text-[#be123c] p-4 sm:p-6 relative overflow-hidden h-32 sm:h-44 flex flex-col justify-center">
-            <div className="relative z-10 w-2/3">
-              <h3 className="font-bold text-sm sm:text-xl leading-tight mb-1">Daily Essentials</h3>
-              <p className="text-xs sm:text-sm mb-2 sm:mb-4 font-medium">Top picks for you</p>
-              <Button asChild size="sm" variant="outline" className="bg-white border-0 text-black hover:bg-gray-100 rounded-full h-7 sm:h-8 px-3 sm:px-4 text-[10px] sm:text-xs font-bold group w-fit">
-                <Link href="/shop">
-                  Shop Now <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </Button>
-            </div>
-            <div className="absolute -right-4 -bottom-4 w-20 sm:w-32 h-20 sm:h-32">
-              <Image src="/images/promo_electronics.png" alt="Electronics" fill className="object-cover rounded-full" />
-            </div>
+          <div className="rounded-xl relative overflow-hidden flex flex-col justify-center shadow-sm hover:shadow-md transition-shadow">
+            <Link href="/shop" className="block w-full">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/banners/grid 4@4x.png" alt="Promo 4" className="w-full h-auto block" />
+            </Link>
           </div>
         </div>
       </section>
@@ -214,27 +179,13 @@ export default function Home() {
       {/* Specific Category Sections */}
       {fruitsProducts.length > 0 && (
         <>
-          <section className="container mx-auto px-5 sm:px-6 mt-2 mb-0">
-            <div className="relative rounded-md overflow-hidden bg-zinc-900 h-[110px] sm:h-64 md:h-80 flex items-center shadow-xl group">
-              <Image
-                src="/images/banners/Fruits_arranged_on_dark_background_20260910170343.jpeg"
-                alt="Dairy & Beverages"
-                fill
-                className="object-cover opacity-80"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent" />
-              <div className="relative z-10 p-5 sm:p-8 md:p-12 w-[70%] sm:max-w-md flex flex-col items-start">
-                <h2 className="font-heading text-16 sm:text-3xl md:text-5xl font-extrabold mb-1 sm:mb-3 text-white drop-shadow-md leading-tight tracking-tight">
-                  Fruits & Vegetables                </h2>
-                <p className="text-white/90 text-[10px] sm:text-base mb-3 sm:mb-6 drop-shadow-sm font-medium leading-snug">
-                  Picked fresh. Delivered to your door.                </p>
-                <Button asChild className="bg-[#8b5cf6] hover:bg-[#7c3aed] text-white rounded-xl font-bold border-0 text-[10px] sm:text-sm h-7 sm:h-10 px-4 sm:px-6 transition-colors shadow-none">
-                  <Link href="/shop">
-                    Explore <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 ml-1.5" />
-                  </Link>
-                </Button>
-              </div>
-            </div>
+          <section className="container mx-auto px-5 sm:px-6 mt-2 mb-0 flex justify-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/banners/collection banner1.jpg.jpeg"
+              alt="Dairy & Beverages"
+              className="w-auto h-auto max-w-full max-h-[215px] md:max-h-[430px] rounded-md shadow-xl object-contain opacity-100"
+            />
           </section>
           <ProductCarousel
             title="Fruits & Vegetables"
@@ -248,28 +199,13 @@ export default function Home() {
 
       {fashionProducts.length > 0 && (
         <>
-          <section className="container mx-auto px-5 sm:px-6 mt-0 mb-0">
-            <div className="relative rounded-md overflow-hidden bg-zinc-900 h-[110px] sm:h-64 md:h-80 flex items-center shadow-xl group">
-              <Image
-                src="/images/hero_fashion.png"
-                alt="Trending Fashion"
-                fill
-                className="object-cover opacity-80 "
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent" />
-              <div className="relative z-10 p-5 sm:p-8 md:p-12 w-[70%] sm:max-w-md flex flex-col items-start">
-                <h2 className="font-heading text-16 sm:text-3xl md:text-5xl font-extrabold mb-1 sm:mb-3 text-white drop-shadow-md leading-tight tracking-tight">
-                  Fashion & Clothing
-                </h2>
-                <p className="text-white/90 text-[10px] sm:text-base mb-3 sm:mb-6 drop-shadow-sm font-medium leading-snug">
-                  Everyday wear. Every size. Every style.                </p>
-                <Button asChild className="bg-[#8b5cf6] hover:bg-[#7c3aed] text-white rounded-xl font-bold border-0 text-[10px] sm:text-sm h-7 sm:h-10 px-4 sm:px-6 transition-colors shadow-none">
-                  <Link href="/shop">
-                    Explore <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 ml-1.5" />
-                  </Link>
-                </Button>
-              </div>
-            </div>
+          <section className="container mx-auto px-5 sm:px-6 mt-0 mb-0 flex justify-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/banners/collection banner2.jpg.jpeg"
+              alt="Trending Fashion"
+              className="w-auto h-auto max-w-full max-h-[215px] md:max-h-[430px] rounded-md shadow-xl object-contain opacity-100"
+            />
           </section>
           <ProductCarousel
             title="Fashion & Clothing"
@@ -282,29 +218,13 @@ export default function Home() {
 
       {drinkProducts.length > 0 && (
         <>
-          <section className="container mx-auto px-5 sm:px-6 mt-0 mb-0">
-            <div className="relative rounded-md overflow-hidden bg-zinc-900 h-[110px] sm:h-64 md:h-80 flex items-center shadow-lg group">
-              <Image
-                src="/images/hero_liquor.png"
-                alt="Premium Liquors"
-                fill
-                className="object-cover opacity-80"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent" />
-              <div className="relative z-10 p-5 sm:p-8 md:p-12 w-[70%] sm:max-w-md flex flex-col items-start">
-                <h2 className="font-heading text-16 sm:text-3xl md:text-5xl font-extrabold mb-1 sm:mb-3 text-white drop-shadow-md leading-tight tracking-tight">
-                  Dairy & Beverages
-                </h2>
-                <p className="text-white/90 text-[10px] sm:text-base mb-3 sm:mb-6 drop-shadow-sm font-medium leading-snug">
-                  Cold, fresh, and ready to pour.
-                </p>
-                <Button asChild className="bg-[#8b5cf6] hover:bg-[#7c3aed] text-white rounded-xl font-bold border-0 text-[10px] sm:text-sm h-7 sm:h-10 px-4 sm:px-6 transition-colors shadow-none">
-                  <Link href="/shop">
-                    Explore <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 ml-1.5" />
-                  </Link>
-                </Button>
-              </div>
-            </div>
+          <section className="container mx-auto px-5 sm:px-6 mt-0 mb-0 flex justify-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/banners/collection banner3.jpg.jpeg"
+              alt="Premium Liquors"
+              className="w-auto h-auto max-w-full max-h-[215px] md:max-h-[430px] rounded-md shadow-lg object-contain opacity-100"
+            />
           </section>
           <ProductCarousel
             title="Dairy & Beverages"
@@ -331,29 +251,13 @@ export default function Home() {
 
       {meatProducts.length > 0 && (
         <>
-          <section className="container mx-auto px-5 sm:px-6 mt-0 mb-0">
-            <div className="relative rounded-md overflow-hidden bg-zinc-900 h-[110px] sm:h-64 md:h-80 flex items-center shadow-lg group">
-              <Image
-                src="/images/banners/Meat_and_seafood_arrangement_20260910171526.jpeg"
-                alt="Fresh Meat & Seafood"
-                fill
-                className="object-cover opacity-80"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent" />
-              <div className="relative z-10 p-5 sm:p-8 md:p-12 w-[70%] sm:max-w-md flex flex-col items-start">
-                <h2 className="font-heading text-16 sm:text-3xl md:text-5xl font-extrabold mb-1 sm:mb-3 text-white drop-shadow-md leading-tight tracking-tight">
-                  Fresh Meat & Seafood
-                </h2>
-                <p className="text-white/90 text-[10px] sm:text-base mb-3 sm:mb-6 drop-shadow-sm font-medium leading-snug">
-                  Premium cuts and fresh catches delivered.
-                </p>
-                <Button asChild className="bg-[#8b5cf6] hover:bg-[#7c3aed] text-white rounded-xl font-bold border-0 text-[10px] sm:text-sm h-7 sm:h-10 px-4 sm:px-6 transition-colors shadow-none">
-                  <Link href="/shop">
-                    Explore <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 ml-1.5" />
-                  </Link>
-                </Button>
-              </div>
-            </div>
+          <section className="container mx-auto px-5 sm:px-6 mt-0 mb-0 flex justify-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/banners/collection banner4.jpg.jpeg"
+              alt="Fresh Meat & Seafood"
+              className="w-auto h-auto max-w-full max-h-[215px] md:max-h-[430px] rounded-md shadow-lg object-contain opacity-100"
+            />
           </section>
           <ProductCarousel
             title="Fresh Meat & Seafood"
@@ -366,17 +270,14 @@ export default function Home() {
 
 
 
-      <section className="container mx-auto px-5 sm:px-6 mt-0 mb-2">
-        <div className="relative rounded-xl overflow-hidden bg-zinc-900 h-[200px] sm:h-64 md:h-80 flex items-center shadow-lg group">
-          <Image
-            src="/images/banners/Mobile_phones_displayed_diagonally_20260910171528.jpeg"
-            alt="Premium Liquors"
-            fill
-            className="object-cover opacity-80"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent" />
-
-        </div>
+      <section className="container mx-auto px-5 sm:px-6 mt-0 mb-2 flex justify-center">
+        <Image
+          src="/images/banners/SINGLE BANNER.jpg.jpeg"
+          alt="Premium Liquors"
+          width={1200}
+          height={400}
+          className="w-auto h-auto max-w-full max-h-[200px] md:max-h-[320px] rounded-sm shadow-lg object-contain"
+        />
       </section>
       {/* Features + Newsletter */}
       <section className="container mx-auto px-5 sm:px-6 mt-2 mb-5">
