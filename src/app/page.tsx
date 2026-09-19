@@ -180,11 +180,19 @@ export default function Home() {
       {fruitsProducts.length > 0 && (
         <>
           <section className="container mx-auto px-5 sm:px-6 mt-2 mb-0 flex justify-center">
+            {/* Mobile Banner */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/images/banners/collection banner1.jpg.jpeg"
               alt="Dairy & Beverages"
-              className="w-auto h-auto max-w-full max-h-[215px] md:max-h-[430px] rounded-md shadow-xl object-contain opacity-100"
+              className="md:hidden w-auto h-auto max-w-full max-h-[215px] rounded-md shadow-xl object-contain opacity-100"
+            />
+            {/* Desktop Banner */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/banners/db1.jpeg"
+              alt="Dairy & Beverages"
+              className="hidden md:block w-full h-auto rounded-md shadow-xl object-contain opacity-100"
             />
           </section>
           <ProductCarousel
@@ -200,11 +208,19 @@ export default function Home() {
       {fashionProducts.length > 0 && (
         <>
           <section className="container mx-auto px-5 sm:px-6 mt-0 mb-0 flex justify-center">
+            {/* Mobile Banner */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/images/banners/collection banner2.jpg.jpeg"
               alt="Trending Fashion"
-              className="w-auto h-auto max-w-full max-h-[215px] md:max-h-[430px] rounded-md shadow-xl object-contain opacity-100"
+              className="md:hidden w-auto h-auto max-w-full max-h-[215px] rounded-md shadow-xl object-contain opacity-100"
+            />
+            {/* Desktop Banner */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/banners/db2.jpeg"
+              alt="Trending Fashion"
+              className="hidden md:block w-full h-auto rounded-md shadow-xl object-contain opacity-100"
             />
           </section>
           <ProductCarousel
@@ -219,11 +235,19 @@ export default function Home() {
       {drinkProducts.length > 0 && (
         <>
           <section className="container mx-auto px-5 sm:px-6 mt-0 mb-0 flex justify-center">
+            {/* Mobile Banner */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/images/banners/collection banner3.jpg.jpeg"
               alt="Premium Liquors"
-              className="w-auto h-auto max-w-full max-h-[215px] md:max-h-[430px] rounded-md shadow-lg object-contain opacity-100"
+              className="md:hidden w-auto h-auto max-w-full max-h-[215px] rounded-md shadow-lg object-contain opacity-100"
+            />
+            {/* Desktop Banner */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/banners/db3.jpeg"
+              alt="Premium Liquors"
+              className="hidden md:block w-full h-auto rounded-md shadow-lg object-contain opacity-100"
             />
           </section>
           <ProductCarousel
@@ -252,11 +276,19 @@ export default function Home() {
       {meatProducts.length > 0 && (
         <>
           <section className="container mx-auto px-5 sm:px-6 mt-0 mb-0 flex justify-center">
+            {/* Mobile Banner */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/images/banners/collection banner4.jpg.jpeg"
               alt="Fresh Meat & Seafood"
-              className="w-auto h-auto max-w-full max-h-[215px] md:max-h-[430px] rounded-md shadow-lg object-contain opacity-100"
+              className="md:hidden w-auto h-auto max-w-full max-h-[215px] rounded-md shadow-lg object-contain opacity-100"
+            />
+            {/* Desktop Banner */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/banners/db4.jpeg"
+              alt="Fresh Meat & Seafood"
+              className="hidden md:block w-full h-auto rounded-md shadow-lg object-contain opacity-100"
             />
           </section>
           <ProductCarousel
@@ -271,12 +303,21 @@ export default function Home() {
 
 
       <section className="container mx-auto px-5 sm:px-6 mt-0 mb-2 flex justify-center">
+        {/* Mobile Banner */}
         <Image
           src="/images/banners/SINGLE BANNER.jpg.jpeg"
           alt="Premium Liquors"
           width={1200}
           height={400}
-          className="w-auto h-auto max-w-full max-h-[200px] md:max-h-[320px] rounded-sm shadow-lg object-contain"
+          className="md:hidden w-auto h-auto max-w-full max-h-[200px] rounded-sm shadow-lg object-contain"
+        />
+        {/* Desktop Banner */}
+        <Image
+          src="/images/banners/deskbannersingle.jpeg"
+          alt="Premium Liquors"
+          width={1204}
+          height={640}
+          className="hidden md:block w-full h-auto rounded-sm shadow-lg object-contain"
         />
       </section>
       {/* Features + Newsletter */}

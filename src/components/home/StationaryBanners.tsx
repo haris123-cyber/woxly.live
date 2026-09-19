@@ -15,6 +15,7 @@ const slides = [
     desc: "Essentials for work, study, and creativity.",
 
     image: "/images/banners/banner carosel 1.jpg.jpeg",
+    image1: "/images/banners/b1.jpeg",
   },
   {
     id: 2,
@@ -22,12 +23,16 @@ const slides = [
     desc: "Discover our exclusive collection of fine writing instruments.",
 
     image: "/images/banners/banner carosel 2.jpg.jpeg",
+    image1: "/images/banners/b2.jpeg",
+
   },
   {
     id: 3,
     title: "Desk Organizers",
 
     image: "/images/banners/banner carosel 3.jpg.jpeg",
+    image1: "/images/banners/b3.jpeg",
+
   },
 
   {
@@ -36,8 +41,13 @@ const slides = [
 
 
     image: "/images/banners/banner carosel 4.jpg.jpeg",
+    image1: "/images/banners/b4.jpeg",
+
   }
 ];
+
+
+
 
 export function StationaryBanners() {
   const [emblaRef, emblaApi] = useEmblaCarousel(
@@ -67,12 +77,22 @@ export function StationaryBanners() {
             <div key={slide.id} className="flex-[0_0_92%] sm:flex-[0_0_100%] min-w-0 pl-4">
               <div className="flex justify-center items-center w-full">
                 {slide.image && (
-                  /* eslint-disable-next-line @next/next/no-img-element */
-                  <img
-                    src={slide.image}
-                    alt={slide.title}
-                    className="w-auto h-auto max-w-full max-h-[200px] md:max-h-[320px] rounded-[12px] sm:rounded-xl shadow-sm object-contain"
-                  />
+                  <>
+                    {/* Mobile Banner */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={slide.image}
+                      alt={slide.title}
+                      className="md:hidden w-auto h-auto max-w-full max-h-[200px] rounded-[12px] sm:rounded-xl shadow-sm object-contain"
+                    />
+                    {/* Desktop Banner */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={slide.image1}
+                      alt={slide.title}
+                      className="hidden md:block w-full h-auto rounded-[12px] sm:rounded-xl shadow-sm object-contain"
+                    />
+                  </>
                 )}
               </div>
             </div>

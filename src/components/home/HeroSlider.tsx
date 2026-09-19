@@ -10,17 +10,17 @@ import Autoplay from "embla-carousel-autoplay";
 const slides = [
   {
     id: 1,
-    image: "/images/hero_grocery.png",
+    image: "/images/banners/HOME BANNER1.jpg.jpeg",
     link: "/shop",
   },
   {
     id: 2,
-    image: "/images/hero_fashion.png",
+    image: "/images/banners/HOME BANNER2.jpg.jpeg",
     link: "/shop",
   },
   {
     id: 3,
-    image: "/images/hero_electronics.png",
+    image: "/images/banners/HOME BANNER3.jpg.jpeg",
     link: "/shop",
   },
 ];
@@ -125,8 +125,7 @@ export function HeroSlider() {
       </div>
 
       <div
-        className="relative overflow-hidden bg-zinc-900 shadow-lg mt-0 sm:mt-0 rounded-none sm:rounded-[6px] group"
-        style={{ height: "clamp(260px, 55vw, 460px)" }}
+        className="relative overflow-hidden bg-zinc-900 shadow-lg mt-0 sm:mt-0 rounded-none sm:rounded-[6px] group h-[clamp(260px,55vw,460px)] md:h-auto md:aspect-[3125/1758]"
         ref={emblaRef}
       >
         {/* Image track */}
