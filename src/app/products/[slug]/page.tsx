@@ -271,7 +271,7 @@ export default function ProductDetailPage() {
       title: "Good quality fish",
       text: "Nice thick fillet, good colour. Cooked it the same day and it was delicious. Delivery was quick too.",
       verified: false,
-      images: product.images ? product.images.slice(0, 2) : [product.image]
+      images: [product.image]
     },
     {
       name: "Priya Nair",
@@ -682,23 +682,10 @@ export default function ProductDetailPage() {
           {/* Action CTAs */}
           <div ref={inPageCTARef} className="flex flex-col gap-3 mt-4 mb-6">
             {product.isLimited && (
-              <div className="w-full flex justify-center sm:justify-end mb-2 ">
-                <div className="relative inline-flex transform -rotate-2 drop-shadow-md cursor-default hover:scale-105 transition-transform">
-                  <div
-                    className="bg-[#dc2626] text-white px-25  py-2.5 rounded-tl-md rounded-bl-md rounded-tr-md flex flex-col items-center justify-center"
-                    style={{ clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 0 100%)' }}
-                  >
-                    <span className="font-black text-xl tracking-widest uppercase leading-none">Hurry Up</span>
-                    <span className="text-[10px] font-bold mt-1 opacity-90 tracking-wide uppercase">Only 2 pieces left</span>
-                  </div>
-                  <div
-                    className="absolute bottom-0 right-0 w-0 h-0"
-                    style={{
-                      borderTop: '24px solid #ce0606ff',
-                      borderRight: '24px solid transparent',
-                      filter: 'drop-shadow(-2px -2px 2px rgba(0,0,0,0.2))'
-                    }}
-                  ></div>
+              <div className="w-full flex">
+                <div className="w-full flex items-center justify-center gap-2 mb-2 bg-[#fef2f2] text-[#dc2626] h-12 rounded-xl shadow-[0_2px_10px_rgba(220,38,38,0.1)]">
+                  <Flame className="w-4 h-3 animate-pulse fill-[#dc2626]" />
+                  <span className="text-[14px] font-bold">Only 2 pieces left, hurry up!</span>
                 </div>
               </div>
             )}
@@ -1076,27 +1063,12 @@ export default function ProductDetailPage() {
             )}
 
             <div className="flex flex-col gap-4 mb-10">
-              {product.isLimited && (
-                <div className="w-full flex justify-center mb-2">
-                  <div className="relative inline-flex transform -rotate-2 drop-shadow-md cursor-default hover:scale-105 transition-transform">
-                    <div
-                      className="bg-[#2ba3f7] text-white px-8 py-3 rounded-tl-md rounded-bl-md rounded-tr-md flex flex-col items-center justify-center"
-                      style={{ clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 0 100%)' }}
-                    >
-                      <span className="font-black text-2xl tracking-widest uppercase leading-none">Hurry Up</span>
-                      <span className="text-[12px] font-bold mt-1 opacity-90 tracking-wide uppercase">Only 2 pieces left</span>
-                    </div>
-                    <div
-                      className="absolute bottom-0 right-0 w-0 h-0"
-                      style={{
-                        borderTop: '24px solid #1a73be',
-                        borderRight: '24px solid transparent',
-                        filter: 'drop-shadow(-2px -2px 2px rgba(0,0,0,0.2))'
-                      }}
-                    ></div>
-                  </div>
+              <div className="w-full flex">
+                <div className="w-full flex items-center justify-center gap-2 bg-[#fef2f2] text-[#dc2626] h-[52px] rounded-2xl shadow-[0_2px_10px_rgba(220,38,38,0.1)]">
+                  <Flame className="w-5 h-5 animate-pulse fill-[#dc2626]" />
+                  <span className="text-[15px] font-bold">Only 2 pieces left, hurry up!</span>
                 </div>
-              )}
+              </div>
               <div className="flex items-center gap-3">
                 <div className="flex items-center rounded-sm  border-1 border-black bg-background h-12 min-w-[120px]">
                   <button
