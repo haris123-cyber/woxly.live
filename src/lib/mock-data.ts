@@ -144,7 +144,7 @@ export const PRODUCTS: Product[] = [
     id: '21', name: 'Brown Leather Handbag', slug: 'brown-handbag', price: 3189, originalPrice: 4299,
     image: '/images/fashion/Brown_leather_handbag.jpeg',
     images: ['/images/fashion/Brown_leather_handbag.jpeg'],
-    category: 'Fashion', brand: 'FashionBrand', rating: 4.6, reviews: 4, description: 'Stylish brown leather handbag.', inStock: true, hasOffer: true
+    category: 'Fashion', brand: 'FashionBrand', rating: 4.6, reviews: 4, description: 'Stylish brown leather handbag.', inStock: true, hasOffer: true, isLimited: true
   },
   {
     id: '22', name: 'Nike Running Shoes', slug: 'nike-running-shoes', price: 5589,
